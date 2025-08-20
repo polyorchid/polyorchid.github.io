@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quantum Research Laboratory</title>
+  <style>
+    :root{
+      --bg:#0b0f14;         /* deep lab night */
+      --panel:#121823;      /* panel blue-black */
+      --panel-2:#0f1520;
+      --accent:#6cf0ff;     /* cyan accent */
+      --accent-2:#a9ff6c;   /* lime accent */
+      --accent-3:#ff7bf0;   /* magenta */
+      --text:#d7e6ff;       /* main text */
+      --muted:#8aa0b8;      /* muted text */
+      --bad:#ff7d7d;
+      --good:#8cff8c;
+      --warn:#ffd97d;
+      --chip:#243247;
+      --chip-2:#1b2636;
+      --shadow: 0 8px 24px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.03);
+    }
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 80% -10%, rgba(108,240,255,.08), transparent 60%),
+                  radial-gradient(1000px 500px at 10% -20%, rgba(255,123,240,.06), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      letter-spacing:.2px;
+    }
+    .bar{position:sticky;top:0;z-index:50;background:rgba(11,15,20,.85);backdrop-filter: blur(8px);border-bottom:1px solid #1a2332}
+    .wrap{max-width:1200px;margin:0 auto;padding:12px 16px}
+    .title{display:flex;align-items:center;gap:12px;font-weight:700}
+    .dot{width:10px;height:10px;border-radius:999px;box-shadow:0 0 24px var(--accent);background:var(--accent)}
+    .brand{font-size:18px;letter-spacing:.8px}
+    .version{font-size:12px;color:var(--muted);margin-left:4px}
+
+    .resbar{display:grid;grid-template-columns: repeat(8, minmax(0,1fr)); gap:8px;margin-top:10px}
+    .chip{background:linear-gradient(180deg,var(--chip), var(--chip-2)); border:1px solid #1c2a3b; border-radius:12px;padding:8px 10px;display:flex;flex-direction:column;gap:4px;box-shadow:var(--shadow)}
+    .chip .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+    .chip .value{font-weight:700}
+    .small{font-size:12px;color:var(--muted)}
+
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+    .tab{background:var(--panel);border:1px solid #1b2534;border-radius:10px;padding:10px 14px;cursor:pointer;user-select:none;box-shadow:var(--shadow)}
+    .tab.active{outline:1px solid var(--accent);box-shadow:0 0 0 2px rgba(108,240,255,.15), var(--shadow)}
+
+    .grid{display:grid;grid-template-columns: 1.2fr 1fr; gap:14px; margin-top:14px}
+    .panel{background:linear-gradient(180deg,var(--panel),var(--panel-2)); border:1px solid #1b2534; border-radius:14px; box-shadow:var(--shadow); padding:14px}
+    .panel h2{margin:0 0 10px 0;font-size:16px}
+    .panel h3{margin:12px 0 8px 0;font-size:14px;color:var(--muted)}
+
+    .btn{background:#162233;border:1px solid #21324a;color:var(--text);padding:8px 10px;border-radius:10px;cursor:pointer;user-select:none;box-shadow:var(--shadow);display:inline-flex;gap:8px;align-items:center}
+    .btn:hover{border-color:#2a3d59}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+    .btn.primary{background:linear-gradient(180deg,#0e2e3c,#0a2430);border-color:#214c64}
+    .btn.warn{background:linear-gradient(180deg,#3c2e0e,#2a1e07);border-color:#5a4b21}
+    .btn.good{background:linear-gradient(180deg,#0e3c2a,#0a3021);border-color:#215a4b}
+
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    .row+.row{margin-top:8px}
+    .kv{display:grid;grid-template-columns:1fr auto;gap:6px 10px}
+
+    .list{display:flex;flex-direction:column;gap:8px}
+    .card{background:rgba(255,255,255,.02);border:1px solid #223149;border-radius:12px;padding:10px 12px;box-shadow:var(--shadow);display:grid;grid-template-columns:1fr auto;gap:8px}
+    .card h4{margin:0 0 6px 0}
+    .muted{color:var(--muted)}
+    .price{font-variant-numeric: tabular-nums; color:var(--warn)}
+
+    .two{display:grid;grid-template-columns: 1fr 1fr; gap:10px}
+    .three{display:grid;grid-template-columns: repeat(3, 1fr); gap:10px}
+
+    .log{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; background:#0a0f15;border-radius:10px;border:1px solid #1a2434;height:260px;overflow:auto;padding:10px;white-space:pre-wrap}
+    .log .t{color:#7fb4ff}
+    .log .save{color:var(--good)}
+    .log .event{color:#ffd4ff}
+    .log .warn{color:#ffd97d}
+    .log .bad{color:#ffaaaa}
+
+    .rightbar{display:flex;flex-direction:column;gap:10px}
+
+    .active-buffs{display:flex;flex-wrap:wrap;gap:6px}
+    .buff{border:1px dashed #37526e;border-radius:10px;padding:6px 8px;font-size:12px;display:flex;gap:8px;align-items:center;background:rgba(105,200,255,.06)}
+
+    .range{accent-color: var(--accent)}
+
+    .helper{font-size:12px;color:var(--muted)}
+
+    .pill{font-size:11px;padding:2px 6px;border-radius:999px;border:1px solid #2b3d57;background:#13202f;color:var(--text)}
+    .pill.ok{background:#13291f;border-color:#2b573d}
+
+    .footer{opacity:.7;padding:10px 16px;font-size:12px}
+
+    @media (max-width: 1000px){
+      .grid{grid-template-columns: 1fr}
+      .resbar{grid-template-columns: repeat(4,minmax(0,1fr))}
+    }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <div class="wrap">
+      <div class="title">
+        <span class="dot"></span>
+        <div class="brand">Quantum Research Laboratory <span class="version" id="version"></span></div>
+      </div>
+      <div class="resbar" id="resbar">
+        <!-- Filled by JS -->
+      </div>
+      <div class="tabs" id="tabs"></div>
+    </div>
+  </div>
+
+  <main class="wrap" style="padding-bottom: 40px">
+    <section id="view-dashboard" class="view">
+      <div class="grid">
+        <div class="panel">
+          <h2>Operations Console</h2>
+          <div class="row">
+            <button class="btn" id="btn-pulse">Run Test Pulse (+Energy)</button>
+            <button class="btn" id="btn-save">Save</button>
+            <button class="btn" id="btn-export">Export</button>
+            <button class="btn" id="btn-import">Import</button>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <div>
+              <div class="helper">Time Dilation (unlocks via Research → Superposition)</div>
+              <input id="time-scale" class="range" type="range" min="0" max="0" value="0" />
+              <div class="helper">Current scale: <span id="scale-label">1× (seconds)</span></div>
+            </div>
+          </div>
+
+          <h3>Status</h3>
+          <div class="kv">
+            <div>Global Production Multiplier</div><div><span id="global-mult">1.00×</span></div>
+            <div>Offline Progress Capacity</div><div><span id="offline-cap">2 hours</span></div>
+            <div>Discovery Chance</div><div><span id="discovery-chance">0.00%</span> / check</div>
+            <div>Tick Rate</div><div><span id="tick-rate">20 Hz</span></div>
+          </div>
+
+          <h3 style="margin-top:14px">Active Breakthroughs</h3>
+          <div class="active-buffs" id="buffs"></div>
+
+          <h3 style="margin-top:14px">Mission Log</h3>
+          <div class="log" id="log"></div>
+        </div>
+
+        <div class="rightbar">
+          <div class="panel">
+            <h2>Laboratory Modules</h2>
+            <div class="list" id="module-list"></div>
+          </div>
+
+          <div class="panel">
+            <h2>Converters</h2>
+            <div class="list" id="converter-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-modules" class="view" style="display:none">
+      <div class="panel">
+        <h2>Laboratory Modules</h2>
+        <p class="helper">Build and upgrade core instruments. Many features unlock via Research.</p>
+        <div class="two" id="modules-detailed"></div>
+      </div>
+    </section>
+
+    <section id="view-research" class="view" style="display:none">
+      <div class="panel">
+        <h2>Research Trees</h2>
+        <p class="helper">Spend <b>Information</b> and <b>Quantum States</b> to unlock automation, time mechanics, and cross-dimensional bonuses.</p>
+        <div class="three">
+          <div>
+            <h3>Entanglement</h3>
+            <div class="list" id="tree-entanglement"></div>
+          </div>
+          <div>
+            <h3>Superposition</h3>
+            <div class="list" id="tree-superposition"></div>
+          </div>
+          <div>
+            <h3>Tunneling</h3>
+            <div class="list" id="tree-tunneling"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-prestige" class="view" style="display:none">
+      <div class="grid">
+        <div class="panel">
+          <h2>Quantum Collapse</h2>
+          <p class="helper">Initiate a lab-wide collapse to convert your progress into <b>Collapse Points (CP)</b>. CP permanently increase production and unlock dimensional bonuses.</p>
+          <div class="kv">
+            <div>Total Quantum States generated (all time)</div><div id="stat-total-qs">0</div>
+            <div>Potential CP on Collapse</div><div id="potential-cp">0</div>
+            <div>Owned CP (unspent)</div><div id="owned-cp">0</div>
+            <div>Collapses Performed</div><div id="collapse-count">0</div>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <button class="btn warn" id="btn-collapse">Initiate Quantum Collapse</button>
+          </div>
+          <div class="helper" style="margin-top:8px">Formula: <span class="pill">CP = ⌊√( total_QS / 250 )⌋</span>. Higher totals grant more CP.</div>
+        </div>
+        <div class="panel">
+          <h2>Permanent Upgrades</h2>
+          <div class="list" id="prestige-upgrades"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-about" class="view" style="display:none">
+      <div class="panel">
+        <h2>About / Help</h2>
+        <p>
+          Manage a quantum facility across multiple resources: <b>Energy</b>, <b>Matter</b>, <b>Information</b>, and <b>Quantum States</b>. Build modules, unlock research, ride temporary breakthroughs, and eventually perform a <b>Quantum Collapse</b> for permanent power.
+        </p>
+        <ul>
+          <li><b>Particle Accelerators</b> produce Energy and can synthesize Matter.</li>
+          <li><b>Quantum Computers</b> consume Energy to generate Information.</li>
+          <li><b>Observation Chambers</b> consume Information to stabilize Quantum States.</li>
+          <li>Research unlocks <i>automation</i>, <i>time dilation</i>, and <i>conversion efficiencies</i>.</li>
+          <li>Breakthroughs occur at random and provide big temporary boons.</li>
+          <li>Closing the page grants <i>offline progress</i> up to your capacity.</li>
+        </ul>
+        <p class="helper">Tip: Superposition → "Temporal Dilation" unlocks the time scale slider for 
+          accelerated experiments. Entanglement → "Automation Protocols" enables autobuyers and auto-converters.</p>
+      </div>
+    </section>
+  </main>
+
+  <div class="footer wrap">
+    Built for idle scientists. Numbers get big; reality remains optional.
+  </div>
+
+  <script>
+  (function(){
+    'use strict';
+
+    const VERSION = 'v1.0.0';
+    const SAVE_KEY = 'qrl_save_v1';
+    const TICK_MS = 50; // 20Hz
+
+    // ---------- Utilities ----------
+    const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+    const now=()=>Date.now();
+    const fmt = {
+      num(n){
+        if(!isFinite(n)) return '∞';
+        if(Math.abs(n) < 1e3) return n.toFixed(2);
+        const units = ['','K','M','B','T','Qa','Qi','Sx','Sp','Oc','No','Dc'];
+        let u=0; let x=Math.abs(n);
+        while(x>=1000 && u<units.length-1){x/=1000;u++;}
+        return (n<0?'-':'') + x.toFixed(2) + units[u];
+      },
+      pct(n){return (n*100).toFixed(2)+'%';},
+      time(ms){
+        const s=Math.floor(ms/1000); if(s<60) return s+'s';
+        const m=Math.floor(s/60); if(m<60) return m+'m';
+        const h=Math.floor(m/60); if(h<48) return h+'h';
+        const d=Math.floor(h/24); return d+'d';
+      }
+    }
+
+    function log(msg, cls){
+      const el = document.getElementById('log');
+      const t = new Date().toLocaleTimeString();
+      const span = document.createElement('div');
+      span.innerHTML = `<span class="t">[${t}]</span> ${msg}`;
+      if(cls) span.classList.add(cls);
+      el.appendChild(span);
+      el.scrollTop = el.scrollHeight;
+    }
+
+    function randomChoice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+
+    // ---------- Game State ----------
+    const baseState = () => ({
+      resources: { E: 100, M: 10, I: 0, QS: 0 }, // Energy, Matter, Information, Quantum States
+      lifetime: 0,
+      lastTs: now(),
+      stats:{ totalE:0, totalM:0, totalI:0, totalQS:0 },
+      options:{
+        autosave:true,
+        autobuy:false,
+      },
+      time:{
+        scaleIndex:0,
+        unlockedMaxIndex:0,
+      },
+      // Multipliers cache (computed each tick)
+      mult:{ global:1, energy:1, matter:1, info:1, qs:1 },
+      // Breakthroughs currently active
+      buffs:[], // { id, name, mults:{E:..,I:..,QS:..}, untilTs }
+      discovery:{ nextCheckTs: now()+10000, baseChance: 0.002 },
+      offline:{ capMs: 2*60*60*1000 },
+      modules:{
+        accelerator:{ name:'Particle Accelerator', desc:'Generates Energy; can synthesize Matter.',
+          count:0, level:1,
+          buyCost:{ M: 5 },
+          buyGrowth:1.17,
+          baseProdE: 2, // E/s per unit
+          synth:{ enabled:false, eToM: 100, eff:0.5 }, // 100 E -> 1 M @ 50% (i.e., needs 200 E to get 1 M effectively)
+        },
+        qcomp:{ name:'Quantum Computer', desc:'Consumes Energy → Information.',
+          count:0, level:1,
+          buyCost:{ E: 60 },
+          buyGrowth:1.19,
+          capEps: 8, // capacity to consume E/s per unit
+          e2iEff: 0.35,
+          auto:false,
+        },
+        chamber:{ name:'Observation Chamber', desc:'Consumes Information → Quantum States (stabilization).',
+          count:0, level:1,
+          buyCost:{ I: 50 },
+          buyGrowth:1.21,
+          capIps: 5, // capacity to consume I/s per unit
+          i2qsEff: 0.25,
+          auto:false,
+        },
+      },
+      converters:{
+        e2m:{ name:'Synthesize Matter', enabled:false, via:'accelerator' },
+        e2i:{ name:'Compute Information', enabled:false, via:'qcomp' },
+        i2qs:{ name:'Stabilize Quantum States', enabled:false, via:'chamber' },
+      },
+      research:{ owned:{}, },
+      prestige:{ cp:0, collapses:0, spent:{}, },
+    });
+
+    let G = baseState();
+
+    const TIME_SCALES = [
+      {label:'1× (seconds)', mult:1},
+      {label:'10× (milliseconds)', mult:10},
+      {label:'100× (microseconds)', mult:100},
+      {label:'1,000× (microseconds+)', mult:1_000},
+      {label:'10,000× (minutes)', mult:10_000},
+      {label:'1,000,000× (hours→years)', mult:1_000_000},
+    ];
+
+    // ---------- Research Trees ----------
+    const RESEARCH = {
+      entanglement:[
+        {id:'ent_auto', name:'Automation Protocols', cost:{ I:150 }, desc:'Unlock autobuyers and enable all converters.', effect:()=>{ G.options.autobuy = true; Object.values(G.converters).forEach(c=>c.enabled=true);}},
+        {id:'ent_synergy', name:'Entangled Modules', cost:{ I:400 }, req:['ent_auto'], desc:'Production scales with √(A·Q·C + 1).', effect:()=>{}},
+        {id:'ent_coupling', name:'Strong Coupling', cost:{ I:900, QS:5 }, req:['ent_synergy'], desc:'+20% global production.', effect:()=>{}},
+      ],
+      superposition:[
+        {id:'sup_time', name:'Temporal Dilation', cost:{ I:200 }, desc:'Unlock time scale slider up to 100×.', effect:()=>{ G.time.unlockedMaxIndex = Math.max(G.time.unlockedMaxIndex,2);}},
+        {id:'sup_time2', name:'Deep Dilation', cost:{ I:1200, QS:3 }, req:['sup_time'], desc:'Increase time scale cap to 1,000× and +4h offline cap.', effect:()=>{ G.time.unlockedMaxIndex = Math.max(G.time.unlockedMaxIndex,3); G.offline.capMs += 4*60*60*1000; }},
+        {id:'sup_time3', name:'Epoch Folding', cost:{ QS:10 }, req:['sup_time2'], desc:'Increase time scale cap to 1,000,000× and +12h offline cap.', effect:()=>{ G.time.unlockedMaxIndex = Math.max(G.time.unlockedMaxIndex,5); G.offline.capMs += 12*60*60*1000; }},
+      ],
+      tunneling:[
+        {id:'tun_eff', name:'Barrier Biasing', cost:{ I:300 }, desc:'+25% conversion efficiencies.', effect:()=>{}},
+        {id:'tun_cost', name:'Quantum Discount', cost:{ I:800, QS:2 }, req:['tun_eff'], desc:'-10% module price growth.', effect:()=>{}},
+        {id:'tun_leak', name:'Vacuum Tunneling', cost:{ QS:12 }, req:['tun_cost'], desc:'+10% chance that conversions refund input.', effect:()=>{}},
+      ],
+    };
+
+    // ---------- Prestige Upgrades ----------
+    const PRESTIGE = [
+      { id:'p_global', name:'Fundamental Constant', desc:'+10% global production per level.', baseCost:1, costScale:1.8, level:0, effect(){ return 1 + 0.10*this.level; }},
+      { id:'p_energy', name:'Zero-Point Energy', desc:'+12% Energy production per level.', baseCost:1, costScale:1.7, level:0, effect(){ return 1 + 0.12*this.level; }},
+      { id:'p_info', name:'Shannon Oracle', desc:'+12% Information production per level.', baseCost:1, costScale:1.7, level:0, effect(){ return 1 + 0.12*this.level; }},
+      { id:'p_offline', name:'Temporal Anchor', desc:'+4h offline capacity per level.', baseCost:2, costScale:1.9, level:0, effect(){ return 1; }},
+      { id:'p_dim', name:'Dimensional Bridge', desc:'Unlocks a cross-dimensional synergy (+15%).', baseCost:5, costScale:2.5, level:0, effect(){ return 1 + 0.15*(this.level>0?1:0); }},
+    ];
+
+    function prestigeCost(u){ return Math.ceil(u.baseCost * Math.pow(u.costScale, u.level)); }
+
+    // ---------- UI Build ----------
+    const tabs=[
+      {id:'dashboard', name:'Dashboard'},
+      {id:'modules', name:'Modules'},
+      {id:'research', name:'Research'},
+      {id:'prestige', name:'Prestige'},
+      {id:'about', name:'About'},
+    ];
+
+    function buildTabs(){
+      const el = document.getElementById('tabs');
+      el.innerHTML='';
+      tabs.forEach((t,i)=>{
+        const b=document.createElement('div'); b.className='tab'+(i===0?' active':''); b.textContent=t.name; b.onclick=()=>showTab(t.id,b);
+        el.appendChild(b);
+      });
+    }
+
+    function showTab(id, btn){
+      document.querySelectorAll('.view').forEach(v=>v.style.display='none');
+      document.getElementById('view-'+id).style.display='block';
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+    }
+
+    function buildResbar(){
+      const el = document.getElementById('resbar');
+      const rowTpl = (id,label,desc)=>`<div class="chip"><div class="label">${label}</div><div class="value" id="res-${id}">0</div><div class="small" id="rate-${id}">+0/s</div></div>`;
+      el.innerHTML = [
+        rowTpl('E','Energy',''),
+        rowTpl('M','Matter',''),
+        rowTpl('I','Information',''),
+        rowTpl('QS','Quantum States',''),
+        `<div class="chip"><div class="label">Global</div><div class="value" id="res-global">1.00×</div><div class="small">multiplier</div></div>`,
+        `<div class="chip"><div class="label">Events</div><div class="value" id="res-buffs">0</div><div class="small">active</div></div>`,
+        `<div class="chip"><div class="label">Autobuy</div><div class="value"><span id="autobuy-state" class="pill">OFF</span></div><div class="small"><button class="btn" id="toggle-autobuy">Toggle</button></div></div>`,
+        `<div class="chip"><div class="label">Save</div><div class="value small" id="last-save">—</div><div class="small"><span class="pill ok" id="autosave-pill">Autosave ON</span></div></div>`,
+      ].join('');
+      document.getElementById('toggle-autobuy').onclick=()=>{ G.options.autobuy=!G.options.autobuy; log(`Autobuyers ${G.options.autobuy?'enabled':'disabled'}.`); };
+    }
+
+    function buildDashboardModules(){
+      const container = document.getElementById('module-list');
+      container.innerHTML='';
+      Object.entries(G.modules).forEach(([k,m])=>{
+        const card=document.createElement('div'); card.className='card';
+        card.innerHTML = `
+          <div>
+            <h4>${m.name} <span class="muted">Lv ${m.level} • x${m.count}</span></h4>
+            <div class="muted">${m.desc}</div>
+          </div>
+          <div class="row">
+            <button class="btn" data-act="buy" data-k="${k}">Buy</button>
+            <button class="btn" data-act="upgrade" data-k="${k}">Upgrade</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      container.onclick = (e)=>{
+        const b=e.target.closest('button'); if(!b) return; const k=b.dataset.k; const act=b.dataset.act; if(!k||!act) return;
+        if(act==='buy') buyModule(k,1); else if(act==='upgrade') upgradeModule(k);
+      }
+    }
+
+    function buildConverters(){
+      const container = document.getElementById('converter-list');
+      container.innerHTML='';
+      const mk=(id,c,label)=>{
+        const wrap=document.createElement('div'); wrap.className='card';
+        wrap.innerHTML=`<div>
+          <h4>${label}</h4>
+          <div class="muted">${c.enabled?'Enabled':'Disabled'}</div>
+        </div>
+        <div class="row">
+          <button class="btn" data-id="${id}">${c.enabled?'Disable':'Enable'}</button>
+        </div>`;
+        container.appendChild(wrap);
+      }
+      mk('e2m',G.converters.e2m,'Energy → Matter (Accelerators)');
+      mk('e2i',G.converters.e2i,'Energy → Information (Quantum Computers)');
+      mk('i2qs',G.converters.i2qs,'Information → Quantum States (Observation Chambers)');
+
+      container.onclick=(e)=>{
+        const b=e.target.closest('button'); if(!b) return; const id=b.dataset.id; const c=G.converters[id]; if(!c) return;
+        if(!G.options.autobuy && !G.research.owned['ent_auto']){ log('Automation locked. Research Entanglement → Automation Protocols to use converters.', 'warn'); return; }
+        c.enabled = !c.enabled; log(`${c.name}: ${c.enabled?'enabled':'disabled'}.`);
+        buildConverters();
+      }
+    }
+
+    function buildModulesDetailed(){
+      const container = document.getElementById('modules-detailed');
+      container.innerHTML='';
+      Object.entries(G.modules).forEach(([k,m])=>{
+        const div=document.createElement('div'); div.className='card'; div.style.display='block';
+        const price = priceOfModule(k);
+        div.innerHTML = `
+          <h4>${m.name} <span class="muted">Lv ${m.level} • x${m.count}</span></h4>
+          <div class="muted">${m.desc}</div>
+          <div class="kv" style="margin-top:6px">
+            <div>Buy Cost</div><div class="price">${costLabel(price)}</div>
+            <div>Upgrade Cost</div><div class="price">${costLabel(upgradeCost(k))}</div>
+            <div>Output / Capacity</div><div>${moduleStatsLine(k)}</div>
+          </div>
+          <div class="row" style="margin-top:8px">
+            <button class="btn" data-act="buy" data-k="${k}">Buy</button>
+            <button class="btn" data-act="buy10" data-k="${k}">Buy ×10</button>
+            <button class="btn" data-act="upgrade" data-k="${k}">Upgrade</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+      container.onclick=(e)=>{
+        const b=e.target.closest('button'); if(!b) return; const k=b.dataset.k; const act=b.dataset.act; if(!k||!act) return;
+        if(act==='buy') buyModule(k,1);
+        if(act==='buy10') buyModule(k,10);
+        if(act==='upgrade') upgradeModule(k);
+      }
+    }
+
+    function buildResearchTrees(){
+      function drawTree(elId, arr){
+        const el = document.getElementById(elId); el.innerHTML='';
+        arr.forEach(r=>{
+          const owned = !!G.research.owned[r.id];
+          const reqOk = !r.req || r.req.every(id=>G.research.owned[id]);
+          const affordable = reqOk && canAfford(r.cost);
+          const li=document.createElement('div'); li.className='card';
+          li.innerHTML = `
+            <div>
+              <h4>${r.name} ${owned?'<span class="pill ok">Unlocked</span>':''}</h4>
+              <div class="muted">${r.desc}</div>
+              <div class="price" style="margin-top:6px">Cost: ${costLabel(r.cost)}</div>
+              ${r.req?`<div class="helper">Requires: ${r.req.map(x=>'“'+getResearchName(x)+'”').join(', ')}</div>`:''}
+            </div>
+            <div class="row">
+              <button class="btn" ${owned?'disabled':''} data-id="${r.id}">${owned?'Owned':(affordable?'Unlock':'Buy')}</button>
+            </div>
+          `;
+          el.appendChild(li);
+        });
+        el.onclick=(e)=>{
+          const b=e.target.closest('button'); if(!b) return; const id=b.dataset.id; if(!id) return;
+          purchaseResearch(id);
+        }
+      }
+      drawTree('tree-entanglement', RESEARCH.entanglement);
+      drawTree('tree-superposition', RESEARCH.superposition);
+      drawTree('tree-tunneling', RESEARCH.tunneling);
+    }
+
+    function buildPrestige(){
+      document.getElementById('stat-total-qs').textContent = fmt.num(G.stats.totalQS);
+      document.getElementById('potential-cp').textContent = potentialCP();
+      document.getElementById('owned-cp').textContent = G.prestige.cp;
+      document.getElementById('collapse-count').textContent = G.prestige.collapses;
+
+      const list=document.getElementById('prestige-upgrades'); list.innerHTML='';
+      PRESTIGE.forEach(u=>{
+        const li=document.createElement('div'); li.className='card';
+        const cost = prestigeCost(u);
+        li.innerHTML = `
+          <div>
+            <h4>${u.name} <span class="muted">Lv ${u.level}</span></h4>
+            <div class="muted">${u.desc}</div>
+            <div class="price" style="margin-top:6px">Cost: ${cost} CP</div>
+          </div>
+          <div><button class="btn" data-id="${u.id}" ${G.prestige.cp<cost?'disabled':''}>Buy</button></div>
+        `;
+        list.appendChild(li);
+      });
+      list.onclick=(e)=>{
+        const b=e.target.closest('button'); if(!b) return; const id=b.dataset.id; const u=PRESTIGE.find(x=>x.id===id); if(!u) return;
+        const cost = prestigeCost(u); if(G.prestige.cp<cost){ log('Not enough Collapse Points.', 'warn'); return; }
+        G.prestige.cp -= cost; u.level++; if(u.id==='p_offline'){ G.offline.capMs += 4*60*60*1000; }
+        log(`Purchased prestige upgrade: ${u.name} (Lv ${u.level}).`, 'event');
+        buildPrestige();
+      }
+    }
+
+    function updateBuffsUI(){
+      const el = document.getElementById('buffs'); el.innerHTML='';
+      G.buffs.filter(b=>b.untilTs>now()).forEach(b=>{
+        const left = Math.max(0, b.untilTs - now());
+        const tag = document.createElement('div'); tag.className='buff';
+        tag.innerHTML = `<span class="pill">${b.name}</span> <span class="helper">${fmt.time(left)} left</span>`;
+        el.appendChild(tag);
+      });
+      document.getElementById('res-buffs').textContent = G.buffs.filter(b=>b.untilTs>now()).length;
+    }
+
+    function costLabel(cost){ return Object.entries(cost).map(([k,v])=>fmt.num(v)+' '+k).join(' • '); }
+
+    function moduleStatsLine(k){
+      const m=G.modules[k];
+      if(k==='accelerator') return `${fmt.num(m.baseProdE*m.count)} E/s (base), synth ${m.synth.enabled?'ON':'OFF'} (100E → 1M @ ${(m.synth.eff*100).toFixed(0)}%)`;
+      if(k==='qcomp') return `Consumes up to ${fmt.num(m.capEps*m.count)} E/s → I @ ${(m.e2iEff*100).toFixed(0)}%`;
+      if(k==='chamber') return `Consumes up to ${fmt.num(m.capIps*m.count)} I/s → QS @ ${(m.i2qsEff*100).toFixed(0)}%`;
+      return '';
+    }
+
+    // ---------- Economy Core ----------
+    function addRes(res, amt){ G.resources[res]+=amt; if(amt>0){ const sKey = res==='E'?'totalE':res==='M'?'totalM':res==='I'?'totalI':'totalQS'; G.stats[sKey]+=amt; } }
+    function spend(cost){ if(!canAfford(cost)) return false; Object.entries(cost).forEach(([k,v])=>{ G.resources[k]-=v; }); return true; }
+    function canAfford(cost){ return Object.entries(cost).every(([k,v])=>G.resources[k]>=v); }
+
+    function priceOfModule(k){
+      const m=G.modules[k]; const n=m.count; const cost={};
+      Object.entries(m.buyCost).forEach(([res,base])=>{ const growthMod = researchHas('tun_cost')?0.9:1; cost[res]=Math.ceil(base*Math.pow(m.buyGrowth*growthMod,n)); });
+      return cost;
+    }
+    function upgradeCost(k){
+      const m=G.modules[k]; const lvl=m.level; const base = Object.entries(m.buyCost).reduce((acc, [_,v])=>acc+v,0);
+      // Upgrades scale more steeply but in the same currency as buyCost's primary resource
+      const primary = Object.keys(m.buyCost)[0];
+      const cost = {}; cost[primary] = Math.ceil(base * Math.pow(1.45, lvl)); return cost;
+    }
+
+    function buyModule(k, n){ n=n||1; for(let i=0;i<n;i++){ const price=priceOfModule(k); if(spend(price)){ G.modules[k].count++; } else { if(n>1) break; log('Insufficient resources.', 'warn'); break; } } buildDashboard(); buildModulesDetailed(); }
+    function upgradeModule(k){ const cost=upgradeCost(k); if(spend(cost)){ G.modules[k].level++; log(`${G.modules[k].name} upgraded to Lv ${G.modules[k].level}.`,'event'); buildDashboard(); buildModulesDetailed(); } else log('Insufficient resources.', 'warn'); }
+
+    function researchHas(id){ return !!G.research.owned[id]; }
+
+    function getResearchById(id){ return Object.values(RESEARCH).flat().find(r=>r.id===id); }
+    function getResearchName(id){ const r=getResearchById(id); return r? r.name : id; }
+
+    function purchaseResearch(id){
+      const r = getResearchById(id); if(!r) return;
+      if(G.research.owned[id]) return;
+      if(r.req && !r.req.every(x=>G.research.owned[x])){ log('Prerequisites not met.', 'warn'); return; }
+      if(!canAfford(r.cost)){ log('Not enough resources.', 'warn'); return; }
+      spend(r.cost);
+      G.research.owned[id]=true; if(typeof r.effect==='function') r.effect();
+      log(`Research unlocked: ${r.name}`,'event');
+      buildResearchTrees(); buildDashboard();
+    }
+
+    function computeMultipliers(){
+      // Base from prestige
+      let global = PRESTIGE.find(u=>u.id==='p_global').effect();
+      let energyM = PRESTIGE.find(u=>u.id==='p_energy').effect();
+      let infoM   = PRESTIGE.find(u=>u.id==='p_info').effect();
+      let qsM     = 1;
+
+      if(PRESTIGE.find(u=>u.id==='p_dim').level>0) global *= PRESTIGE.find(u=>u.id==='p_dim').effect();
+      if(researchHas('ent_coupling')) global *= 1.20;
+
+      // Synergy research: scales with sqrt(A*Q*C+1)
+      if(researchHas('ent_synergy')){
+        const a=G.modules.accelerator.count||1; const q=G.modules.qcomp.count||1; const c=G.modules.chamber.count||1;
+        const s = Math.sqrt(a*q*c + 1);
+        global *= (1 + (s-1)*0.03); // 3% per sqrt unit
+      }
+
+      // Buffs
+      const active = G.buffs.filter(b=>b.untilTs>now());
+      let buffE=1, buffI=1, buffQS=1;
+      active.forEach(b=>{
+        buffE *= (b.mults.E||1); buffI *= (b.mults.I||1); buffQS *= (b.mults.QS||1); global *= (b.mults.global||1);
+      });
+
+      G.mult={ global, energy:energyM*buffE, matter:1, info:infoM*buffI, qs:qsM*buffQS };
+    }
+
+    function simulate(dt){
+      // dt is in seconds, already scaled by time dilation
+      computeMultipliers();
+
+      const acc = G.modules.accelerator; const qc = G.modules.qcomp; const ch = G.modules.chamber;
+
+      // 1) Accelerators generate Energy
+      const energyPerSec = acc.baseProdE * acc.count * (1 + 0.12*(acc.level-1)) * G.mult.global * G.mult.energy;
+      let E = energyPerSec * dt; // generated
+
+      // 2) Conversions
+      // a) Energy -> Matter (via accelerators) if enabled
+      if(G.converters.e2m.enabled || acc.synth.enabled){
+        const cap = acc.count * (1 + 0.5*(acc.level-1)); // capacity units / s
+        const energyUsable = Math.min(G.resources.E + E, cap*dt*200); // need 200 E per 1 M at 50% baseline eff
+        const effBase = acc.synth.eff * (researchHas('tun_eff')?1.25:1);
+        const refund = (researchHas('tun_leak') && Math.random()<0.10) ? 1 : 0; // refund chance
+        const mGain = (energyUsable/acc.synth.eToM) * effBase;
+        if(energyUsable>0){ addRes('M', mGain); const consumed = energyUsable * (refund?0:1); if(consumed<=E){ E -= consumed; } else { const need=consumed-E; G.resources.E = Math.max(0, G.resources.E - need); E = 0; }
+        }
+      }
+
+      // b) Energy -> Information via Quantum Computers
+      if(G.converters.e2i.enabled || qc.auto){
+        const cap = qc.capEps * qc.count * (1 + 0.5*(qc.level-1));
+        const avail = G.resources.E + E;
+        const use = Math.min(cap*dt, avail);
+        const eff = qc.e2iEff * (researchHas('tun_eff')?1.25:1);
+        const refund = (researchHas('tun_leak') && Math.random()<0.10) ? 1 : 0;
+        const iGain = use * eff * G.mult.global * G.mult.info;
+        if(use>0){ addRes('I', iGain); const consumed = use * (refund?0:1); if(consumed<=E){ E -= consumed; } else { const need=consumed-E; G.resources.E = Math.max(0, G.resources.E - need); E=0; } }
+      }
+
+      // After conversions, any residual generated Energy gets added
+      if(E>0) addRes('E', E);
+
+      // c) Information -> Quantum States via Chamber
+      if(G.converters.i2qs.enabled || ch.auto){
+        const cap = ch.capIps * ch.count * (1 + 0.5*(ch.level-1));
+        const use = Math.min(cap*dt, G.resources.I);
+        const eff = ch.i2qsEff * (researchHas('tun_eff')?1.25:1);
+        const refund = (researchHas('tun_leak') && Math.random()<0.10) ? 1 : 0;
+        const qsGain = use * eff * G.mult.global * G.mult.qs;
+        if(use>0){ addRes('QS', qsGain); G.resources.I -= use * (refund?0:1); }
+      }
+
+      // Autobuy simple strategy
+      if(G.options.autobuy && researchHas('ent_auto')){
+        // Prefer balancing purchases
+        const order=['accelerator','qcomp','chamber'];
+        order.forEach(k=>{
+          let tries=3; while(tries-->0){ const price=priceOfModule(k); if(canAfford(price)) { spend(price); G.modules[k].count++; } else break; }
+        });
+      }
+    }
+
+    // ---------- Breakthrough Events ----------
+    const EVENTS = [
+      { id:'higgs', name:'Higgs Surge', duration: 60_000, mults:{E:3}, flavor:'The field vibrates; Energy output triples.'},
+      { id:'epr', name:'EPR Surprise', duration: 45_000, mults:{QS:2}, flavor:'Spooky action at a distance doubles QS yields.'},
+      { id:'zeno', name:'Quantum Zeno', duration: 60_000, mults:{global:1.2}, flavor:'Observation slows decay; +20% global.'},
+      { id:'grant', name:'Anonymous Grant', duration: 1, mults:{}, instant: (G)=>{ const lump = 200 + G.stats.totalI*0.02; addRes('I',lump); }, flavor:'A mysterious benefactor funds your work (+Information).' },
+      { id:'res_unlock', name:'Phase Transition', duration: 1, mults:{}, instant:(G)=>{ if(!G.research.owned['ent_auto']){ G.research.owned['ent_auto']=true; log('Breakthrough granted research: Automation Protocols','event'); buildResearchTrees(); } }, flavor:'A sudden reconfiguration unlocks latent protocols.' }
+    ];
+
+    function discoveryCheck(){
+      if(now() < G.discovery.nextCheckTs) return;
+      // Base chance, boosted by modules and time scale
+      const a=G.modules.accelerator.count, q=G.modules.qcomp.count, c=G.modules.chamber.count;
+      const scale = TIME_SCALES[G.time.scaleIndex]?.mult || 1;
+      const chance = G.discovery.baseChance * (1 + 0.02*(a+q+c)) * (1 + Math.log10(Math.max(1,scale))*.5);
+      document.getElementById('discovery-chance').textContent = (chance*100).toFixed(3)+'%';
+      if(Math.random() < chance){
+        const ev = randomChoice(EVENTS);
+        if(ev.instant){ ev.instant(G); log(`Breakthrough: ${ev.name}. ${ev.flavor}`,'event'); }
+        else{
+          G.buffs.push({ id:ev.id, name:ev.name, mults:ev.mults, untilTs: now()+ev.duration });
+          log(`Breakthrough: ${ev.name} for ${fmt.time(ev.duration)}. ${ev.flavor}`,'event');
+        }
+        updateBuffsUI();
+      }
+      // Next check in 12–20 seconds
+      G.discovery.nextCheckTs = now() + (12_000 + Math.random()*8_000);
+    }
+
+    // ---------- Prestige ----------
+    function potentialCP(){ return Math.floor(Math.sqrt((G.stats.totalQS||0)/250)); }
+
+    function doCollapse(){
+      const gain = potentialCP();
+      if(gain<=0){ log('Not enough progress to gain Collapse Points. Generate more Quantum States.', 'warn'); return; }
+      // Reset everything except prestige
+      G.prestige.cp += gain; G.prestige.collapses++;
+      const keep = { prestige: G.prestige, options:G.options, time:G.time, research:{ owned:{} }, offline:G.offline };
+      // Keep owned research? No, but keep automation if it was granted via event
+      Object.keys(G.research.owned).forEach(id=>{ if(id==='ent_auto' && G.research.owned[id]) keep.research.owned[id]=true; });
+
+      const newG = baseState();
+      // Merge keeps
+      newG.prestige = keep.prestige; newG.options = keep.options; newG.time = keep.time; newG.offline=keep.offline; newG.research.owned = keep.research.owned;
+      G = newG;
+      log(`Quantum Collapse complete. Gained ${gain} CP. Systems reset; constants stabilized.`, 'event');
+      buildAll();
+    }
+
+    // ---------- Save / Load ----------
+    function save(manual=false){
+      G.lastTs = now();
+      const state = JSON.stringify({ G, PRESTIGE: PRESTIGE.map(u=>({id:u.id, level:u.level})) });
+      localStorage.setItem(SAVE_KEY, state);
+      document.getElementById('last-save').textContent = new Date(G.lastTs).toLocaleTimeString();
+      if(manual) log('Progress saved.','save');
+    }
+
+    function load(){
+      try{
+        const s = localStorage.getItem(SAVE_KEY); if(!s) return;
+        const obj = JSON.parse(s);
+        if(obj && obj.G){ G = Object.assign(baseState(), obj.G); }
+        if(obj && Array.isArray(obj.PRESTIGE)){
+          obj.PRESTIGE.forEach(saved=>{ const u = PRESTIGE.find(x=>x.id===saved.id); if(u) u.level = saved.level; });
+        }
+      }catch(err){ console.error(err); }
+    }
+
+    function applyOfflineProgress(){
+      if(!G.lastTs) return;
+      const dtMs = clamp(now() - G.lastTs, 0, G.offline.capMs);
+      if(dtMs < 1000) return; // less than a second, ignore
+      const dt = dtMs / 1000; // seconds
+      // Simulate in coarse steps for stability
+      const step = 30; // seconds per step
+      let left = dt;
+      while(left>0){ const d = Math.min(step, left); simulate(d); left -= d; }
+      log(`Offline progress processed: ${fmt.time(dtMs)} at current efficiencies.`, 'save');
+    }
+
+    function exportSave(){
+      save();
+      const data = btoa(unescape(encodeURIComponent(JSON.stringify({ G, PRESTIGE: PRESTIGE.map(u=>({id:u.id, level:u.level})) }))));
+      const txt = prompt('Copy your save data:', data);
+      if(txt) { /* no-op, user copied */ }
+    }
+
+    function importSave(){
+      const data = prompt('Paste your save data:'); if(!data) return;
+      try{
+        const obj = JSON.parse(decodeURIComponent(escape(atob(data))));
+        if(obj && obj.G){ G = Object.assign(baseState(), obj.G); }
+        if(obj && Array.isArray(obj.PRESTIGE)){
+          PRESTIGE.forEach(u=>{ const saved=obj.PRESTIGE.find(x=>x.id===u.id); if(saved) u.level=saved.level; });
+        }
+        log('Save imported.','save'); buildAll(); save();
+      }catch(e){ alert('Invalid save data.'); }
+    }
+
+    // ---------- Ticking ----------
+    let lastTick = now();
+    function tick(){
+      const t = now();
+      const dtReal = (t - lastTick)/1000; lastTick=t;
+      const scale = TIME_SCALES[G.time.scaleIndex]?.mult || 1;
+      const dt = dtReal * scale;
+
+      simulate(dt);
+      discoveryCheck();
+      updateUI();
+    }
+
+    // ---------- UI Updates ----------
+    function updateUI(){
+      // Top resources
+      const {E,M,I,QS} = G.resources;
+      document.getElementById('res-E').textContent = fmt.num(E);
+      document.getElementById('res-M').textContent = fmt.num(M);
+      document.getElementById('res-I').textContent = fmt.num(I);
+      document.getElementById('res-QS').textContent = fmt.num(QS);
+
+      // Approx rates (rough estimation from last tick multipliers and module states)
+      const acc=G.modules.accelerator, qc=G.modules.qcomp, ch=G.modules.chamber;
+      const energyPerSec = acc.baseProdE * acc.count * (1 + 0.12*(acc.level-1)) * G.mult.global * G.mult.energy;
+      document.getElementById('rate-E').textContent = '+'+fmt.num(energyPerSec)+'/s';
+
+      const qcUse = qc.capEps * qc.count * (1 + 0.5*(qc.level-1));
+      const iRate = (G.converters.e2i.enabled||qc.auto)? qcUse * qc.e2iEff * G.mult.global * G.mult.info : 0;
+      document.getElementById('rate-I').textContent = '+'+fmt.num(iRate)+'/s';
+
+      const chUse = ch.capIps * ch.count * (1 + 0.5*(ch.level-1));
+      const qsRate = (G.converters.i2qs.enabled||ch.auto)? chUse * ch.i2qsEff * G.mult.global * G.mult.qs : 0;
+      document.getElementById('rate-QS').textContent = '+'+fmt.num(qsRate)+'/s';
+
+      // Matter rate: rough from accelerator synth
+      const mRate = (G.converters.e2m.enabled||acc.synth.enabled)? (acc.count * (1+0.5*(acc.level-1)) * 200 / acc.synth.eToM * acc.synth.eff) : 0;
+      document.getElementById('rate-M').textContent = '+'+fmt.num(mRate)+'/s';
+
+      // Multipliers
+      document.getElementById('res-global').textContent = (G.mult.global).toFixed(2)+'×';
+      document.getElementById('global-mult').textContent = (G.mult.global).toFixed(2)+'×';
+
+      // Autobuy + autosave pills
+      document.getElementById('autobuy-state').textContent = G.options.autobuy? 'ON':'OFF';
+      document.getElementById('autosave-pill').textContent = G.options.autosave? 'Autosave ON':'Autosave OFF';
+
+      // Offline cap
+      document.getElementById('offline-cap').textContent = fmt.time(G.offline.capMs);
+
+      // Buff tags refresh every update
+      updateBuffsUI();
+
+      // Time scale label
+      const ts = TIME_SCALES[G.time.scaleIndex] || TIME_SCALES[0];
+      document.getElementById('scale-label').textContent = ts.label;
+    }
+
+    function buildAll(){
+      buildTabs(); buildResbar(); buildDashboardModules(); buildConverters(); buildModulesDetailed(); buildResearchTrees(); buildPrestige();
+      document.getElementById('version').textContent = VERSION;
+
+      document.getElementById('btn-pulse').onclick=()=>{ addRes('E', 10 * (1 + G.modules.accelerator.level*0.1)); };
+      document.getElementById('btn-save').onclick=()=>save(true);
+      document.getElementById('btn-export').onclick=exportSave;
+      document.getElementById('btn-import').onclick=importSave;
+      document.getElementById('btn-collapse').onclick=()=>{
+        if(confirm('Quantum Collapse will reset most progress in exchange for Collapse Points. Proceed?')) doCollapse();
+      };
+
+      // Time scale slider
+      const slider = document.getElementById('time-scale');
+      slider.min = 0; slider.max = G.time.unlockedMaxIndex; slider.value = Math.min(G.time.scaleIndex, G.time.unlockedMaxIndex);
+      slider.oninput = ()=>{ G.time.scaleIndex = parseInt(slider.value,10); };
+
+      // Tabs default
+      showTab('dashboard');
+
+      updateUI();
+    }
+
+    // ---------- Bootstrap ----------
+    load();
+    buildAll();
+    applyOfflineProgress();
+
+    // Keep slider limits in sync with research unlocks
+    setInterval(()=>{
+      const slider = document.getElementById('time-scale');
+      const max = G.time.unlockedMaxIndex; if(parseInt(slider.max,10)!==max){ slider.max = max; slider.value = Math.min(G.time.scaleIndex, max); }
+    }, 1000);
+
+    // Discovery check ticker handled in tick()
+    setInterval(()=>{ if(G.options.autosave) save(); }, 60_000);
+
+    setInterval(tick, TICK_MS);
+
+    // Initial log
+    log('Boot sequence complete. Begin operations.');
+
+  })();
+  </script>
+</body>
+</html>
