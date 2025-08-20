@@ -227,8 +227,9 @@
 
     motd: () => [
       "Foost.Dev // Systems nominal.",
-      "Tip: add your own commands inside COMMANDS in index.html.",
-      "All activity monitored by a very judgmental toaster."
+      " ",
+      "All activity monitored by a very judgmental toaster.",
+	  " "
     ].join("\n"),
 	
 	scandisk: () => [
@@ -236,13 +237,25 @@
       "I dont know what you expected. This isn't a real terminal.",
       " "
     ].join("\n"),
+	
+	SCANDISK: () => [
+      " ",
+      "I dont know what you expected. This isn't a real terminal.",
+      " "
+    ].join("\n"),
 
     ls: () => [
       "C:\\",
-      "├─ /docs",
-      "├─ /src",
-      "├─ /deploy",
-      "└─ README.txt"
+	  "└─ /root",
+      "  └─ /docs",
+	  "    ├─ /hidden",
+	  "    └─ README.txt"
+      "  ├─ /src",
+      "  └─ /deploy",
+	  "    ├─ /hack.click",
+	  "    └─ /planet.launch",
+	  " "
+      
     ].join("\n"),
 
     clear: (args, ctx) => { ctx.clear(); return null; },
