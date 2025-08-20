@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Foost.Dev</title>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* --- position the terminal window over your PNG's screen --- */
+    --screen-left: 6.25%;     /* adjust these if needed */
+    --screen-top: 7.6%;
+    --screen-width: 87%;
+    --screen-height: 68%;
+    --screen-radius: 26px;
+
+    /* theme */
+    --bg:#000;
+    --fg:#e9e9e9;
+    --dim:#a0a0a0;
+    --accent:#c9c9c9;
+    --scanline:rgba(255,255,255,0.055);
+    --glow:rgba(255,255,255,0.06);
+    --magenta:rgba(240,40,140,0.08);
+    --cyan:rgba(40,180,240,0.09);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:#111; display:grid; place-items:center;
+    color:var(--fg);
+    font: 20px/1.15 "VT323", "IBM VGA 8x16", ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
+    letter-spacing:.01em; -webkit-font-smoothing:none; text-rendering:optimizeSpeed;
+  }
+
+  /* Frame that holds your CRT image */
+  .crt-frame{
+    position:relative;
+    width:min(1000px, 95vw);
+    /* keep the PNG’s native aspect; if it’s square this is fine */
+    aspect-ratio: 1 / 1; /* change if your png is not square */
+  }
+  .crt-bezel{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:contain; display:block; user-select:none; pointer-events:none;
+  }
+
+  /* The live screen area */
+  .screen{
+    position:absolute;
+    left:var(--screen-left);
+    top:var(--screen-top);
+    width:var(--screen-width);
+    height:var(--screen-height);
+    border-radius:var(--screen-radius);
+    overflow:hidden;
+    background:#020202; /* “off” black */
+    box-shadow: inset 0 0 60px rgba(255,255,255,0.05), inset 0 0 180px rgba(255,255,255,0.04);
+  }
+
+  /* Scanlines + magnet tint + glassy vignette */
+  .screen::before{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(to bottom,
+        var(--scanline) 0px,
+        var(--scanline) 1px,
+        rgba(0,0,0,0) 3px,
+        rgba(0,0,0,0) 4px);
+    mix-blend-mode:screen; pointer-events:none;
+    animation: flicker 3.2s infinite steps(60,end);
+  }
+  .screen::after{
+    content:"";
+    position:absolute; inset:-6%;
+    background:
+      radial-gradient(120% 70% at 50% 0%, rgba(0,0,0,0.35), transparent 40%),
+      radial-gradient(130% 90% at 50% 100%, rgba(0,0,0,0.5), transparent 45%),
+      radial-gradient(100% 100% at 15% 30%, var(--magenta) 0%, transparent 55%),
+      radial-gradient(90% 85% at 80% 60%, var(--cyan) 0%, transparent 60%);
+    pointer-events:none;
+    filter: blur(0.2px);
+  }
+  @keyframes flicker{
+    0%, 100% { opacity: .85 }
+    8%       { opacity: .90 }
+    10%      { opacity: .75 }
+    11%      { opacity: .92 }
+    50%      { opacity: .86 }
+    51%      { opacity: .80 }
+    70%      { opacity: .88 }
+  }
+
+  /* Terminal layout inside the screen */
+  .view{
+    position:absolute; inset:12px 14px 54px 14px; /* leave room for input row */
+    overflow:auto; padding-right:6px;
+  }
+  .view::-webkit-scrollbar{ width:8px }
+  .view::-webkit-scrollbar-thumb{ background:#1b1b1b; border-radius:10px }
+  .view::-webkit-scrollbar-track{ background:#0a0a0a }
+
+  .line{ white-space:pre-wrap; word-break:break-word; margin:1px 0 }
+  .dim{ color:var(--dim) }
+  .accent{ color:var(--accent) }
+
+  .input-row{
+    position:absolute; left:14px; right:14px; bottom:14px;
+    display:flex; align-items:baseline; gap:8px; padding-top:8px;
+    border-top:1px solid rgba(255,255,255,0.06);
+    background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.25));
+  }
+  .path{ color:var(--fg) }
+  .prompt{ color:var(--accent) }
+  #cli{
+    flex:1; background:transparent; color:var(--fg); border:none; outline:none;
+    font:inherit; caret-color:var(--fg);
+  }
+  .blink{ display:inline-block; width:8px; height:1.1em; margin-left:2px; background:var(--fg); animation:blink 1.05s steps(1,end) infinite; }
+  @keyframes blink{ 0%,49%{opacity:1} 50%,100%{opacity:0} }
+
+  ::selection{ background: rgba(200,200,200,0.25); color: var(--fg); }
+
+  @media (max-width:700px){
+    .view{ inset:10px 10px 50px 10px }
+    :root{ --screen-radius: 18px; }
+  }
+</style>
+</head>
+<body>
+  <div class="crt-frame" id="crt">
+    <img class="crt-bezel" src="crt.png" alt="CRT monitor" />
+    <div class="screen" id="screen">
+      <div class="view" id="view" role="log" aria-live="polite" aria-label="Terminal output"></div>
+      <div class="input-row">
+        <span class="path" id="path">C:/WINDOWS/Foost.Dev</span><span class="prompt">></span>
+        <input id="cli" type="text" inputmode="text" spellcheck="false" autocomplete="off" autocapitalize="none" />
+        <span class="blink" aria-hidden="true"></span>
+      </div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  /* ==========================
+     CONFIG
+     ========================== */
+
+  // Prompt path (your request):
+  const PROMPT_PATH = "C:\\WINDOWS\\Foost.Dev";
+
+  // Where to go when user types `enter` and hits Return:
+  const TARGET_URL = "https://www.reddit.com";
+
+  /* Add new console commands here.
+     - STRING → printed as-is.
+     - FUNCTION(args, ctx) → return string/array, or use ctx.print()/ctx.clear().
+  */
+  const COMMANDS = {
+    help: [
+      "Available commands:",
+      " ",
+	  "  chkdsk          Checks a disk and displays a status report.",
+	  "  hacker          Deploys selected game. hack.click",
+	  "  planetlaunch    Deploys selected game. planet.launch",
+	  "  list            List available games.",
+      "  help            Show this help.",
+      "  about           What is this?",
+      "  motd            Message of the day.",
+      "  ls              Pretend file listing.",
+      "  clear           Clear the screen."
+    ].join("\n"),
+	chkdsk: [
+      "Volume Serial Number is Foost.DEV",
+	  " ",
+      "31,840,000,000,000 bytes total disk space",
+      "           124,072 bytes in 9 hidden files",
+      "            32,768 bytes in 4 directories",
+      "         7,405,568 bytes in user files",
+      "   793,420,690,221 bytes in rule 34 content",
+      "31,046,571,747,371 bytes available on disk",
+	  " ",
+      "Instead of using CHKDSK, try using SCANDISK. SCANDISK can reliably detect",
+      "and fix a much wider range of disk problems.",
+	  " "
+    ].join("\n"),
+	hacker: [
+      "Launching hack.click",
+	  " ",
+    ].join("\n"),
+	list: [
+      "hack.click         Hacking idle game.",
+	  " ",
+	  "planet.launch      Idle spaceport manager.",
+	  " "
+    ].join("\n"),
+
+    about: "Games here made by Foostus for the enjoyment of friends",
+
+    motd: () => [
+      "Foost.Dev // Systems nominal.",
+      "Tip: add your own commands inside COMMANDS in index.html.",
+      "All activity monitored by a very judgmental toaster."
+    ].join("\n"),
+	
+	scandisk: () => [
+      " ",
+      "I dont know what you expected. This isn't a real terminal.",
+      " "
+    ].join("\n"),
+
+    ls: () => [
+      "C:\\",
+      "├─ /docs",
+      "├─ /src",
+      "├─ /deploy",
+      "└─ README.txt"
+    ].join("\n"),
+
+    clear: (args, ctx) => { ctx.clear(); return null; },
+  };
+  const ROUTES = {
+	  enter: {
+		url: TARGET_URL,                         
+		script: ["Loading next page..."]
+	  },
+	  hacker: {
+		url: "https://www.reddit.com",
+		script: ["Loading hack.click...", "Still loading...", "Someday maybe..."],
+		delay: 500, step: 1500, finalWait: 1000
+	  },
+	  planetlaunch: {
+		url: "https://www.reddit.com",
+		script: ["Loading planet.launch...", "Still loading...", "Someday maybe..."],
+		delay: 500, step: 1500, finalWait: 1000
+	  }
+};
+
+  /* ==========================
+     TERMINAL IMPLEMENTATION
+     ========================== */
+  const view = document.getElementById("view");
+  const cli  = document.getElementById("cli");
+  const pathEl = document.getElementById("path");
+  const screen = document.getElementById("screen");
+  pathEl.textContent = PROMPT_PATH;
+
+  const state = { history: [], idx: -1 };
+  
+  let _timers = [];
+  function later(ms, fn){ const id = setTimeout(fn, ms); _timers.push(id); return id; }
+  function flushTimers(){ _timers.forEach(clearTimeout); _timers = []; }
+
+  function playScript(lines, opts = {}){
+    const delay = opts.delay ?? 500;
+    const step  = opts.step  ?? 1500;
+    (lines || ["Loading..."]).forEach((line, i) => later(delay + i*step, () => print(line)));
+    return delay + (lines?.length ?? 1)*step;
+  }
+
+
+  function scrollToBottom(){ view.scrollTop = view.scrollHeight + 9999; }
+  function print(text=""){
+    const line = document.createElement("div");
+    line.className = "line";
+    line.textContent = text;
+    view.appendChild(line);
+    scrollToBottom();
+  }
+  function printBlock(text){
+    (Array.isArray(text) ? text : String(text)).split("\n").forEach(ln => print(ln));
+  }
+  function echoCommand(cmd){ print(`${PROMPT_PATH}> ${cmd}`); }
+  function clear(){ view.innerHTML = ""; }
+  function setFocus(){
+    cli.focus();
+    const val = cli.value; cli.value = ""; cli.value = val; // move caret to end
+  }
+
+  function handleCommand(raw){
+	const input = raw.trim();
+	echoCommand(raw);
+	if (!input) return;
+
+    const key = input.toLowerCase();
+    if (ROUTES[key]){
+      flushTimers(); // cancel any previous pending prints
+      const r = ROUTES[key];
+      const t = playScript(r.script, r);
+      later((r.finalWait ?? 1000) + t, () => { window.location.href = r.url; });
+      return;
+  }
+
+    const [cmd, ...rest] = input.split(/\s+/);
+    const args = rest;
+    const entry = COMMANDS[cmd];
+
+    if (entry === undefined){
+      print(`Command not found: ${cmd}. Type "help".`);
+      return;
+    }
+
+    if (typeof entry === "function"){
+      const out = entry(args, { print: printBlock, clear });
+      if (out !== null && out !== undefined) printBlock(out);
+    } else {
+      printBlock(entry);
+    }
+  }
+
+  // Input + history controls
+  cli.addEventListener("keydown", (e) => {
+    if (e.key === "Enter"){
+      e.preventDefault();
+      const raw = cli.value;
+      if (raw.trim()){
+        state.history.push(raw);
+        state.idx = state.history.length;
+      }
+      handleCommand(raw);
+      cli.value = "";
+      return;
+    }
+    if (e.key === "ArrowUp"){
+      e.preventDefault();
+      if (!state.history.length) return;
+      state.idx = Math.max(0, state.idx - 1);
+      cli.value = state.history[state.idx] || "";
+      setFocus();
+      return;
+    }
+    if (e.key === "ArrowDown"){
+      e.preventDefault();
+      if (!state.history.length) return;
+      state.idx = Math.min(state.history.length, state.idx + 1);
+      cli.value = (state.idx >= state.history.length) ? "" : (state.history[state.idx] || "");
+      setFocus();
+      return;
+    }
+  });
+
+  // Click anywhere on the screen to focus the console
+  screen.addEventListener("click", setFocus);
+
+  // Boot banner
+  function boot(){
+    print("Welcome to Foost.Dev");
+    print('Type "help" for a list of commands.');
+    print("");
+    print("");
+    print("");
+    print("");
+    print("");
+    setFocus();
+  }
+  window.addEventListener("DOMContentLoaded", boot);
+})();
+</script>
+</body>
+</html>

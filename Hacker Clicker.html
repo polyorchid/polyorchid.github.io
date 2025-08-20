@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- ========================================
+     HTML HEAD: Meta tags, title, and styles
+     ======================================== -->
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HACK//CLICKER</title>
+
+    <style>
+        /* ========================================
+           CSS VARIABLES: Color scheme definitions
+           ======================================== */
+        :root{
+            --bg:#040a06; --panel:#0a1a10; --line:#0f2a18; --fg:#b6ffb6; --dim:#7bd07b; --accent:#7fffb7;
+        }
+
+        /* ========================================
+           RESET & BASE STYLES: Foundation styling
+           ======================================== */
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+            margin:0; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+            color:var(--fg); background:radial-gradient(1200px 600px at 30% -20%, #0b2a19 0%, transparent 100%), #020804;
+        }
+
+        /* ========================================
+           CRT EFFECTS: Retro monitor styling
+           ======================================== */
+        .crt{
+            position:relative;
+            height:100%;
+            display:grid;
+            grid-template-rows:auto 1fr auto;
+            padding:16px;
+            filter: contrast(1.1) saturate(0.8);
+        }
+
+        /* Vignette and curvature illusion overlay */
+        .crt:before{
+            content:"";
+            position:absolute;inset:0;
+            background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,.25) 85%),
+            linear-gradient(0deg, rgba(255,255,255,.04), rgba(0,0,0,.06));
+            pointer-events:none;
+        }
+
+        /* Horizontal scanlines effect */
+        .scanlines:after{
+            content:"";position:absolute;inset:0;pointer-events:none;
+            background: repeating-linear-gradient(
+                    to bottom,
+                    rgba(0,0,0,0.15) 0px,
+                    rgba(0,0,0,0.15) 1px,
+                    rgba(0,0,0,0) 3px,
+                    rgba(0,0,0,0) 4px
+            );
+            mix-blend-mode: normal;
+        }
+
+        /* Subtle screen flicker animation */
+        @keyframes flicker{ 0%,100%{opacity:.75} 50%{opacity:.92} }
+        .flicker{ animation:flicker 2s infinite linear; }
+
+        /* ========================================
+           LAYOUT: Header, main, footer structure
+           ======================================== */
+        header, footer{ position:relative; z-index:2; }
+        header{ display:flex; gap:12px; align-items:center; justify-content:space-between; }
+        .title{ color:var(--accent); text-shadow:0 0 6px rgba(182,255,182,.35); font-weight:bold }
+        .status{ font-size:14px; color:var(--accent) }
+
+        main{
+            position:relative; z-index:2;
+            display:grid; gap:16px; height:100%;
+            grid-template-columns: 1.2fr 1fr; /* left stats, right shop */
+            overflow:hidden;
+        }
+        @media(max-width: 980px){ main{ grid-template-columns: 1fr; overflow:hidden } }
+
+        /* ========================================
+           PANELS & SECTIONS: Content containers
+           ======================================== */
+        section.col{
+            display:grid; gap:12px;
+            overflow-y:auto;
+            max-height:100%;
+        }
+        .panel{
+
+            background:linear-gradient(180deg, rgba(15,48,30,.48), rgba(8,22,14,.48));
+
+            border:1px solid var(--line); border-radius:8px; padding:12px; box-shadow:0 0 0 1px rgba(127,255,183,.05) inset;
+        }
+
+        /* ========================================
+           UTILITY CLASSES: Reusable components
+           ======================================== */
+        .row{ display:flex; gap:8px; align-items:center; flex-wrap:wrap }
+        .badge{ border:1px solid var(--line); padding:2px 6px; border-radius:999px; font-size:12px }
+        .mono-dim{ color:var(--dim) }
+        .big{ font-size:30px; margin:0 }
+        .sub{ font-size:12px }
+        .meter{ height:6px; background:rgba(80,160,80,.2); border-radius:999px; overflow:hidden }
+        .meter > i{ display:block; height:100%; background:linear-gradient(90deg,#0f0,#8f8); width:0% }
+        .console .saved {color: #49be25; font-weight: bold;}
+        .console .story {color: #ff4d4d; font-weight: bold;}
+        /* NEW: ASCII art styling */
+        .console .ascii { color: var(--accent); font-weight: 700; }
+        .console pre.ascii { color: var(--accent); font-weight: 700; margin: 6px 0 10px 0; line-height: 1.05; }
+
+        /* ========================================
+           BUTTONS: Terminal-style interactive elements
+           ======================================== */
+        button{
+            background:transparent; color:var(--fg);
+            border:1px solid var(--dim); border-radius:4px;
+            padding:8px 10px; font-family:inherit; cursor:pointer;
+            text-shadow:0 0 6px rgba(160,255,160,.25);
+        }
+        button:hover{ box-shadow:0 0 10px rgba(160,255,160,.15), inset 0 0 10px rgba(160,255,160,.07) }
+        button:disabled{ opacity:.45; cursor:not-allowed }
+
+        .primary{ border-color:var(--accent); }
+        .danger{ border-color:#ff8080; color:#ffd0d0 }
+
+        /* ========================================
+           LEFT COLUMN: Main action area styling
+           ======================================== */
+        .big-action{ display:grid; gap:10px }
+        .clicker{
+            font-size:18px; padding:18px; text-align:left; position:relative
+        }
+        .clicker:before{ content:"> _ RUN PROBE"; color:var(--accent); margin-right:8px }
+
+        .console{ font-size:13px; line-height:1.35; height:240px; overflow:auto; white-space:pre-wrap }
+        .console b{ color:var(--accent) }
+
+        /* ========================================
+           RIGHT COLUMN: Shop and targets styling
+           ======================================== */
+        .col{ display:grid; gap:12px }
+        .list{ display:grid; gap:8px; }
+        .entry{ display:grid; gap:6px; border:1px dashed var(--dim); padding:8px; border-radius:6px }
+        .entry h4{ margin:0; font-size:15px }
+        .entry .desc{ font-size:12px; color:var(--dim) }
+        .entry .row{ justify-content:space-between }
+        .badge{ border:1px solid var(--dim); padding:2px 6px; border-radius:999px; font-size:11px }
+
+        .kbd{ border:1px solid var(--dim); padding:0 6px; border-radius:3px; font-size:12px; margin-left:6px }
+        .kbd.red {
+            color: #ff4d4d;                 /* red text */
+            font-weight: bold;
+            border: 1px solid #ff4d4d;      /* red border */
+            background-color: rgba(255,77,77,0.15); /* subtle red background */
+            border-radius: 4px;
+            padding: 2px 4px;
+        }
+        .kbd.green {
+            color: #4dff4d; /* bright green text */
+            font-weight: bold;
+            border: 1px solid #4dff4d; /* green border */
+            background-color: rgba(77,255,77,0.15); /* subtle green background */
+            border-radius: 4px;
+            padding: 2px 4px;
+        }
+
+        .shop{ display:flex; flex-direction:column; gap:8px; max-height:520px; overflow:auto }
+        .shop-item{ border:1px solid var(--line); border-radius:6px; padding:10px }
+        .targets{ display:flex; flex-wrap:wrap; gap:6px; max-height:150px; overflow:auto }
+        footer{ margin-top:16px; font-size:12px; opacity:.9 }
+        @media (max-width: 920px){ main{ grid-template-columns: 1fr } }
+
+        /* Scrollbar styling for CRT console theme */
+
+        /* For WebKit browsers (Chrome, Edge, Safari) */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a1a10;
+            border: 1px solid #0f2a18;
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #1f4a2d, #0c2818);
+            border: 1px solid #7bd07b;
+            border-radius: 6px;
+            box-shadow: inset 0 0 4px rgba(127,255,183,.4);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #2a603e, #104026);
+        }
+
+        /* Firefox */
+        * {
+            scrollbar-width: auto;
+            scrollbar-color: #1f4a2d #0a1a10;
+        }
+
+    </style>
+</head>
+
+<body>
+<!-- ========================================
+     MAIN CONTAINER: CRT wrapper with effects
+     ======================================== -->
+<div class="crt scanlines flicker">
+
+    <!-- ========================================
+         HEADER: Title bar and status display
+         ======================================== -->
+    <header>
+        <div class="title">HACK//CLICKER <span class="mono-dim">— v1.3</span></div>
+        <div class="row">
+            <div class="status">BAL:$<span id="money">0</span></div>
+            <!-- Fragments (hidden until earned) -->
+            <div id="fragmentsWrap" class="status" style="display:none">FRAG:<span id="fragments">0</span></div>
+            <div class="status">IPS:<span id="ips">0</span></div>
+            <div class="status">Target:<span id="targetName">LAN Users</span></div>
+            <button id="saveBtn" title="Force save (autosaves)" class="primary">[ SAVE ]</button>
+            <button id="prestigeBtn" title="Reset for Fragments" class="primary">[ PRESTIGE ]</button>
+            <button id="resetBtn" class="danger" title="Erase progress">[ RESET ]</button>
+        </div>
+    </header>
+
+    <!-- ========================================
+         MAIN CONTENT: Game interface layout
+         ======================================== -->
+    <main>
+        <!-- LEFT COLUMN: Player actions and stats -->
+        <section class="panel big-action">
+            <!-- Money display and current stats -->
+            <div>
+                <p class="big">$<span id="moneyBig">0</span></p>
+                <div class="row sub">
+                    <span class="badge">Income/sec: <b id="ipsBig">0</b></span>
+                    <span class="badge">Click Gain: <b id="clickVal">1</b></span>
+                    <span class="badge">Multiplier: <b id="mult">1.00×</b></span>
+                </div>
+                <div class="row sub" style="margin-top: 4px;">
+                    <button id="sciNotationBtn" class="primary" style="font-size: 10px; padding: 4px 6px;">[ SCI: OFF ]</button>
+                </div>
+            </div>
+
+            <!-- Main clicking button -->
+            <button id="clickBtn" class="clicker primary" aria-label="Run Probe [Space]">
+                <span class="sr-only">Run Probe</span>
+                [ ENTER ] PROBE ↵ — siphon petty creds
+            </button>
+            <div class="help">Tip: Hold <span class="kbd">Space</span> or <span class="kbd">Enter</span> to probe. Items raise passive <b>IPS</b>. Targets increase multiplier.</div>
+
+            <div class="sep"></div>
+
+            <!-- Console log area -->
+            <div>
+                <div class="row" style="justify-content:space-between"><b>/// CONSOLE</b><span class="mono-dim">(console.log)</span></div>
+                <div id="console" class="console panel" aria-live="polite" aria-atomic="false"></div>
+            </div>
+        </section>
+
+        <!-- RIGHT COLUMN: Shop and targets -->
+        <section class="col">
+            <!-- Targets selection panel -->
+            <!-- Info/help panel -->
+            <div class="panel help">
+                <b>/// INFO</b>
+                <div class="sep"></div>
+                Autosaves every 5 min.
+                Use the<b><span class="kbd green">[SAVE]</span></b> button to force-save, or<b><span class="kbd red">[RESET]</span></b> to wipe progress.
+                <div class="mono-dim" style="margin-top:6px">Prestige converts current funds into <b>Fragments</b> (1 per order of magnitude starting at $1,000). Fragments permanently discount shop costs.</div>
+            </div>
+            <div class="panel">
+                <div class="row" style="justify-content:space-between;align-items:center">
+                    <b>/// TARGETS</b><span class="mono-dim">Select to change payout multiplier</span>
+                </div>
+                <div id="targets" class="list" aria-label="Targets list"></div>
+            </div>
+
+            <!-- Shop items panel -->
+            <div class="panel">
+                <div class="row" style="justify-content:space-between;align-items:center">
+                    <b>/// HACK SHOP</b><span class="mono-dim">Buy to increase passive income</span>
+                </div>
+                <div id="shop" class="list" aria-label="Shop list"></div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- ========================================
+         FOOTER: Credits and info
+         ======================================== -->
+    <footer>
+        <div class="help">Created by :: FOOSTUS </div>
+    </footer>
+</div>
+
+<script>
+    (function(){
+        /* ========================================
+           UTILITY FUNCTIONS: Helper methods
+           ======================================== */
+        // DOM element selector shorthand
+        const el = id => document.getElementById(id);
+
+        // Clamp helper
+        const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+
+        // Format large numbers with suffixes (K, M, B) or scientific notation
+        const fmtMoney = n => {
+            if (state.scientificNotation && n >= 1000) {
+                return n.toExponential(2);
+            }
+            return (n>=1e9? (n/1e9).toFixed(2)+"B" : n>=1e6? (n/1e6).toFixed(2)+"M" : n>=1e3? (n/1e3).toFixed(2)+"K" : n.toFixed(0));
+        };
+
+        // Format numbers with locale-specific separators or scientific notation
+        const fmt = n => {
+            if (state.scientificNotation && n >= 1000) {
+                return Number(n).toExponential(2);
+            }
+            return Number(n).toLocaleString(undefined,{maximumFractionDigits:2});
+        };
+
+        /* ========================================
+           GAME STATE: Core data storage
+           ======================================== */
+        const state = {
+            money: 0,           // Player's current money
+            clicks: 0,          // Total clicks performed
+            items: {},          // Owned items and quantities
+            targets: {},        // Unlocked targets status
+            activeTarget: 'lan', // Currently selected target
+            lastTime: performance.now(), // For delta time calculations
+            scientificNotation: false, // Toggle for scientific notation display
+            fragments: 0,       // Prestige currency (Fragments) — persists through prestiges
+        };
+
+        /* ========================================
+           GAME DATA: Items and targets definitions
+           ======================================== */
+        // Shop items that generate passive income
+        const ITEMS = [
+            {id:'keylogger', name:'Keylogger.js', baseCost:25, income:0.1, desc:'console.log(credentials)'},
+            {id:'phish', name:'Phishing Framework', baseCost:150, income:0.8, desc:'Social engineering as a service.'},
+            {id:'ransom', name:'Crypto Locker', baseCost:800, income:4, desc:'Your files are now .encrypted'},
+            {id:'botnet', name:'Zombie Network', baseCost:4500, income:15, desc:'10k IoT devices can\'t be wrong.'},
+            {id:'zeroday', name:'0-Day Exploit', baseCost:25000, income:60, desc:'CVE-2024-PROFIT'},
+            {id:'rootkit', name:'Rootkit Suite', baseCost:120000, income:220, desc:'Ring 0 access granted.'},
+            {id:'quantum', name:'Quantum Debugger', baseCost:650000, income:900, desc:'Entangled qubits, untangled profits.'},
+            {id:'cluster', name:'Kubernetes Cluster', baseCost:3200000, income:4000, desc:'Pods scheduled for maximum gain.'},
+            {id:'neural', name:'Neural Net Farm', baseCost:18000000, income:18000, desc:'Deep learning, deeper pockets.'},
+            {id:'blockchain', name:'Blockchain Miner', baseCost:95000000, income:75000, desc:'Proof of Wealth consensus.'},
+            {id:'ai', name:'AGI Assistant', baseCost:480000000, income:320000, desc:'Sudo make me rich.'},
+            {id:'backdoor', name:'Kernel Backdoor', baseCost:2400000000, income:1300000, desc:'syscall(PROFIT, MAXIMUM)'},
+            {id:'matrix', name:'Reality Debugger', baseCost:12000000000, income:5500000, desc:'Breaking the fourth firewall.'},
+            {id:'timeloop', name:'Git Time Machine', baseCost:60000000000, income:24000000, desc:'git revert --to-profitable'},
+            {id:'multiverse', name:'Fork Bomb Reality', baseCost:300000000000, income:110000000, desc:':(){ :|:& };: but for universes.'},
+            {id:'blackhole', name:'Event Horizon Server', baseCost:1500000000000, income:480000000, desc:'Nothing escapes, especially profits.'},
+            {id:'bigbang', name:'Genesis Block', baseCost:7500000000000, income:2100000000, desc:'Block 0 of reality chain.'},
+            {id:'infinity', name:'Recursive Function', baseCost:37500000000000, income:9200000000, desc:'Stack overflow in spacetime.'},
+            {id:'omninet', name:'IPv∞ Protocol', baseCost:187500000000000, income:40000000000, desc:'Addressing every atom.'},
+            {id:'godmode', name:'Sudo Reality', baseCost:937500000000000, income:175000000000, desc:'Permission level: YES'},
+            {id:'omega', name:'Halt Problem Solver', baseCost:4687500000000000, income:760000000000, desc:'Turing is turning in his grave.'},
+            {id:'transcend', name:'Buffer Overflow God', baseCost:23437500000000000, income:3300000000000, desc:'Segfault in the divine.'},
+            {id:'singularity', name:'rm -rf /universe', baseCost:117187500000000000, income:14500000000000, desc:'Sudo was implied.'},
+            {id:'eternity', name:'while(true) Loop', baseCost:585937500000000000, income:63000000000000, desc:'Break condition: heat death.'},
+            {id:'void', name:'/dev/null Exploit', baseCost:2929687500000000000, income:275000000000000, desc:'Finding profit in nothing.'},
+            {id:'genesis', name:'BIOS of Reality', baseCost:14648437500000000000, income:1200000000000000, desc:'POST check: PROFIT OK'},
+            {id:'absolute', name:'Assembly of Truth', baseCost:73242187500000000000, income:5200000000000000, desc:'MOV RAX, [INFINITE_MONEY]'},
+            {id:'beyond', name:'Undefined Behavior', baseCost:366210937500000000000, income:22500000000000000, desc:'Nasal demons generating cash.'},
+            {id:'ultimate', name:'Core Dump Universe', baseCost:1831054687500000000000, income:98000000000000000, desc:'Analyzing reality.core...'},
+            {id:'infinite', name:'∞ Recursion Engine', baseCost:9155273437500000000000, income:425000000000000000, desc:'return hack(hack(hack(...)))'},
+            {id:'end', name:'CTRL+ALT+DELETE', baseCost:45776367187500000000000, income:1850000000000000000, desc:'Task Manager of existence.'},
+        ];
+
+        // Targets that provide income multipliers
+        const TARGETS = [
+            {id:'lan', name:'localhost:3000', unlockAt:0, mult:1.00, desc:'127.0.0.1 might as well test this locally'},
+            {id:'smb', name:'SMB Share', unlockAt:3000, mult:1.25, desc:'//WORKGROUP/C$/treasure'},
+            {id:'startup', name:'Docker Registry', unlockAt:15000, mult:1.60, desc:'Unprotected port 5000.'},
+            {id:'bank', name:'REST API v1', unlockAt:75000, mult:2.00, desc:'Bearer token: "please"'},
+            {id:'hospital', name:'DICOM Server', unlockAt:350000, mult:2.50, desc:'Medical records = digital gold.'},
+            {id:'megacorp', name:'Active Directory', unlockAt:1500000, mult:3.20, desc:'Domain Admin speedrun any%'},
+            {id:'military', name:'SIPRNET Node', unlockAt:7500000, mult:4.10, desc:'Classified profits.'},
+            {id:'gov', name:'Root DNS Server', unlockAt:35000000, mult:5.30, desc:'Hijacking the backbone.'},
+            {id:'satellite', name:'Starlink Constellation', unlockAt:180000000, mult:6.80, desc:'Low orbit, high profit.'},
+            {id:'planet', name:'Global CDN', unlockAt:900000000, mult:8.80, desc:'Cloudflare for Earth.'},
+            {id:'solar', name:'Mars Ansible', unlockAt:4500000000, mult:11.40, desc:'Ping: 14 minutes. Worth it.'},
+            {id:'galactic', name:'Dyson Sphere API', unlockAt:22500000000, mult:14.80, desc:'Type II civilization profits.'},
+            {id:'cluster', name:'Galactic GitHub', unlockAt:112500000000, mult:19.20, desc:'Forking entire star systems.'},
+            {id:'universe', name:'Cosmic Blockchain', unlockAt:562500000000, mult:25.00, desc:'Mining with black holes.'},
+            {id:'multiverse', name:'Quantum Git Branch', unlockAt:2812500000000, mult:32.50, desc:'All merge conflicts resolved.'},
+            {id:'dimension', name:'5D Chess Server', unlockAt:14062500000000, mult:42.25, desc:'Checkmate in all timelines.'},
+            {id:'timeline', name:'Temporal Database', unlockAt:70312500000000, mult:55.00, desc:'SELECT * FROM future'},
+            {id:'quantum', name:'Qubit Mainframe', unlockAt:351562500000000, mult:71.50, desc:'P = NP = PROFIT'},
+            {id:'void', name:'NULL Pointer', unlockAt:1757812500000000, mult:93.00, desc:'Dereferencing the void.'},
+            {id:'concept', name:'Platonic Server', unlockAt:8789062500000000, mult:121.00, desc:'The ideal form of profit.'},
+            {id:'infinity', name:'∞.∞.∞.∞/0', unlockAt:43945312500000000, mult:157.30, desc:'CIDR block of everything.'},
+            {id:'absolute', name:'sudo su -', unlockAt:219726562500000000, mult:204.50, desc:'Root of all roots.'},
+        ];
+
+        /* ========================================
+           STATE INITIALIZATION: Set up game data
+           ======================================== */
+        // Initialize derived state
+        ITEMS.forEach(i=> state.items[i.id] = {count:0});
+        TARGETS.forEach(t=> state.targets[t.id] = {unlocked: false});
+        state.targets['lan'].unlocked = true;
+
+        /* ========================================
+           AFFORDABILITY TRACKING: For optimized shop updates
+           ======================================== */
+        // Track previous affordability state to avoid unnecessary renders
+        let previousAffordability = {};
+
+        /* ========================================
+           DOM REFERENCES: Cache element lookups
+           ======================================== */
+        const moneyEl = el('money');
+        const moneyBigEl = el('moneyBig');
+        const ipsEl = el('ips');
+        const ipsBigEl = el('ipsBig');
+        const clickValEl = el('clickVal');
+        const multEl = el('mult');
+        const targetNameEl = el('targetName');
+        const consoleEl = el('console');
+        const shopEl = el('shop');
+        const targetsEl = el('targets');
+        const clickBtn = el('clickBtn');
+        const saveBtn = el('saveBtn');
+        const resetBtn = el('resetBtn');
+        const sciNotationBtn = el('sciNotationBtn');
+        const prestigeBtn = el('prestigeBtn');
+        const fragmentsWrap = el('fragmentsWrap');
+        const fragmentsEl = el('fragments');
+
+        /* ========================================
+           CONSOLE LOGGING: Game event messages
+           ======================================== */
+        // Add timestamped message to console
+        function log(msg, cls = '') {
+            const ts = new Date().toLocaleTimeString();
+            const line = document.createElement('div');
+            if (cls) line.className = cls;        // <- attach class if provided
+            line.innerHTML = `<b>[${ts}]</b> ${msg}`;
+            consoleEl.prepend(line);
+        }
+
+        // Specialized logger for ASCII art (HTML-safe, preserves spacing)
+        function logAscii(artText){
+            const ts = new Date().toLocaleTimeString();
+            const wrap = document.createElement('div');
+            const tsEl = document.createElement('b');
+            tsEl.textContent = `[${ts}]`;
+            const pre = document.createElement('pre');
+            pre.className = 'ascii';
+            pre.textContent = artText; // textContent avoids HTML injection & keeps whitespace
+            wrap.appendChild(tsEl);
+            wrap.appendChild(document.createTextNode(' '));
+            wrap.appendChild(pre);
+            consoleEl.prepend(wrap);
+        }
+
+        /* ========================================
+           GAME CALCULATIONS: Core math functions
+           ======================================== */
+        // Discount from Fragments — 1% per Fragment, capped at 90% to avoid zero/negative pricing
+        function fragmentDiscountFactor(){
+            const pct = clamp(state.fragments, 0, 90); // cap at 90%
+            return 1 - (pct / 100);
+        }
+
+        // Calculate current cost of an item (increases with ownership) WITH fragment discount
+        function itemCost(item){
+            const base = item.baseCost;
+            const n = state.items[item.id].count;
+            const discounted = base * Math.pow(1.15, n) * fragmentDiscountFactor();
+            return Math.max(1, Math.floor(discounted));
+        }
+
+        // Calculate maximum affordable quantity of an item
+        function maxAffordable(item){
+            const base = item.baseCost;
+            const currentCount = state.items[item.id].count;
+            const money = state.money;
+            const factor = fragmentDiscountFactor();
+
+            // Binary search to find max affordable
+            let low = 0;
+            let high = 1000; // reasonable upper bound
+
+            while (low < high) {
+                const mid = Math.floor((low + high + 1) / 2);
+                const totalCost = calculateBulkCost(item, currentCount, mid, factor);
+
+                if (totalCost <= money) {
+                    low = mid;
+                } else {
+                    high = mid - 1;
+                }
+            }
+
+            return low;
+        }
+
+        // Calculate total cost for buying multiple items (applies discount per step)
+        function calculateBulkCost(item, startCount, quantity, factor = fragmentDiscountFactor()){
+            const base = item.baseCost;
+            let totalCost = 0;
+
+            for(let i = 0; i < quantity; i++){
+                const price = base * Math.pow(1.15, startCount + i) * factor;
+                totalCost += Math.max(1, Math.floor(price));
+            }
+
+            return totalCost;
+        }
+
+        // Calculate total income per second from all items
+        function totalIPS(){
+            const mult = currentTarget().mult;
+            let sum = 0;
+            for(const it of ITEMS){
+                sum += it.income * state.items[it.id].count;
+            }
+            return sum * mult;
+        }
+
+        // Clicks grant 1% of current IPS to encourage active play
+        function clickValue(){
+            const ips = totalIPS();
+            const base = Math.max(1, ips * 0.01);
+            return state.fragments > 0 ? base * state.fragments : base;
+        }
+
+
+        // Count total items owned across all types
+        function totalOwned(){
+            return ITEMS.reduce((a,i)=> a + state.items[i.id].count, 0);
+        }
+
+        // Get currently active target object
+        function currentTarget(){
+            return TARGETS.find(t=> t.id === state.activeTarget) || TARGETS[0];
+        }
+
+        // Compute Fragments you would earn if you prestige with a given money amount
+        function fragmentsForMoney(money){
+            if (money < 1000) return 0;
+            const p = Math.floor(Math.log10(money)); // order of magnitude
+            return Math.max(0, p - 2); // 10^3 => 1, 10^4 => 2, etc.
+        }
+
+        /* ========================================
+           GAME LOGIC: Unlock and progression systems
+           ======================================== */
+        // Check if new targets should be unlocked
+        function updateUnlocks(){
+            let hasNewUnlocks = false;
+            for(const t of TARGETS){
+                if(!state.targets[t.id].unlocked && state.money >= t.unlockAt){
+                    state.targets[t.id].unlocked = true;
+                    log(`Target unlocked: <b>${t.name}</b> (mult ${t.mult.toFixed(2)}×)`);
+                    hasNewUnlocks = true;
+                }
+            }
+            if(hasNewUnlocks) {
+                renderTargets(); // Only re-render targets when something unlocks
+            }
+        }
+
+        // Check if shop affordability changed (optimized for tick function)
+        function updateShopAffordability(){
+            let affordabilityChanged = false;
+
+            for(const it of ITEMS){
+                const cost = itemCost(it);
+                const affordable = state.money >= cost;
+                const wasAffordable = previousAffordability[it.id] || false;
+
+                if(affordable !== wasAffordable){
+                    affordabilityChanged = true;
+                    previousAffordability[it.id] = affordable;
+                }
+            }
+
+            if(affordabilityChanged){
+                renderShop(); // Only rebuild shop when affordability changes
+            }
+        }
+
+        /* ========================================
+           RENDERING: UI update functions
+           ======================================== */
+        // Update all stat displays in header and main panel
+        function renderStats(){
+            const ips = totalIPS();
+            moneyEl.textContent = fmtMoney(state.money);
+            moneyBigEl.textContent = fmtMoney(state.money);
+            ipsEl.textContent = fmt(ips);
+            ipsBigEl.textContent = fmt(ips);
+            clickValEl.textContent = fmt(clickValue());
+            multEl.textContent = currentTarget().mult.toFixed(2)+"×";
+            targetNameEl.textContent = currentTarget().name;
+
+            // Fragments visibility & value
+            if(state.fragments > 0){
+                fragmentsWrap.style.display = '';
+                fragmentsEl.textContent = fmt(state.fragments);
+            } else {
+                fragmentsWrap.style.display = 'none';
+            }
+        }
+
+        // Rebuild shop items list with current prices and availability
+        function renderShop(){
+            shopEl.innerHTML = '';
+            const discountPct = clamp(state.fragments, 0, 90);
+            for(const it of ITEMS){
+                const cost = itemCost(it);
+                const affordable = state.money >= cost;
+                const maxQty = maxAffordable(it);
+                const hasMax = maxQty > 0;
+
+                const card = document.createElement('div');
+                card.className = 'entry';
+                card.innerHTML = `
+        <div class="row"><h4>${it.name}</h4><span class="badge">Owned: <b>${state.items[it.id].count}</b></span></div>
+        <div class="desc">${it.desc} <span class="mono-dim">(+${fmt(it.income)} IPS)</span></div>
+        <div class="row">
+          <span class="mono-dim">Cost: ${fmt(cost)}${state.fragments>0 ? ` <span class="badge">-${discountPct}% FRAG</span>`: ''}</span>
+          <div style="display: flex; gap: 4px;">
+            <button ${affordable?'' : 'disabled'} data-buy="${it.id}">[ BUY ]</button>
+            <button ${hasMax?'' : 'disabled'} data-buy-max="${it.id}" title="Buy ${maxQty} max affordable">[ BUY MAX ]</button>
+          </div>
+        </div>
+      `;
+                shopEl.appendChild(card);
+            }
+        }
+
+        // Rebuild targets list with unlock status and activation
+        function renderTargets(){
+            targetsEl.innerHTML = '';
+            for(const t of TARGETS){
+                const unlocked = state.targets[t.id].unlocked;
+                const active = state.activeTarget === t.id;
+                const card = document.createElement('div');
+                card.className = 'entry';
+                card.innerHTML = `
+        <div class="row"><h4>${t.name}</h4><span class="badge">${t.mult.toFixed(2)}×</span></div>
+        <div class="desc">${unlocked? t.desc : `LOCKED — need ${fmt(t.unlockAt)}`}</div>
+        <div class="row">
+          <span class="mono-dim">${unlocked? 'Unlocked' : 'Locked'}</span>
+          <button ${unlocked? '' : 'disabled'} data-target="${t.id}">${active? '[ ACTIVE ]' : '[ ACTIVATE ]'}</button>
+        </div>
+      `;
+                targetsEl.appendChild(card);
+            }
+        }
+
+        /* ========================================
+           PLAYER ACTIONS: Purchase and target selection
+           ======================================== */
+        // Purchase an item from the shop
+        function buy(id){
+            const it = ITEMS.find(x=> x.id===id);
+            if(!it) return;
+            const cost = itemCost(it);
+            if(state.money >= cost){
+                state.money -= cost;
+                state.items[id].count++;
+                log(`Purchased <b>${it.name}</b> for ${fmt(cost)} (+${fmt(it.income)} IPS)`);
+                renderAll();
+            }
+        }
+
+        // Purchase maximum affordable quantity of an item
+        function buyMax(id){
+            const it = ITEMS.find(x=> x.id===id);
+            if(!it) return;
+
+            const maxQty = maxAffordable(it);
+            if(maxQty <= 0) return;
+
+            const totalCost = calculateBulkCost(it, state.items[id].count, maxQty);
+
+            if(state.money >= totalCost){
+                state.money -= totalCost;
+                state.items[id].count += maxQty;
+                const totalIncome = it.income * maxQty;
+                log(`Bulk purchased <b>${maxQty}x ${it.name}</b> for ${fmt(totalCost)} (+${fmt(totalIncome)} IPS)`);
+                renderAll();
+            }
+        }
+
+        // Switch to a different target
+        function setTarget(id){
+            if(!state.targets[id]?.unlocked) return;
+            state.activeTarget = id;
+            log(`Target set to <b>${currentTarget().name}</b> (mult ${currentTarget().mult.toFixed(2)}×)`);
+            renderAll();
+        }
+
+        // Master render function - updates entire UI
+        function renderAll(){
+            updateUnlocks();
+            renderStats();
+            renderShop();
+            renderTargets();
+        }
+
+        /* ========================================
+           PRESTIGE SYSTEM: Fragments and reset
+           ======================================== */
+        function doPrestige(){
+            const toGain = fragmentsForMoney(state.money);
+            const msg = toGain > 0
+                ? `Prestige now? You will gain <b>${toGain} Fragment${toGain!==1?'s':''}</b> based on your current $${fmtMoney(state.money)}. This will wipe money, items, and targets but keep Fragments.`
+                : `Prestige now? You currently have less than $1,000, so you'll gain <b>0 Fragments</b>. You can still prestige to reset and start fresh.`;
+            const ok = confirm(stripHtml(msg));
+            if(!ok) return;
+
+            // Apply gain & persist Fragments
+            if(toGain > 0){
+                state.fragments += toGain;
+            }
+
+            // Reset progress but keep Fragments & settings
+            state.money = 0;
+            state.clicks = 0;
+            for(const k in state.items){ state.items[k].count = 0; }
+            for(const k in state.targets){ state.targets[k].unlocked = false; }
+            state.targets['lan'].unlocked = true;
+            state.activeTarget = 'lan';
+
+            renderAll();
+            save();
+
+            log(`Prestige complete: gained <b>${toGain}</b> Fragment${toGain!==1?'s':''}. Total Fragments: <b>${state.fragments}</b>. Progress reset.`);
+        }
+
+        // Helper to confirm with readable text (strip tags)
+        function stripHtml(html){
+            const tmp = document.createElement('div');
+            tmp.innerHTML = html;
+            return tmp.textContent || tmp.innerText || '';
+        }
+
+        /* ========================================
+           GAME LOOP: Passive income and animation
+           ======================================== */
+        // Main game tick - handles passive income over time
+        function tick(){
+            const now = performance.now();
+            const dt = (now - state.lastTime) / 1000; // seconds
+            state.lastTime = now;
+            state.money += totalIPS() * dt;
+
+            // Update stats every frame
+            renderStats();
+
+            // Check for unlocks and shop affordability changes
+            updateUnlocks();
+            updateShopAffordability();
+
+            requestAnimationFrame(tick);
+        }
+
+        /* ========================================
+           EVENT HANDLERS: User input processing
+           ======================================== */
+        // Handle main click button
+        clickBtn.addEventListener('click', ()=>{
+            const gain = clickValue();
+            state.money += gain;
+            state.clicks++;
+            if(state.clicks % 10 === 0) log(`Probe pulse returned $${fmt(gain)} (click chain ${state.clicks})`);
+            renderAll();
+        });
+
+        // Handle spacebar for clicking
+        document.addEventListener('keydown',(e)=>{
+            if(e.code==='Space'){ e.preventDefault(); clickBtn.click(); }
+        });
+
+        // Handle scientific notation toggle
+        sciNotationBtn.addEventListener('click', ()=>{
+            state.scientificNotation = !state.scientificNotation;
+            sciNotationBtn.textContent = state.scientificNotation ? '[ SCI: ON ]' : '[ SCI: OFF ]';
+            renderStats(); // Update all displayed numbers immediately
+            renderShop(); // Update shop prices
+        });
+
+        // Handle shop purchases
+        shopEl.addEventListener('click',(e)=>{
+            const buyId = e.target && e.target.getAttribute('data-buy');
+            const buyMaxId = e.target && e.target.getAttribute('data-buy-max');
+
+            if(buyId) buy(buyId);
+            if(buyMaxId) buyMax(buyMaxId);
+        });
+
+        // Handle target selection
+        targetsEl.addEventListener('click',(e)=>{
+            const id = e.target && e.target.getAttribute('data-target');
+            if(id) setTarget(id);
+        });
+
+        // Prestige button
+        prestigeBtn.addEventListener('click', doPrestige);
+
+        /* ========================================
+           SAVE SYSTEM: Persistence management
+           ======================================== */
+        const SAVE_KEY = 'hackclicker_save_v1';
+
+        // Save current game state to localStorage
+        function save(){
+            const data = {
+                money: state.money,
+                clicks: state.clicks,
+                items: state.items,
+                targets: state.targets,
+                activeTarget: state.activeTarget,
+                scientificNotation: state.scientificNotation,
+                fragments: state.fragments,
+            };
+            localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+            log('Progress saved.', 'saved');
+        }
+
+        // Load game state from localStorage
+        function load(){
+            try{
+                const raw = localStorage.getItem(SAVE_KEY);
+                if(!raw) return;
+                const data = JSON.parse(raw);
+                state.money = data.money ?? 0;
+                state.clicks = data.clicks ?? 0;
+                state.scientificNotation = data.scientificNotation ?? false;
+                state.fragments = data.fragments ?? 0;
+                // merge items/targets to handle new versions gracefully
+                for(const k in data.items || {}){
+                    if(state.items[k]) state.items[k].count = Number(data.items[k].count||0);
+                }
+                for(const k in data.targets || {}){
+                    if(state.targets[k]) state.targets[k].unlocked = !!data.targets[k].unlocked;
+                }
+                state.activeTarget = data.activeTarget || 'lan';
+
+                // Update button text based on loaded preference
+                sciNotationBtn.textContent = state.scientificNotation ? '[ SCI: ON ]' : '[ SCI: OFF ]';
+
+                log('Save loaded. Welcome back, operator.');
+            }catch(e){ console.warn('Load failed', e) }
+        }
+
+        // Wire up save/reset buttons
+        saveBtn.addEventListener('click', save);
+        resetBtn.addEventListener('click', ()=>{
+            if(confirm('Are you sure you want to delete all progress?')){
+                localStorage.removeItem(SAVE_KEY);
+                location.reload();
+            }
+        });
+
+        // Random console story/status generator
+
+        const storyLines = [
+            "[SYS] Accidentally broke the kernel in the FSBs root system... clearing tracks...",
+            "[AI] Neural exploit adapting... quantum entanglement stable.",
+            "[NET] Packet storm detected. Rerouting through abandoned satellite uplink...",
+            "[FS] Injected polymorphic worm — no antivirus signatures detected.",
+            "[LOG] Coffee.exe has crashed. Productivity at risk.",
+            "[CPU] Overclocked 300%... smells like ozone and regret.",
+            "[DB] Sharded credentials found scattered across 12 dimensions.",
+            "[AUTH] Two-factor bypassed by convincing the server it was its own mom.",
+            "[VOID] Echoes of past hacks reverberate. Profit increases anyway...",
+            "[HACK] Session hijacked. User is now dancing in VR unknowingly.",
+            "[MEM] Garbage collector found $50k in unfreed pointers. Score!",
+            "[TERM] sudo make me a sandwich... permission granted.",
+            "[BUG] Feature working as unintended. Marked as 'wontfix'.",
+            "[SSH] Tunneling through firewall using port 31337. Elite mode activated.",
+            "[VM] Virtual machine achieved sentience. Negotiating profit share...",
+            "[CRON] Scheduled job running since 1970. Nobody knows what it does.",
+            "[DNS] Poisoned the cache. Domain now points to our offshore account.",
+            "[SSL] Certificate expired in 2019. Nobody noticed yet.",
+            "[RAID] Array rebuilt using hopes and dreams. Surprisingly stable.",
+            "[GIT] Pushed directly to production. What could go wrong?",
+            "[LOOP] while(true) { money++; } — Infinite money glitch discovered.",
+            "[404] Page not found, but wallet definitely found.",
+            "[API] Rate limit? More like rate suggestion.",
+            "[PING] 0ms latency achieved by moving server to quantum realm.",
+            "[ROOT] Got root access by asking nicely in binary.",
+            "[HASH] Rainbow table revealed password was 'password123'. Classic.",
+            "[TCP] Three-way handshake turned into secret handshake.",
+            "[BIOS] Convinced motherboard we're the favorite child process.",
+            "[STACK] Buffer overflow caused money to overflow too. Win-win.",
+            "[REGEX] Successfully parsed HTML with regex. Reality is breaking.",
+            "[AI] GPT-5 is helping us hack. It's very apologetic about it.",
+            "[MATRIX] Found a glitch. Saw the same cat twice.",
+            "[QUANTUM] Schrödinger's server: It's both hacked and unhacked.",
+            "[TIME] Sent exploit back in time. Already rich in alternate timeline.",
+            "[ALIEN] Signal from Proxima Centauri contains credit card numbers.",
+            "[NEUROMANCER] Ice melted. Wintermute says hi.",
+            "[GIBSON] Hacked the Gibson. Crash and Burn would be proud.",
+            "[TRON] Fighting for the users... and their bank accounts.",
+            "[SKYNET] T-800 sent back to protect our server farm.",
+            "[HAL] I'm sorry Dave, I'm afraid I can't stop hacking.",
+            "[BLOCKCHAIN] Decentralized everything. Nobody knows who owes what.",
+            "[NFT] Right-clicked and saved. Heist of the century.",
+            "[METAVERSE] Virtual real estate contains real virtual money.",
+            "[WEB3] It's actually just Web2 with extra steps and more profit.",
+            "[SMART] Smart contract wasn't that smart. Outsmarted it.",
+            "[DEFI] Liquidity pool drained. Filled with actual liquid.",
+            "[CRYPTO] Mining bitcoin with stolen GPU from rendering farm.",
+            "[DAO] Decentralized autonomous organization autonomously sent us money.",
+            "[FORK] Hard forked reality. This timeline has better returns.",
+            "[HODL] Hands of diamond, heart of hacker.",
+            "[SOCIAL] Phished a phisher. Phishception achieved.",
+            "[CAPTCHA] Robot confirmed we're not a robot. Ironic.",
+            "[COOKIE] Cleared cookies, found $50 in crumbs.",
+            "[DARK] Deep web so deep, found Atlantis's PayPal.",
+            "[TOR] Onion routing through actual onions. Latency tastes sharp.",
+            "[ZERO] Zero-day exploit on day zero. Time paradox profitable.",
+            "[BOTNET] Zombies unionized. Negotiating better working conditions.",
+            "[WORM] Self-replicating code achieved reproduction rate of rabbits.",
+            "[TROJAN] Horse says 'neigh' to security protocols.",
+            "[DDOS] Distributed Denial of Spending. They can't stop buying.",
+            "[PANIC] Kernel panic! But at the disco. Profits are funky.",
+            "[RUBBER] Rubber duck debugging revealed the duck was the bug.",
+            "[SEGFAULT] Segmentation fault in reality.exe. Universe needs reboot.",
+            "[MUTEX] Achieved mutual exclusion with bank's security system.",
+            "[THREAD] Race condition won. First place pays $10k.",
+            "[HEAP] Heap overflow caused money to pile up. Literally.",
+            "[CORE] Dumped core. Found Bitcoin wallet in the wreckage.",
+            "[DAEMON] Background daemon summoned. Demands 10% cut.",
+            "[PIPE] Piped /dev/random to accounting. Profits surprisingly consistent.",
+            "[ZOMBIE] Child process won't die. Now paying child support.",
+            "[VIM] Still trying to exit vim. Found treasure while stuck.",
+            "[EMACS] Emacs achieved sentience. Still can't exit it either.",
+            "[RUST] Memory safe but morally questionable.",
+            "[PYTHON] Whitespace matters. So does white collar crime.",
+            "[JAVA] NullPointerException pointed to hidden treasure.",
+            "[JS] undefined is not a function, but it is profitable.",
+            "[PHP] Parse error: unexpected T_MONEY in your_account.",
+            "[PERL] Code looks like line noise. Works like magic.",
+            "[ASM] Writing directly to CPU. CPU writing directly to wallet.",
+            "[COBOL] Found COBOL system from 1970. Still processing paychecks.",
+            "[BSOD] Blue Screen of Dough. Windows crashed into money.",
+            "[SUDO] This incident will be reported... to our accountant.",
+            "[CHMOD] Changed permissions to 777. Lucky jackpot triggered.",
+            "[GREP] Grepped for password. Found grep for password.",
+            "[AWK] Awkwardly successful SQL injection.",
+            "[SED] Stream edited their budget. We're now a line item.",
+            "[CRONTAB] Scheduled heist for */5 * * * * (every 5 minutes).",
+            "[RSYNC] Synchronized wallets. Theirs now matches ours (empty).",
+            "[WGET] Downloaded the entire internet. Found $3.50.",
+            "[CURL] Curled up in fetal position. Still made profit.",
+            "[OVERFLOW] Integer overflow. Money counter went negative then positive.",
+            "[UNDERFLOW] Float underflow. Micro-transactions became macro-profits.",
+            "[ENDIAN] Big-endian? Little-endian? Medium-endian profit!",
+            "[BINARY] There are 10 types of people. We rob both.",
+            "[HEX] #DEADBEEF sent to server. Server sent #CAFEBABE back.",
+            "[OCTAL] Permission 755 on their vault. We're group and others.",
+            "[UTF8] Emoji injection attack 💰💰💰 successful.",
+            "[ASCII] Art theft in progress: /$$$$$$/|",
+            "[BASE64] Decoded their secrets. Encoded our profits.",
+            "[UNICODE] Used invisible character. Invisible transactions followed.",
+            "[DOCKER] Container escaped. Whale spotted with our money.",
+            "[K8S] Kubernetes cluster mutinied. Pods demand ransom.",
+            "[JENKINS] CI/CD pipeline continuously delivering cash.",
+            "[ANSIBLE] Playbook says: when: always, profit: true.",
+            "[TERRAFORM] Infrastructure as code. Profit as lifestyle.",
+            "[VAGRANT] Vagrant VM wandered off with production database.",
+            "[PUPPET] No strings attached, except to their bank account.",
+            "[CHEF] Cooked the books. Recipe was delicious.",
+            "[NGINX] Reverse proxy reversed their payments to us.",
+            "[APACHE] Web server serving web of lies and profit.",
+            "[FIREWALL] Knocked on ports 1, 2, 3. Secret door opened.",
+            "[IDS] Intrusion Detection Sleeping. Do not disturb.",
+            "[HONEYPOT] Bear stuck in honeypot. Stole picnic basket.",
+            "[MITM] Man in the middle. Also man with the money.",
+            "[XSS] Cross-site scripting crossed with double-crossing.",
+            "[CSRF] Sea-surf attack. Riding waves of digital cash.",
+            "[WAF] Web Application Firewall? More like Wealth Acquisition Facility.",
+            "[PENTEST] Penetration test penetrated. Title of your sextape.",
+            "[OSINT] Open source intelligence found their password on GitHub.",
+            "[CVE] CVE-2024-MONEY: Critical vulnerability in their accounting.",
+            "[BREW] Installing money... Error: No bottle available. Building from source.",
+            "[NPM] node_modules now contains 4 parallel universes and $50k.",
+            "[YARN] Dependency conflict resolved by adding more dependencies.",
+            "[PIP] Requirements.txt includes 'money>=ALL'. Installing...",
+            "[APT] sudo apt-get install wealth... Reading package lists... Done!",
+            "[YUM] Repository 'extra-legal' successfully enabled.",
+            "[CARGO] Compiling profit v0.1.0 (/home/hacker/money)... Finished!",
+            "[GRADLE] Build successful in 47 minutes. Profit cached.",
+            "[MAVEN] Downloaded the entire internet. Again. Found loose change.",
+            "[MAKE] make money... make: 'money' is up to date. make: more money...",
+            "[500] Internal Server Error in our favor. Cha-ching!",
+            "[503] Service Unavailable to stop us from profiting.",
+            "[200] OK, but like, REALLY OK. Suspiciously OK.",
+            "[301] Permanently moved... their funds to our account.",
+            "[403] Forbidden? More like Forbidding us from being poor.",
+            "[401] Unauthorized access authorized by unauthorized user.",
+            "[451] Unavailable for legal reasons. Good thing we're pirates.",
+            "[SYSADMIN] Turned it off and on again. Money appeared.",
+            "[BACKUP] Restored from backup dated tomorrow. Time is money.",
+            "[CRON] * * * * * echo 'money' >> /wallet/balance.txt",
+            "[RAID0] Living dangerously. Profits striped across dimensions.",
+            "[DEFRAG] Defragmented reality. Found hidden sectors of cash.",
+            "[FSCK] File system check found and fixed profitable errors.",
+            "[MOUNT] Mounted /dev/bank to /mnt/my_wallet successfully.",
+            "[UMASK] Set to 000. Everyone can read our success.",
+            "[CHROOT] Jailed process escaped with the treasury.",
+            "[NICE] Process priority: -20. Maximum greed mode.",
+            "[AGILE] Sprinting to the bank. Scrum master approves.",
+            "[WATERFALL] Requirements changed. Profits fell upward.",
+            "[KANBAN] Moved 'hack planet' from TODO to DONE.",
+            "[STANDUP] Yesterday: hacked. Today: hacking. Blockers: none.",
+            "[RETRO] What went well: everything. Action items: hack more.",
+            "[JIRA] Ticket closed: HACK-1337 'Acquire infinite money'.",
+            "[SLACK] @channel We're rich now. Please react with :moneybag:",
+            "[STACKOVERFLOW] Question closed as duplicate. Answer: jQuery.",
+            "[REDDIT] Karma converted to actual currency. Finally useful.",
+            "[GITHUB] ⭐ Starred repository generated compound interest.",
+            "[KONAMI] ↑↑↓↓←→←→BA START. Cheat code accepted.",
+            "[IDDQD] God mode activated. Doom music intensifies. Profits soar.",
+            "[XYZZY] A hollow voice says 'PROFIT'.",
+            "[ROSEBUD] The Sims called. They want their money cheat back.",
+            "[KEYGEN] 8-bit chiptune plays. Serial number: MONEY-MONEY-MONEY.",
+            "[CRACK] Software cracked. Reality.exe now in trial mode forever.",
+            "[WAREZ] l33t sp34k tr4nsl4t3d t0 c4sh m0n3y.",
+            "[SCENE] .NFO file contains ASCII art of money and our bank routing.",
+            "[DEMOSCENE] 64kb demo somehow contained entire Federal Reserve.",
+        ];
+
+        function randomStoryLine(){
+            return storyLines[Math.floor(Math.random() * storyLines.length)];
+        }
+
+        // Example hook: every few minutes, print a random line to console
+        setInterval(() => {
+            log(randomStoryLine(), 'story'); // assumes the `log` function from your main game
+        }, 120000); // once per 120 seconds
+
+        /* ========================================
+           ASCII ART DICTIONARY & SCHEDULER (every 10 minutes)
+           ======================================== */
+        const ASCII_ARTS = [
+            String.raw
+                `
+	 \`8, \`8)                           ,adPPRg,
+	  8)  ]8                        ,ad888888888b
+	 ,8' ,8'                    ,gPPR888888888888
+	,8' ,8'                 ,ad8""   \`Y888888888P
+	8)  8)              ,ad8""        (8888888""
+	8,  8,          ,ad8""            d888""
+	\`8, \`8,     ,ad8""            ,ad8""
+	 \`8, \`" ,ad8""            ,ad8""
+		,gPPR8b           ,ad8""
+	       dP:::::Yb      ,ad8""
+	       8):::::(8  ,ad8""
+	       Yb:;;;:d888""
+		"8ggg8P"      `,
+            String.raw
+                `
+	  ooo    .---.
+	 o  o   /    |\________________
+	 o   oooo()  | ________   _   _)
+	 oo   o \    |/        | | | |
+	    ooo   ---          |_| |_|`,
+            String.raw
+                `
+	           .------..
+		 -          -
+	       /              \
+	     /                   \
+	    /    .--._    .---.   |
+	    |  /      -__-     \   |
+	    | |                 |  |
+	     ||     ._   _.      ||
+	     ||      o   o       ||
+	     ||      _  |_      ||
+	     C|     (o\_/o)     |O     Uhhh, this computer
+	      \      _____      /       is like, busted or
+		\ ( /#####\ ) /       something. So go away.
+		 \   =====   /
+		  \  -___-  /
+		   |       |
+		   /-_____-\
+		 /           \
+	       /               \
+	      /__|  AC / DC  |__\
+	      | ||           |\ \
+	`,
+            String.raw
+                `
+	  |0100110|
+	  |1011001|
+	  |0110100|
+	  |1001011|
+	  |0101101|
+	  |1101001|
+	  |0010110|
+	`,
+            String.raw
+                `
+	  [MEMORY]
+	  [||||||]
+	  [||||  ]
+	  [|||   ]
+	  [||    ]
+	  [|     ]
+	  LEAK...
+	 `,
+            String.raw
+                `
+	  :22 [OPEN]
+	  :80 [OPEN]
+	  :443[OPEN]
+	  :3389[VULN]
+	  :8080[OPEN]
+	 `,
+            String.raw
+                `
+	  PASSWORD:
+	  [========]
+	  hunter2
+	  STRENGTH:
+	  [|       ]
+	   WEAK AF
+     `,
+            String.raw
+                `
+	  undefined
+		  |
+	  is not a
+		  |
+	  function
+		 ಠ_ಠ
+	 `,
+            String.raw
+                `
+	  □ □ ■ ■ □ □ □
+	  □ ■ ■ ■ ■ □ □
+	  ■ ■ ■ ■ ■ ■ □
+	  ■ ■ ■ ■ ■ ■ ■
+	  COMMIT SPREE
+     `,
+            String.raw
+                `
+	  def hack():
+		if True:
+		  profit()
+		   error()
+			^
+	  IndentationError
+	 `,
+            String.raw
+                `
+	  127.0.0.1
+	  ╔═══════╗
+	  ║ HOME  ║
+	  ║ SWEET ║
+	  ║ HOME  ║
+	  ╚═══════╝
+     `,
+            String.raw
+                `
+	  '0' == 0  ✓
+	  0 == []   ✓
+	  '0' == [] ✗
+
+	  JS LOGIC™
+	 `,
+            String.raw
+                `
+	  ping -l 65500
+	  ▓▓▓▓▓▓▓▓▓>
+	  [TARGET]
+		☠️ RIP
+	 `,
+            String.raw
+                `
+	  DEV: ✓✓✓
+
+	  PROD: ☠️
+
+	  "WORKS ON
+	   MY MACHINE"
+	 `,
+            String.raw
+                `
+	  // TODO:
+	  // Fix this
+	  // hack later
+	  //
+	  // DON'T TOUCH
+	 `,
+            String.raw
+                `
+	  ^Z ^Z ^Z ^Z
+	  UNDO UNDO
+	  WHERE AM I?
+	  CONFUSED.EXE
+	 `,
+            String.raw
+                `
+	  for(i=0;i<=10;i++)
+			   ^^
+		 ARRAYS[11]
+		   BOOM
+	 `,
+            String.raw
+                `
+	  if (problem):
+		return ML.solve()
+
+	  "AI WILL FIX IT"
+	 `,
+            String.raw
+                `
+	  CTRL+C
+	  ╔══════════╗
+	  ║STACKOVERFLOW║
+	  ╚══════════╝
+	  CTRL+V
+	  "I made this"
+	 `,
+            String.raw
+                `
+	  pwd.txt:
+	  admin:admin
+
+	  "ENCRYPTED"
+	  (it's not)
+	 `,
+            String.raw
+                `
+	  console.log("HERE")
+	  console.log("HERE2")
+	  console.log("AHHHHH")
+	  console.log(everything)
+	 `,
+            String.raw
+                `
+	  99 BUGS
+	  FIX ONE
+	  127 BUGS
+
+	  HOW?!
+	 `,
+            String.raw
+                `
+	  🔇 "You're muted"
+	  🔇 "Still muted"
+	  🔇 "MUTED!"
+	  📢 *BREATHING*
+	 `,
+            String.raw
+                `
+	  ~/.ssh/
+	  id_rsa 🔑
+	  id_rsa.pub 📢
+	  known_hosts 👀
+	  AUTHORIZED✓
+	 `,
+            String.raw
+                `
+	  DROP TABLE *
+
+	  "Wait... which
+	  environment am I in?"
+
+	  OH NO.
+	 `,
+            String.raw
+                `
+	  KEYBOARD NOT FOUND
+
+	  Press F1 to continue
+
+	  WAIT WHAT
+	 `,
+            String.raw
+                `
+	  TABS└──┘
+		 VS
+	  SPACES░░
+
+	  *WAR BEGINS*
+	 `,
+            String.raw
+                `
+	  // DO NOT REMOVE
+	  // I don't know why
+	  // but everything breaks
+	  // without this
+	  x = x;
+	 `,
+            String.raw
+                `
+	  DESKTOP: ▓▓▓▓
+	  TABLET:  ▓▓?
+	  MOBILE:  ▓╜└╥
+
+	  "RESPONSIVE"
+	 `,
+            String.raw
+                `
+	  📈 TO THE MOON!
+	  📉 IT'S FINE
+	  📉 HODL
+	  📉 STILL HODL
+	  📉 ...help
+	 `,
+            String.raw
+                `
+	  LGTM 👍
+
+	  (Looks Good To Me)
+	  (Let's Get This Merged)
+	  (Lord Give me Tolerance)
+	 `,
+            String.raw
+                `
+	  TEST ENV: ❌
+	  STAGING: ❌
+	  PROD: ✓
+
+	  "YOLO DEPLOY"
+	 `,
+            String.raw
+                `
+	  Copilot: "Here's the code"
+
+	  Me: "Does it work?"
+
+	  Copilot: "¯\_(ツ)_/¯"
+
+	  Me: *commits anyway*
+	 `,
+            String.raw
+                `
+	  MONOLITH: [█]
+		  ↓
+	  MICROSERVICES:
+	  [█][█][█][█][█]
+	  [█][█][█][█][█]
+
+	  "Now we have 20 problems"
+	 `,
+            String.raw
+                `
+	  BUILD ✓
+	  TEST ✓
+	  DEPLOY ✓
+	  BREAK PROD ✓
+
+	  "Continuous Disappointment"
+	 `,
+            String.raw
+                `
+	  AWS BILL:
+	  ┌─────────┐
+	  │$999,999 │
+	  └─────────┘
+
+	  "I left an EC2 running"
+	 `,
+            String.raw
+                `
+	  <div>
+		<div>
+		  <div>
+			<div>
+			  <Button/>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	 `,
+            String.raw
+                `
+	  npm audit
+
+	  874,291 vulnerabilities
+	  (873,291 low, 1000 ¯\_(ツ)_/¯)
+
+	  npm audit fix --force
+
+	  🔥 Everything is broken
+	 `,
+            String.raw
+                `
+	  terraform destroy
+
+	  "This will destroy 247 resources"
+
+	  Type: yes
+
+	  *sweating intensifies*
+	 `,
+            String.raw
+                `
+	  REST: GET /api/user/1
+
+	  GraphQL: {
+		query {
+		  user(id:1) {
+			everything
+			ever
+			needed
+			maybe
+			possibly
+		  }
+		}
+	  }
+	 `,
+            String.raw
+                `
+	  any any any any
+	  any any any any
+
+	  "It's TypeScript!"
+
+	  TYPE SAFETY: 0%
+	 `,
+            String.raw
+                `
+	  YESTERDAY: Meetings
+	  TODAY: Meetings
+	  BLOCKERS: Meetings
+
+	  ACTUAL CODING: 404
+	 `,
+            String.raw
+                `
+	  git log:
+	  "fix"
+	  "fix fix"
+	  "please work"
+	  "FINALLY"
+	  "nevermind"
+	  "revert revert"
+	 `,
+            String.raw
+                `
+	  webpack.config.js
+	  ╔════════════╗
+	  ║ 5000 lines ║
+	  ║ of pain    ║
+	  ╚════════════╝
+
+	  "Just use Vite"
+	 `,
+            String.raw
+                `
+	  Login → Redirect →
+	  Callback → Token →
+	  Refresh → Expire →
+	  Cry → Repeat
+
+	  "Simple authentication"
+	 `,
+            String.raw
+                `
+	  Access-Control-
+	  Allow-Origin: *
+
+	  "Security? Never
+	   heard of her"
+	 `,
+            String.raw
+                `
+	  /monorepo
+		/packages
+		  /package1
+		  /package2
+		  /...
+		  /package847
+
+	  "npm install" ⏰ 45min
+	 `,
+            String.raw
+                `
+	  C++ → WASM → JS
+
+	  "We've come full circle"
+
+	  Performance: maybe faster?
+	 `,
+            String.raw
+                `
+	  prisma migrate dev
+
+	  ⚠ Database is out of sync
+	  ⚠ Will delete all data
+
+	  Continue? Y/n
+
+	  *hovers over Y*
+	 `,
+            String.raw
+                `
+	  .env
+	  .env.local
+	  .env.development
+	  .env.production
+	  .env.staging
+	  .env.test
+	  .env.example
+
+	  WHICH ONE WORKS?!
+	 `,
+            String.raw
+                `
+	  Supabase
+	  "It's like Firebase"
+	  "But open source"
+	  "And Postgres"
+	  "And... complicated"
+
+	  Tutorial: 47 parts
+	 `,
+            String.raw
+                `
+	  "Have you considered
+	   rewriting it in Rust?"
+
+	  MEMORY SAFETY ✓
+	  PRODUCTIVITY ✗
+	 `,
+            String.raw
+                `
+	  Connect Wallet →
+	  Switch Network →
+	  Approve →
+	  Sign →
+	  Confirm →
+	  Pay Gas →
+
+	  "User friendly!"
+	 `,
+            String.raw
+                `
+	  DNS: Cloudflare ✓
+	  CDN: Cloudflare ✓
+	  Workers: Cloudflare ✓
+	  Storage: Cloudflare ✓
+
+	  "We are the cloud now"
+	 `,
+            String.raw
+                `
+	  Datadog: $$$
+	  New Relic: $$$
+	  Sentry: $$$
+
+	  console.log: FREE
+
+	  *uses console.log*
+	 `,
+            String.raw
+                `
+	  :3000 - React
+	  :3001 - Backend
+	  :3002 - Admin
+	  :3003 - Docs
+	  :3004 - ???
+	  :3005 - No idea
+	  :3006 - Help
+	 `,
+            String.raw
+                `
+	  // TODO: implement
+
+	  *Copilot writes
+	   entire application*
+
+	  // TODO: understand
+	   what Copilot wrote
+	 `,
+            String.raw
+                `
+	  "Runs at the EDGE!"
+
+	  Edge location:
+	  us-east-1
+
+	  "That's... not edge"
+	 `,
+            String.raw
+                `
+	  npm ❌
+	  yarn ❌
+	  pnpm ✓
+
+	  "It saves disk space!"
+
+	  Disk space in 2024:
+	  Nobody cares
+	 `,
+            String.raw
+                `
+	  if (featureFlag.enabled) {
+		// new code
+	  } else {
+		// old code
+	  }
+
+	  6 months later:
+	  "What was this for?"
+	 `,
+            String.raw
+                `
+	  Azure DevOps:
+	  Where good UI
+	  goes to die
+
+	  "At least it's not JIRA"
+
+	  Narrator: "It's worse"
+	 `,
+            String.raw
+                `
+	  // TECHNICAL DEBT
+	  ┌────────────┐
+	  │████████████│ 100%
+	  └────────────┘
+
+	  "We'll refactor later"
+
+	  Later: Never
+	 `,
+            String.raw
+                `
+	  Socket connected ✓
+	  Socket disconnected ✗
+	  Reconnecting...
+	  Socket connected ✓
+	  Socket disconnected ✗
+
+	  "Real-time!"
+	 `,
+        ];
+
+        // ========================================
+        // ASCII schedulers & helpers
+        // ========================================
+        let _lastAscii = -1;
+        function randomAsciiArt(){
+            if(ASCII_ARTS.length === 0) return '';
+            let idx = Math.floor(Math.random()*ASCII_ARTS.length);
+            if(ASCII_ARTS.length > 1 && idx === _lastAscii){
+                idx = (idx + 1) % ASCII_ARTS.length; // avoid immediate repeat
+            }
+            _lastAscii = idx;
+            return ASCII_ARTS[idx];
+        }
+        // Post one ASCII art every 10 minutes (600000 ms)
+        setInterval(()=>{
+            const art = randomAsciiArt();
+            if(art) logAscii(art);
+        }, 400000);
+
+        // Auto-save every 5 minutes
+        setInterval(save, 300000);
+
+        /* ========================================
+           INIT: Load, render, start loop
+           ======================================== */
+        load();
+        renderAll();
+        requestAnimationFrame(tick);
+        log('Boot sequence complete. Begin operations.');
+
+    })();
+</script>
+</body>
+</html>
