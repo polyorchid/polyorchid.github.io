@@ -1,1 +1,1 @@
-www.foostus.com
+echo "www.foostus.com" > CNAME
