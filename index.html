@@ -13,6 +13,12 @@
     --screen-width: 87%;
     --screen-height: 68%;
     --screen-radius: 26px;
+	
+	/* Tweak these to line up the invisible power area with your PNG */
+    --power-left: 89%;   /* % from the left edge of the whole PNG */
+    --power-top:  79.5%;   /* % from the top edge */
+    --power-width:  4.2%;
+    --power-height: 2%;
 
     /* theme */
     --bg:#000;
@@ -32,7 +38,26 @@
     font: 20px/1.15 "VT323", "IBM VGA 8x16", ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
     letter-spacing:.01em; -webkit-font-smoothing:none; text-rendering:optimizeSpeed;
   }
+  .power-hotspot{
+    position:absolute;
+    left:var(--power-left); top:var(--power-top);
+    width:var(--power-width); height:var(--power-height);
+    cursor:pointer;
+    z-index:5;
+  }
+  .power-hotspot.debug{ outline:2px dashed rgba(0,255,0,.5); background:rgba(0,255,0,.08); }
 
+  /* Power OFF state */
+  .screen.off{
+    background:#000; box-shadow:none;
+  }
+  
+  .screen.off .view,
+  .screen.off .input-row{ display:none; }
+
+  .screen.off::before,
+  .screen.off::after{ opacity:0 !important; animation:none !important; }
+  
   /* Frame that holds your CRT image */
   .crt-frame{
     position:relative;
@@ -131,6 +156,8 @@
 <body>
   <div class="crt-frame" id="crt">
     <img class="crt-bezel" src="crt.png" alt="CRT monitor" />
+	<div class="power-hotspot" id="powerBtn" aria-label="Power button"></div>
+	<audio id="powerSound" src="turnon.wav" preload="auto"></audio>
     <div class="screen" id="screen">
       <div class="view" id="view" role="log" aria-live="polite" aria-label="Terminal output"></div>
       <div class="input-row">
@@ -226,7 +253,7 @@
 		script: ["Loading next page..."]
 	  },
 	  hacker: {
-		url: "https://www.reddit.com",
+		url: "./Hacker Clicker.html",
 		script: ["Loading hack.click...", "Still loading...", "Someday maybe..."],
 		delay: 500, step: 1500, finalWait: 1000
 	  },
@@ -244,6 +271,9 @@
   const cli  = document.getElementById("cli");
   const pathEl = document.getElementById("path");
   const screen = document.getElementById("screen");
+  const powerBtn   = document.getElementById("powerBtn");
+  const powerSound = document.getElementById("powerSound");
+  let powerOn = true;
   pathEl.textContent = PROMPT_PATH;
 
   const state = { history: [], idx: -1 };
@@ -259,6 +289,27 @@
     return delay + (lines?.length ?? 1)*step;
   }
 
+  function setPower(on){
+    if (on === powerOn) return;
+    powerOn = on;
+
+  // Visual + behavior toggle
+    screen.classList.toggle("off", !on);
+
+    if (on){
+    // Turning ON: play sound (user gesture from click lets it play)
+      try { powerSound.currentTime = 0; powerSound.play(); } catch(e){}
+      clear();           // wipe old buffer
+      boot();            // reprint boot text
+      setFocus();
+    } else {
+    // Turning OFF: stop pending prints and blank screen
+      flushTimers?.();   // safe in case you kept the helper from earlier
+      clear();
+    }
+  }
+
+  powerBtn.addEventListener("click", () => setPower(!powerOn));
 
   function scrollToBottom(){ view.scrollTop = view.scrollHeight + 9999; }
   function print(text=""){
@@ -312,6 +363,7 @@
   // Input + history controls
   cli.addEventListener("keydown", (e) => {
     if (e.key === "Enter"){
+	  if (!powerOn) { e.preventDefault(); return; }
       e.preventDefault();
       const raw = cli.value;
       if (raw.trim()){
@@ -341,7 +393,7 @@
   });
 
   // Click anywhere on the screen to focus the console
-  screen.addEventListener("click", setFocus);
+  screen.addEventListener("click", () => { if (powerOn) setFocus(); });
 
   // Boot banner
   function boot(){
