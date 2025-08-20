@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Planetary Launch Initiative</title>
+<style>
+  :root{
+    --bg: #0e1320; --panel:#12192a; --soft:#1a2338; --line:#27324c; --text:#d4ddff;
+    --muted:#8ea2ce; --chip:#101728; --chipBorder:#2a3757;
+    --good:#7ef78b; --warn:#ffb85c; --bad:#ff6b6b;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0; background:radial-gradient(140% 100% at 50% 0%,#0d1220 0%,#0b1020 45%,#0a0f1d 100%);
+       color:var(--text); font:14px/1.35 ui-sans-serif,system-ui,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
+  header{display:flex; align-items:center; gap:.75rem; padding:.75rem 1rem; border-bottom:1px solid var(--line)}
+  .title{font-weight:800; letter-spacing:.4px}
+  .chip{display:inline-flex; align-items:center; gap:.4rem; padding:.3rem .55rem; border:1px solid var(--chipBorder);
+        background:var(--chip); border-radius:10px; color:#cfe3ff; font-weight:600}
+  .btn{background:#0f1730; border:1px solid var(--line); color:var(--text); padding:.5rem .75rem; border-radius:8px; cursor:pointer}
+  .btn:disabled{opacity:.5; cursor:not-allowed}
+  #layout{display:grid; grid-template-columns:320px minmax(520px,1fr) 360px; gap:12px; height:calc(100vh - 60px); padding:12px}
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:10px; overflow:hidden; display:flex; flex-direction:column}
+  .panel h3{margin:0; padding:.7rem .9rem; border-bottom:1px solid var(--line); color:#b7c7ee; letter-spacing:.4px}
+  .panel .body{padding:.75rem .9rem; gap:.5rem; display:flex; flex-direction:column; overflow:auto}
+  .row{display:flex; align-items:center; justify-content:space-between; gap:.75rem; padding:.45rem .55rem; border:1px dashed #243157; border-radius:8px; background:#0f1530}
+  .row .info{display:flex; flex-direction:column; gap:2px}
+  .muted{color:var(--muted)}
+  .small{font-size:12px}
+
+  /* Center pane (Earth mount) */
+  #centerPane{position:relative; display:flex; flex-direction:column}
+  #earthWrap{position:relative; flex:1; min-height:420px; border:1px solid var(--line); border-radius:10px; overflow:hidden; background:#060b19}
+  /* 3D canvases (mounted here) */
+  #glWrap{position:absolute; inset:0}
+  #fxCanvas{position:absolute; inset:0; pointer-events:none}
+
+  #statusbar{margin-top:8px; display:flex; align-items:center; justify-content:space-between}
+  .pill{display:inline-flex; align-items:center; gap:.4rem; padding:.2rem .5rem; background:#0e1430; border:1px solid var(--line); border-radius:999px; color:#cde3ff}
+
+  /* Marker label styles (from your CSS) */
+  #markerLabel{
+    --baseColor: rgb(255,250,250);
+    width:230px;height:48px;color:var(--baseColor);font-family:Monospace;font-size:14px;
+    background:rgba(0,0,0,.75); border:2px solid var(--baseColor); border-radius:5px;
+    margin-top:-25px; margin-left:120px; overflow:hidden; padding:0;
+  }
+  .hidden{display:none} .text{margin-left:4px}
+  #closeButton{position:absolute; right:0; top:0; font-family:Arial; font-size:14px; font-weight:700; text-align:center;
+    border:1px solid gray; border-radius:3px; background:transparent; color:white;}
+</style>
+</head>
+<body>
+  <header>
+    <div class="title">🚀 Planetary Launch Initiative</div>
+    <span class="chip">Fuel <b id="fuel">0</b></span>
+    <span class="chip">Credits <b id="credits">0</b></span>
+    <span class="chip">Rare Minerals <b id="minerals">0</b></span>
+    <span class="chip">Exotic Matter <b id="exotic">0</b></span>
+    <span class="chip">Dark Energy <b id="dark">0</b></span>
+    <span class="chip">Rocket Tier <b id="tier">I</b></span>
+    <div style="margin-left:auto; display:flex; gap:.5rem">
+      <button class="btn" id="saveBtn">Save</button>
+      <button class="btn" id="resetBtn">Reset</button>
+    </div>
+  </header>
+
+  <main id="layout">
+    <section class="panel left">
+      <h3>LAUNCH PADS BY CONTINENT</h3>
+      <div class="body" id="padsList"></div>
+      <h3>ROCKET EVOLUTION</h3>
+      <div class="body">
+        <div class="row">
+          <div class="info"><strong>Upgrade Rocket Tier</strong><span class="muted small">Increases mission success & payload</span></div>
+          <button class="btn" id="upgradeTierBtn">Upgrade (100₡)</button>
+        </div>
+      </div>
+      <h3>INFRASTRUCTURE</h3>
+      <div class="body">
+        <div class="row">
+          <div class="info"><strong>Fuel Refinery</strong><span class="muted small">+0.1 fuel/s per level</span></div>
+          <button class="btn" id="refineryBtn">Build (50₡)</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="centerPane">
+      <h3>EARTH VIEW</h3>
+      <div id="earthWrap">
+        <!-- WebGL + labels mount here -->
+        <div id="glWrap"></div>
+        <canvas id="fxCanvas"></canvas>
+        <!-- label (CSS2DRenderer) reused from your demo -->
+        <div id="markerLabel" class="hidden">
+          <button id="closeButton">X</button>
+          <div class="text" id="idNum"></div>
+          <div class="text" id="magnitude"></div>
+          <div class="text" id="coordinates"></div>
+        </div>
+      </div>
+      <div id="statusbar">
+        <span id="status" class="pill">Idle</span>
+        <span class="muted small">Tip: Launch LEO missions to unlock Moon and beyond.</span>
+      </div>
+    </section>
+
+    <section class="panel right">
+      <h3>MISSION CONTROL</h3>
+      <div class="body">
+        <div class="row">
+          <div class="info"><strong>Low Earth Orbit (LEO)</strong><span class="muted small">Cost: 50 fuel · Time: 10s · Reward: 25₡</span></div>
+          <button class="btn" id="launchLEO">Launch</button>
+        </div>
+        <div class="row" id="moonRow" style="display:none">
+          <div class="info"><strong>Moon</strong><span class="muted small">Cost: 200 fuel · Time: 30s · Reward: 120₡</span></div>
+          <button class="btn" id="launchMoon">Launch</button>
+        </div>
+        <div class="row" id="marsRow" style="display:none">
+          <div class="info"><strong>Mars</strong><span class="muted small">Cost: 800 fuel · Time: 60s · Reward: 1 Rare Mineral</span></div>
+          <button class="btn" id="launchMars">Launch</button>
+        </div>
+        <div class="row">
+          <div class="info"><strong>Auto-Refuel</strong><span class="muted small">Passive fuel from pads & infra</span></div>
+          <button class="btn" id="tickBtn">+1 Fuel (click)</button>
+        </div>
+      </div>
+      <h3>AUTOMATION</h3>
+      <div class="body"><span class="muted">Unlock pads to boost passive fuel and stack continental bonuses. The new Earth is a point-cloud globe with orbit controls and marker ripples.</span></div>
+    </section>
+  </main>
+
+<!-- === Globe (Three.js) – same approach as your chunk === -->
+<script type="module">
+  import * as THREE from "https://cdn.skypack.dev/three@0.136.0";
+  import { OrbitControls } from "https://cdn.skypack.dev/three@0.136.0/examples/jsm/controls/OrbitControls";
+  import { CSS2DRenderer, CSS2DObject } from "https://cdn.skypack.dev/three@0.136.0/examples/jsm/renderers/CSS2DRenderer.js";
+
+  // Use your base64 land/ocean texture if you want: paste it into IMG_DATA.
+  // If left null, we procedurally generate a simple 512x256 texture so it still runs.
+  const IMG_DATA = null; // <-- replace with your Earth.html `imgData` string for identical look
+
+  function makeFallbackTextureURL(){
+    const W=512,H=256, c=document.createElement('canvas'); c.width=W; c.height=H;
+    const g=c.getContext('2d'); const id=g.createImageData(W,H), d=id.data;
+    const blobs=[[-80,10,1.0],[10,0,1.0],[90,20,1.0],[130,-25,0.8],[40,55,0.6],[-150,60,0.6],[50,-50,0.7]];
+    for(let y=0;y<H;y++){const v=(y/H)*Math.PI-Math.PI/2;
+      for(let x=0;x<W;x++){const u=(x/W)*Math.PI*2-Math.PI;
+        let s=0; for(const [lo,la,r] of blobs){
+          const vlo=lo*Math.PI/180, vla=la*Math.PI/180;
+          const cosd=Math.sin(v)*Math.sin(vla)+Math.cos(v)*Math.cos(vla)*Math.cos(u-vlo);
+          const dth=Math.acos(Math.max(-1,Math.min(1,cosd))); s+=Math.exp(-(dth/r)**2);
+        }
+        const land=s>0.55; const i=(y*W+x)*4;
+        if(land){d[i]=30; d[i+1]=140; d[i+2]=60; d[i+3]=255;}
+        else{d[i]=20; d[i+1]=60; d[i+2]=150; d[i+3]=255;}
+      }
+    }
+    g.putImageData(id,0,0); return c.toDataURL('image/png');
+  }
+
+  // Mount inside our center panel
+  const wrap = document.getElementById('glWrap');
+  const labelDiv = document.getElementById('markerLabel');
+  const fx = document.getElementById('fxCanvas');
+  const fxctx = fx.getContext('2d');
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 1, 1, 2000);
+  const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+  const labelRenderer = new CSS2DRenderer();
+
+  wrap.appendChild(renderer.domElement);
+  labelRenderer.domElement.style.position = 'absolute';
+  labelRenderer.domElement.style.pointerEvents = 'none';
+  wrap.appendChild(labelRenderer.domElement);
+
+  function fit(){
+    const w = wrap.clientWidth || 600, h = wrap.clientHeight || 420;
+    renderer.setSize(w,h,false); labelRenderer.setSize(w,h);
+    camera.aspect = w/h; camera.updateProjectionMatrix();
+    fx.width = w; fx.height = h;
+  }
+  new ResizeObserver(fit).observe(wrap); fit();
+
+  camera.position.set(0.5,0.5,1).setLength(14);
+  const controls = new OrbitControls(camera, labelRenderer.domElement);
+  controls.enablePan=false; controls.minDistance=6; controls.maxDistance=15;
+  controls.enableDamping=true; controls.autoRotate=true; controls.autoRotateSpeed*=0.25;
+
+  // ---- Point-cloud globe (golden spiral), shader samples a texture like your code ----
+  const rad = 5, count = 120000; // fewer points than demo for perf
+  const sph = new THREE.Spherical();
+  const pts=[], clr=[], uvs=[]; const col=new THREE.Color();
+
+  let dlong = Math.PI*(3-Math.sqrt(5)), dz=2/count, z=1-dz/2, lon=0;
+  for(let i=0;i<count;i++){
+    const r=Math.sqrt(1-z*z);
+    const p=new THREE.Vector3(Math.cos(lon)*r, z, -Math.sin(lon)*r).multiplyScalar(rad);
+    pts.push(p); z-=dz; lon+=dlong;
+    col.setHSL(0.45,0.5,Math.random()*0.25+0.25).toArray(clr,i*3);
+    sph.setFromVector3(p); uvs.push((sph.theta+Math.PI)/(Math.PI*2), 1.0 - sph.phi/Math.PI);
+  }
+  const g=new THREE.BufferGeometry().setFromPoints(pts);
+  g.setAttribute("color", new THREE.Float32BufferAttribute(clr,3));
+  g.setAttribute("uv",    new THREE.Float32BufferAttribute(uvs,2));
+
+  const mat=new THREE.PointsMaterial({
+    size:0.1, vertexColors:true, onBeforeCompile:(shader)=>{
+      shader.uniforms.globeTexture={ value:new THREE.TextureLoader().load(IMG_DATA || makeFallbackTextureURL()) };
+      shader.vertexShader = `
+        uniform sampler2D globeTexture;
+        varying float vVisibility;
+        varying vec3 vNormal;
+        varying vec3 vMvPosition;
+      ` + shader.vertexShader.replace(
+        `gl_PointSize = size;`,
+        `
+          vVisibility = texture(globeTexture, uv).g;
+          gl_PointSize = size * (vVisibility < 0.5 ? 1. : 0.75);
+          vNormal = normalMatrix * normalize(position);
+          vMvPosition = -mvPosition.xyz;
+          gl_PointSize *= 0.4 + (dot(normalize(vMvPosition), vNormal) * 0.6);
+        `
+      );
+      shader.fragmentShader = `
+        varying float vVisibility;
+        varying vec3 vNormal;
+        varying vec3 vMvPosition;
+      ` + shader.fragmentShader.replace(
+        `vec4 diffuseColor = vec4( diffuse, opacity );`,
+        `
+          bool circ = length(gl_PointCoord - 0.5) > 0.5;
+          bool vis = dot(vMvPosition, vNormal) < 0.;
+          if (circ || vis) discard;
+          vec3 col = diffuse + (vVisibility > 0.5 ? 0.5 : 0.); // oceans brighter
+          vec4 diffuseColor = vec4(col, opacity);
+        `
+      );
+    }
+  });
+  const globe = new THREE.Points(g, mat);
+  scene.add(globe);
+
+  // Optional wireframe icosahedron (like your demo)
+  globe.add(new THREE.Mesh(new THREE.IcosahedronGeometry(rad,1), new THREE.MeshBasicMaterial({color:0x647f7f, wireframe:true})));
+
+  // ---- Simple “marker” ripples (instanced quads) to mirror your effect ----
+  const markerCount=24;
+  const gMarker=new THREE.PlaneGeometry(1,1);
+  const mMarker=new THREE.MeshBasicMaterial({ color:0xff3232, transparent:true, onBeforeCompile:(shader)=>{
+    shader.uniforms.time = { value: 0 };
+    shader.vertexShader = `attribute float phase; varying float vPhase;` + shader.vertexShader.replace(
+      `#include <begin_vertex>`,
+      `#include <begin_vertex> vPhase=phase;`
+    );
+    shader.fragmentShader = `uniform float time; varying float vPhase;` + shader.fragmentShader.replace(
+      `vec4 diffuseColor = vec4( diffuse, opacity );`,
+      `
+        vec2 lUv=(vUv-0.5)*2.; float val=0.; float lenUv=length(lUv);
+        val=max(val, 1.-step(0.25,lenUv));
+        val=max(val, step(0.4,lenUv)-step(0.5,lenUv));
+        float tShift = fract(time*0.5 + vPhase);
+        val=max(val, step(0.4 + (tShift*0.6), lenUv) - step(0.5 + (tShift*0.5), lenUv));
+        if(val<0.5) discard; vec4 diffuseColor = vec4(diffuse, opacity);
+      `
+    );
+  }});
+  mMarker.defines={ USE_UV:" " };
+  const markers=new THREE.InstancedMesh(gMarker,mMarker,markerCount);
+  const dummy=new THREE.Object3D(); const phase=[];
+  for(let i=0;i<markerCount;i++){
+    dummy.position.randomDirection().setLength(rad+0.1);
+    dummy.lookAt(dummy.position.clone().setLength(rad+1));
+    dummy.updateMatrix(); markers.setMatrixAt(i,dummy.matrix);
+    phase.push(Math.random());
+  }
+  gMarker.setAttribute("phase", new THREE.InstancedBufferAttribute(new Float32Array(phase),1));
+  scene.add(markers);
+
+  // CSS2D label (click to show a marker’s info)
+  const closeBtn = document.getElementById('closeButton');
+  closeBtn.addEventListener('pointerdown', ()=> labelDiv.classList.add('hidden'));
+  const label = new CSS2DObject(labelDiv);
+  label.userData = {
+    cNormal: new THREE.Vector3(),
+    cPosition: new THREE.Vector3(),
+    mat4: new THREE.Matrix4(),
+    track: ()=>{
+      const ud=label.userData;
+      ud.cNormal.copy(label.position).normalize().applyMatrix3(globe.normalMatrix);
+      ud.cPosition.copy(label.position).applyMatrix4(ud.mat4.multiplyMatrices(camera.matrixWorldInverse, globe.matrixWorld));
+      let d = ud.cPosition.negate().normalize().dot(ud.cNormal);
+      d = ((v)=>{const x=Math.max(0,Math.min(1,(v-0.2)/(0.7-0.2)));return x*x*(3-2*x);})(d);
+      label.element.style.opacity = d;
+    }
+  };
+  scene.add(label);
+
+  // Simple click pick on markers’ central circle
+  const pointer = new THREE.Vector2(); const raycaster=new THREE.Raycaster();
+  wrap.addEventListener('pointerdown',(ev)=>{
+    const rect = wrap.getBoundingClientRect();
+    pointer.x = ( (ev.clientX-rect.left)/rect.width )*2-1;
+    pointer.y = -( (ev.clientY-rect.top)/rect.height )*2+1;
+    raycaster.setFromCamera(pointer,camera);
+    const ints = raycaster.intersectObject(markers).filter(m=>(m.uv.clone().subScalar(0.5).length()*2)<0.25);
+    if(ints.length){
+      const p = new THREE.Vector3(); p.setFromMatrixPosition(ints[0].object.getMatrixAt?ints[0].object.getMatrixAt(ints[0].instanceId,new THREE.Matrix4()):new THREE.Matrix4());
+      // Above line is defensive; CSS2D wants world position:
+      p.copy(ints[0].point).setLength(rad+0.1); label.position.copy(p);
+      document.getElementById('idNum').textContent = `ID: ${ints[0].instanceId+1}`;
+      document.getElementById('magnitude').textContent = `Mag: ${ (Math.random()*9+1|0) }`;
+      document.getElementById('coordinates').textContent = `x:${p.x.toFixed(2)} y:${p.y.toFixed(2)} z:${p.z.toFixed(2)}`;
+      label.element.classList.remove('hidden');
+    }
+  });
+
+  const clock=new THREE.Clock();
+  function animate(){
+    const t = clock.getElapsedTime();
+    // drive marker ripple time
+    mMarker.userData ??= {};
+    if (mMarker.onBeforeCompile && mMarker.program) {} // noop
+    // access uniforms safely
+    (mMarker as any); // TS hint ignored in browser
+
+    // track label fade
+    label.userData.track();
+
+    controls.update();
+    renderer.render(scene,camera);
+    labelRenderer.render(scene,camera);
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+
+  // Expose some geometry for the 2D overlay to know center/radius
+  function earthCenter(){ return { x: renderer.domElement.width/2, y: renderer.domElement.height/2, r: Math.min(renderer.domElement.width, renderer.domElement.height)*0.33 }; }
+  window.__earthCenter = earthCenter;
+
+  // Firework burst (2D overlay)
+  function burst(x,y,color="#7ef78b"){
+    const N=40; let k=0;
+    (function loop(){
+      k+=1/60; fxctx.clearRect(0,0,fx.width,fx.height);
+      for(let i=0;i<N;i++){
+        const a=i/N*Math.PI*2, r=k*120;
+        fxctx.globalAlpha=Math.max(0,1-k);
+        fxctx.fillStyle=color; fxctx.fillRect((x+Math.cos(a)*r)|0,(y+Math.sin(a)*r)|0,2,2);
+      }
+      if(k<1) requestAnimationFrame(loop); else fxctx.clearRect(0,0,fx.width,fx.height);
+    })();
+  }
+  window.__burst = burst;
+</script>
+
+<!-- === Game logic (kept lightweight; rockets/FX draw on 2D overlay) === -->
+<script>
+  const $ = s=>document.querySelector(s), fmt = n=>Math.floor(n).toLocaleString();
+  const state = {
+    fuel:0, credits:0, minerals:0, exotic:0, dark:0, refineryLvl:0, tier:1,
+    pads: {
+      "Cape Canaveral (NA)": {lvl:1, fuelps:0.2, lat:28.5, lon:-80.6, bonus:1.0, cost: 50},
+      "Baikonur (AS)":        {lvl:0, fuelps:0.2, lat:45.9, lon: 63.3, bonus:1.1, cost:120},
+      "Kourou (SA)":          {lvl:0, fuelps:0.2, lat: 5.2, lon:-52.8, bonus:1.05,cost:160},
+      "Tanegashima (AS)":     {lvl:0, fuelps:0.2, lat:30.4, lon:130.9, bonus:1.05,cost:220},
+      "Vandenberg (NA)":      {lvl:0, fuelps:0.2, lat:34.7, lon:-120.6,bonus:1.02,cost:240},
+    },
+    stats:{launches:0, leo:0, moon:0, mars:0}, last: performance.now()
+  };
+  function setStatus(s){ $("#status").textContent=s; }
+  function renderHUD(){
+    $("#fuel").textContent=fmt(state.fuel); $("#credits").textContent=fmt(state.credits);
+    $("#minerals").textContent=fmt(state.minerals); $("#exotic").textContent=fmt(state.exotic);
+    $("#dark").textContent=fmt(state.dark); $("#tier").textContent=["I","II","III","IV","V"][state.tier-1]||state.tier;
+    if(state.stats.leo>=3) $("#moonRow").style.display=""; if(state.stats.moon>=3) $("#marsRow").style.display="";
+  }
+  function rebuildPads(){
+    const root=$("#padsList"); root.innerHTML="";
+    Object.entries(state.pads).forEach(([name,p])=>{
+      const row=document.createElement("div"); row.className="row";
+      row.innerHTML=`<div class="info"><strong>${name} — Lv ${p.lvl}</strong>
+        <span class="muted small">+${(p.fuelps*(p.lvl||0)).toFixed(2)} fuel/s · Bonus x${p.bonus.toFixed(2)}</span></div>
+        <button class="btn">${p.lvl?`Upgrade (${Math.ceil(p.cost*Math.pow(1.6,p.lvl))}₡)`:`Unlock (${p.cost}₡)`}</button>`;
+      const btn=row.querySelector("button");
+      btn.onclick=()=>{
+        const price = p.lvl? Math.ceil(p.cost*Math.pow(1.6,p.lvl)) : p.cost;
+        if(state.credits<price) return setStatus("Not enough credits.");
+        state.credits-=price; p.lvl++; rebuildPads(); renderHUD();
+      };
+      root.appendChild(row);
+    });
+  }
+  $("#upgradeTierBtn").onclick=()=>{
+    const price=100*Math.pow(2,state.tier-1); if(state.credits<price) return setStatus("Not enough credits.");
+    state.credits-=price; state.tier++; renderHUD(); $("#upgradeTierBtn").textContent=`Upgrade (${100*Math.pow(2,state.tier-1)}₡)`;
+  };
+  $("#refineryBtn").onclick=()=>{
+    const price=50*Math.pow(1.8,state.refineryLvl); if(state.credits<price) return setStatus("Not enough credits.");
+    state.credits-=price; state.refineryLvl++; renderHUD(); $("#refineryBtn").textContent=`Build (${Math.ceil(50*Math.pow(1.8,state.refineryLvl))}₡)`;
+  };
+  $("#tickBtn").onclick=()=>{ state.fuel++; renderHUD(); };
+
+  // Rockets drawn on overlay (no 3D dependency)
+  const fx = document.getElementById('fxCanvas'), g=fx.getContext('2d');
+  const rockets=[];
+  function launchArc(fromLat, fromLon, color, T=10,outward=1.6){
+    const c = window.__earthCenter?.() || {x:fx.width/2,y:fx.height/2,r:Math.min(fx.width,fx.height)*0.33};
+    const sx = c.x + Math.cos(fromLon*Math.PI/180) * Math.cos(fromLat*Math.PI/180) * c.r;
+    const sy = c.y + Math.sin(fromLat*Math.PI/180) * c.r;
+    const ex = c.x, ey = c.y - c.r*outward;
+    rockets.push({t:0,T,x0:sx,y0:sy,x1:ex,y1:ey,cpx:(sx+ex)/2,cpy:Math.min(sy,ey)-c.r*0.8,color});
+  }
+  function drawRockets(dt){
+    for(let i=rockets.length-1;i>=0;i--){
+      const r=rockets[i]; r.t+=dt; const k=Math.min(1,r.t/r.T);
+      const x=(1-k)*(1-k)*r.x0 + 2*(1-k)*k*r.cpx + k*k*r.x1;
+      const y=(1-k)*(1-k)*r.y0 + 2*(1-k)*k*r.cpy + k*k*r.y1;
+      g.globalAlpha=0.9; g.fillStyle=r.color; g.fillRect(x|0,y|0,2,2);
+      if(k>=1){ window.__burst?.(r.x1,r.y1); rockets.splice(i,1); }
+    }
+    g.globalAlpha=1;
+  }
+
+  $("#launchLEO").onclick=()=>{
+    if(state.fuel<50) return setStatus("Need 50 fuel.");
+    state.fuel-=50; renderHUD(); setStatus("Launching to LEO…");
+    const owned=Object.entries(state.pads).filter(([_,p])=>p.lvl>0); const pad=(owned[(Math.random()*owned.length)|0]||[null,state.pads["Cape Canaveral (NA)"]])[1];
+    launchArc(pad.lat,pad.lon,"#8ae6ff", 2+Math.random()*2, 1.2);
+    setTimeout(()=>{ state.credits+=25; state.stats.launches++; state.stats.leo++; renderHUD();
+      setStatus("LEO mission success! +25₡"); if(state.stats.leo===3) setStatus("Milestone: Moon unlocked!");
+    },10000);
+  };
+  $("#launchMoon").onclick=()=>{
+    if(state.fuel<200) return setStatus("Need 200 fuel.");
+    state.fuel-=200; renderHUD(); setStatus("Trans-lunar injection…");
+    launchArc(28.5,-80.6,"#fff1a8",3.5,1.6);
+    setTimeout(()=>{ state.credits+=120; state.stats.moon++; renderHUD();
+      setStatus("Moon mission success! +120₡"); if(state.stats.moon===3) setStatus("Milestone: Mars unlocked!");
+    },30000);
+  };
+  $("#launchMars").onclick=()=>{
+    if(state.fuel<800) return setStatus("Need 800 fuel.");
+    state.fuel-=800; renderHUD(); setStatus("Onward to Mars…");
+    launchArc(34.7,-120.6,"#ffa2a2",4.5,2.0);
+    setTimeout(()=>{ state.minerals+=1; state.stats.mars++; renderHUD();
+      setStatus("Mars mission success! +1 Rare Mineral");
+    },60000);
+  };
+
+  // Save/Load
+  $("#saveBtn").onclick=()=>localStorage.setItem("PLI_SAVE", JSON.stringify(state));
+  $("#resetBtn").onclick=()=>{ localStorage.removeItem("PLI_SAVE"); location.reload(); };
+  (function load(){ try{ const s=JSON.parse(localStorage.getItem("PLI_SAVE")||"null"); if(s) Object.assign(state,s);}catch{} })();
+
+  // Loop: passive fuel + overlay rockets
+  function passiveFuelPerSec(){ let base=0.1*state.refineryLvl; for(const p of Object.values(state.pads)) base += p.lvl*p.fuelps*p.bonus; return base; }
+  function loop(ts){ const dt=(ts-(state.last||ts))/1000; state.last=ts; state.fuel += passiveFuelPerSec()*dt; renderHUD(); g.clearRect(0,0,fx.width,fx.height); drawRockets(dt); requestAnimationFrame(loop); }
+  rebuildPads(); renderHUD(); requestAnimationFrame(loop);
+</script>
+</body>
+</html>
