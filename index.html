@@ -192,6 +192,7 @@
 	  "  hacker              Deploys selected game. hack.click",
 	  "  planetlaunch        Deploys selected game. planet.launch",
 	  "  quantumresearch     Deploys selected game. quantum.research",
+	  "  puddleplanet        Deploys selected game. puddle.planet",
 	  "  list                List available games.",
       "  help                Show this help.",
       "  about               What is this?",
@@ -221,7 +222,11 @@
       "hack.click         Hacking idle game.",
 	  " ",
 	  "planet.launch      Idle spaceport manager.",
-	  " "
+	  " ",
+	  "quantum.research   Idle CERN.",
+	  " ",
+	  "puddle.planet      Thunderstorm Simulator.",
+	  " "	
     ].join("\n"),
 
     about: "Games here made by Foostus for the enjoyment of friends",
@@ -255,7 +260,8 @@
       "  └─ /deploy",
 	  "    ├─ /hack.click",
 	  "    ├─ /planet.launch",
-	  "    └─ /quantum.research",
+	  "    ├─ /quantum.research",
+	  "    └─ /puddle.planet",	
 	  " ",
       
     ].join("\n"),
@@ -280,6 +286,11 @@
 	  quantumresearch: {
 		url: "./quantumresearch.html",
 		script: ["Loading quantum.research...", "Still loading...", "Someday maybe..."],
+		delay: 500, step: 1500, finalWait: 1000
+	  },
+	  puddleplanet: {
+		url: "./puddleplanet.html",
+		script: ["Loading puddle.planet...", "Still loading...", "Someday maybe..."],
 		delay: 500, step: 1500, finalWait: 1000
 	  }
 };
@@ -431,3 +442,4 @@
 </script>
 </body>
 </html>
+
