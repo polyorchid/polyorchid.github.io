@@ -193,6 +193,7 @@
 	  "  planetlaunch        Deploys selected game. planet.launch",
 	  "  quantumresearch     Deploys selected game. quantum.research",
 	  "  puddleplanet        Deploys selected game. puddle.planet",
+	  "  physicssim          Deploys selected game. physics.sim",	
 	  "  list                List available games.",
       "  help                Show this help.",
       "  about               What is this?",
@@ -226,7 +227,9 @@
 	  "quantum.research   Idle CERN.",
 	  " ",
 	  "puddle.planet      Thunderstorm Simulator.",
-	  " "	
+	  " ",
+	  "physics.sim        Gravity Simulator.",
+	  " "
     ].join("\n"),
 
     about: "Games here made by Foostus for the enjoyment of friends",
@@ -261,7 +264,8 @@
 	  "    ├─ /hack.click",
 	  "    ├─ /planet.launch",
 	  "    ├─ /quantum.research",
-	  "    └─ /puddle.planet",	
+	  "    ├─ /puddle.planet",	
+	  "    └─ /physics.sim",
 	  " ",
       
     ].join("\n"),
@@ -291,6 +295,11 @@
 	  puddleplanet: {
 		url: "./puddleplanet.html",
 		script: ["Loading puddle.planet...", "Still loading...", "Someday maybe..."],
+		delay: 500, step: 1500, finalWait: 1000
+	  },
+	  physicssim: {
+		url: "./physicssim.html",
+		script: ["Loading physics.sim...", "Still loading...", "Someday maybe..."],
 		delay: 500, step: 1500, finalWait: 1000
 	  }
 };
@@ -442,4 +451,5 @@
 </script>
 </body>
 </html>
+
 
