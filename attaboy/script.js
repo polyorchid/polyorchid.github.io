@@ -107,7 +107,7 @@ const defaultAttaboys = [
   {
     id: 'a10',
     name: 'Sadie King',
-    note: 'Your communication skills help our team collaborate effectively.',
+    note: 'Thank you for showing up, caring, and giving your best every day. Your effort makes a difference, helps this team succeed, and is appreciated more than you probably realize.',
     rarity: 'Legendary',
     image: 'photos/a10.png',
   },
