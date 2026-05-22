@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attaboy Gacha Simulator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <nav class="tab-nav" role="tablist" aria-label="Main navigation">
+      <button type="button" class="tab-btn active" role="tab" aria-selected="true" aria-controls="page-home" data-tab="home">Home</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="page-gacha" data-tab="gacha">Open</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="page-collection" data-tab="collection">Collection</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="page-account" data-tab="account">Account</button>
+      <button type="button" id="tab-admin" class="tab-btn tab-admin" role="tab" aria-selected="false" aria-controls="page-admin" data-tab="admin" hidden>Admin</button>
+    </nav>
+    <div id="user-status-bar" class="user-status-bar" hidden>
+      <span class="user-status-name" id="status-username"></span>
+      <span class="key-badge" id="status-keys" title="Open keys remaining">🔑 0</span>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <section id="page-home" class="page page-active" role="tabpanel">
+      <div class="splash">
+        <img src="photos/ABLogo.png" alt="Attaboy logo" class="splash-logo" width="360" height="auto">
+        <p class="splash-lead">Celebrate your team with surprise affirmations from your managers.</p>
+        <ol class="splash-steps">
+          <li>Create an <strong>Account</strong> to save your collection, XP, and levels.</li>
+          <li>Use <strong>open keys</strong> to pull Attaboys — new accounts start with a few keys.</li>
+          <li>Each pull adds copies to your <strong>Collection</strong> and earns XP toward higher levels.</li>
+          <li>Rare <strong>Foil</strong>, <strong>Gold</strong>, and <strong>Polychrome</strong> editions can drop — tracked separately per manager.</li>
+          <li>Redeem key codes on your account page, or get more from an admin.</li>
+        </ol>
+        <button type="button" class="btn btn-primary splash-cta" data-goto="gacha">Start opening Attaboys</button>
+        <p class="splash-footer">
+          <button type="button" class="admin-entry-link" id="open-admin-login">Admin sign in</button>
+        </p>
+      </div>
+    </section>
+
+    <section id="page-gacha" class="page" role="tabpanel" hidden>
+      <div class="page-inner">
+        <header class="page-header">
+          <h2>Open an Attaboy</h2>
+          <p id="gacha-subtitle">Sign in to use your open keys and build your collection.</p>
+        </header>
+        <section class="gacha-panel card">
+          <div class="gacha-meta">
+            <span class="key-badge key-badge-lg" id="gacha-keys-display">🔑 —</span>
+          </div>
+          <button type="button" id="openBtn" class="btn btn-primary open-btn" disabled>Open an Attaboy (1 key)</button>
+          <p id="gacha-hint" class="gacha-hint"></p>
+          <div id="result" class="result" aria-live="polite"></div>
+        </section>
+      </div>
+    </section>
+
+    <section id="page-collection" class="page" role="tabpanel" hidden>
+      <div class="page-inner">
+        <header class="page-header">
+          <h2>My Collection</h2>
+          <p id="collection-subtitle">Sign in to view the Attaboys you have opened.</p>
+        </header>
+        <div id="user-collection-list" class="user-collection-list"></div>
+        <p id="collection-empty" class="empty-state" hidden>No Attaboys yet. Use an open key on the Open tab!</p>
+      </div>
+    </section>
+
+    <section id="page-account" class="page" role="tabpanel" hidden>
+      <div class="page-inner">
+        <div id="account-guest" class="card account-card">
+          <header class="page-header">
+            <h2>Account</h2>
+            <p>Create an account or sign in to save your collection and keys.</p>
+          </header>
+          <div class="account-forms">
+            <form id="register-form" class="account-form">
+              <h3>Sign up</h3>
+              <label for="register-username">Username</label>
+              <input type="text" id="register-username" class="input" autocomplete="username" required minlength="3" pattern="[a-zA-Z0-9_]+" title="Letters, numbers, and underscores only">
+              <label for="register-password">Password</label>
+              <input type="password" id="register-password" class="input" autocomplete="new-password" required minlength="4">
+              <button type="submit" class="btn btn-primary">Create account</button>
+              <p id="register-error" class="error-message" hidden></p>
+            </form>
+            <form id="login-form" class="account-form">
+              <h3>Sign in</h3>
+              <label for="login-username">Username</label>
+              <input type="text" id="login-username" class="input" autocomplete="username" required>
+              <label for="login-password">Password</label>
+              <input type="password" id="login-password" class="input" autocomplete="current-password" required>
+              <button type="submit" class="btn btn-secondary">Sign in</button>
+              <p id="account-login-error" class="error-message" hidden></p>
+            </form>
+          </div>
+        </div>
+
+        <div id="account-user" class="account-user" hidden>
+          <section class="card account-card">
+            <header class="page-header account-profile-header">
+              <div>
+                <h2>Welcome, <span id="profile-username"></span></h2>
+                <p>Open keys let you pull Attaboys. Each pull earns XP and levels up your cards.</p>
+              </div>
+              <button type="button" id="user-logout-btn" class="btn btn-secondary btn-sm">Sign out</button>
+            </header>
+            <dl class="profile-stats">
+              <div><dt>Open keys</dt><dd id="profile-keys">0</dd></div>
+              <div><dt>Unique Attaboys</dt><dd id="profile-unique">0</dd></div>
+              <div><dt>Total pulls</dt><dd id="profile-total-pulls">0</dd></div>
+            </dl>
+          </section>
+          <section class="card account-card">
+            <header class="page-header">
+              <h2>Redeem key code</h2>
+              <p>Enter a code from your admin to receive more open keys.</p>
+            </header>
+            <form id="redeem-form" class="redeem-form">
+              <input type="text" id="redeem-code-input" class="input" placeholder="e.g. ABCD-1234" autocomplete="off">
+              <button type="submit" class="btn btn-primary">Redeem</button>
+            </form>
+            <p id="redeem-success" class="success-message" hidden></p>
+            <p id="redeem-error" class="error-message" hidden></p>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-admin" class="page" role="tabpanel" hidden>
+      <div class="page-inner">
+        <div id="adminContent" class="admin-content" hidden>
+          <header class="admin-toolbar">
+            <p class="admin-toolbar-label">Admin panel</p>
+            <button type="button" id="admin-logout-btn" class="btn btn-secondary btn-sm">Sign out</button>
+          </header>
+
+          <section class="settings card">
+            <header class="page-header">
+              <h2>Rarity Settings</h2>
+              <p>Adjust drop weights for each rarity (higher = more common).</p>
+            </header>
+            <div class="rarity-weights">
+              <div class="rarity-weight" data-rarity="Common">
+                <label for="weight-common">Common</label>
+                <input type="number" id="weight-common" class="input" min="0" step="1">
+              </div>
+              <div class="rarity-weight" data-rarity="Uncommon">
+                <label for="weight-uncommon">Uncommon</label>
+                <input type="number" id="weight-uncommon" class="input" min="0" step="1">
+              </div>
+              <div class="rarity-weight" data-rarity="Rare">
+                <label for="weight-rare">Rare</label>
+                <input type="number" id="weight-rare" class="input" min="0" step="1">
+              </div>
+              <div class="rarity-weight" data-rarity="Epic">
+                <label for="weight-epic">Epic</label>
+                <input type="number" id="weight-epic" class="input" min="0" step="1">
+              </div>
+              <div class="rarity-weight" data-rarity="Legendary">
+                <label for="weight-legendary">Legendary</label>
+                <input type="number" id="weight-legendary" class="input" min="0" step="1">
+              </div>
+            </div>
+            <button type="button" id="save-weights" class="btn btn-secondary save-btn">Save Rarity Weights</button>
+          </section>
+
+          <section class="settings card">
+            <header class="page-header">
+              <h2>Card edition drops</h2>
+              <p>Chance per open for Foil, Gold, or Polychrome (percent). Polychrome is checked first, then Gold, then Foil; otherwise Standard.</p>
+            </header>
+            <div class="rarity-weights variant-rates">
+              <div class="rarity-weight">
+                <label for="rate-foil">Foil %</label>
+                <input type="number" id="rate-foil" class="input" min="0" max="100" step="0.1">
+              </div>
+              <div class="rarity-weight">
+                <label for="rate-gold">Gold %</label>
+                <input type="number" id="rate-gold" class="input" min="0" max="100" step="0.1">
+              </div>
+              <div class="rarity-weight">
+                <label for="rate-polychrome">Polychrome %</label>
+                <input type="number" id="rate-polychrome" class="input" min="0" max="100" step="0.1">
+              </div>
+            </div>
+            <p class="admin-field-hint">Defaults: Foil 8%, Gold 2%, Polychrome 0.5%. Special editions earn bonus XP (×1.5 / ×2.5 / ×5).</p>
+            <button type="button" id="save-variant-rates" class="btn btn-secondary save-btn">Save Edition Rates</button>
+          </section>
+
+          <section class="card admin-keys-section">
+            <header class="page-header">
+              <h2>Open keys &amp; codes</h2>
+              <p>Grant keys to players or generate redeemable codes they can enter on their Account page.</p>
+            </header>
+
+            <aside class="admin-instructions" aria-label="How open keys work">
+              <h3 class="admin-instructions-title">GitHub Pages hosting</h3>
+              <p>Everyone uses the same site link, but each person’s <strong>account lives in their own browser</strong>. Generated codes are <strong>not</strong> saved only on your device — you must publish them to the site (see below).</p>
+              <dl class="admin-instructions-list">
+                <div>
+                  <dt>Generate code → send to a player</dt>
+                  <dd>Create a code, click <strong>Download codes file</strong>, replace <code>data/redeem-codes.json</code> in your repo, commit, and push. After GitHub Pages updates (1–2 min), anyone can redeem that code once per account.</dd>
+                </div>
+                <div>
+                  <dt>Built-in codes</dt>
+                  <dd><code>ATTABOY-KEY-01</code> … <code>ATTABOY-KEY-10</code> are already in the app (20 keys each, once per account).</dd>
+                </div>
+                <div>
+                  <dt>Grant keys by username</dt>
+                  <dd>Only works for accounts created <strong>on this same browser</strong>. For remote players, use shareable codes instead.</dd>
+                </div>
+              </dl>
+            </aside>
+
+            <h3 class="admin-subheading">Grant keys to a user (same browser only)</h3>
+            <form id="grant-keys-form" class="admin-inline-form">
+              <input type="text" id="grant-username" class="input" placeholder="Username" required aria-label="Username">
+              <label class="admin-field-label" for="grant-amount">Keys to add</label>
+              <input type="number" id="grant-amount" class="input input-narrow" min="1" value="3" required>
+              <button type="submit" class="btn btn-secondary">Grant keys</button>
+            </form>
+            <p id="grant-message" class="success-message" hidden></p>
+            <p id="grant-error" class="error-message" hidden></p>
+
+            <h3 class="admin-subheading">Generate a redeem code (share on GitHub)</h3>
+            <form id="create-code-form" class="admin-inline-form admin-code-form">
+              <label class="admin-field-label" for="code-keys">Keys to award</label>
+              <input type="number" id="code-keys" class="input input-narrow" min="1" value="20" required>
+              <button type="submit" class="btn btn-primary">Generate code</button>
+            </form>
+            <p class="admin-field-hint">Each published code works <strong>once per player account</strong>. Generate a unique code per person (or small group), then publish the JSON file.</p>
+            <p id="code-created" class="code-created" hidden></p>
+            <button type="button" id="download-codes-btn" class="btn btn-secondary">Download codes file for GitHub</button>
+            <p class="admin-field-hint">Save as <code>data/redeem-codes.json</code> in your repo and push. Players reload the site to pick up new codes.</p>
+            <h3 class="admin-subheading">Active codes</h3>
+            <ul id="redeem-codes-list" class="redeem-codes-list"></ul>
+            <h3 class="admin-subheading">Registered users</h3>
+            <ul id="admin-users-list" class="admin-users-list"></ul>
+          </section>
+
+          <section class="collection card">
+            <header class="page-header">
+              <h2>Attaboy catalog</h2>
+              <p>Edit each attaboy's rarity. Changes save automatically.</p>
+            </header>
+            <div id="attaboy-list" class="attaboy-list"></div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="admin-login-dialog" class="admin-dialog" aria-labelledby="admin-dialog-title">
+    <form method="dialog" class="admin-dialog-form" id="admin-login-form">
+      <header class="admin-dialog-header">
+        <h2 id="admin-dialog-title">Admin sign in</h2>
+        <button type="button" class="admin-dialog-close" id="close-admin-login" aria-label="Close">×</button>
+      </header>
+      <p class="admin-dialog-lead">Enter the admin password to manage attaboys and rarity settings.</p>
+      <label for="admin-password-input" class="sr-only">Admin password</label>
+      <input type="password" id="admin-password-input" placeholder="Password" class="input password-input" autocomplete="current-password">
+      <p id="login-error" class="error-message" hidden>Incorrect password. Try again.</p>
+      <div class="admin-dialog-actions">
+        <button type="button" class="btn btn-secondary" id="cancel-admin-login">Cancel</button>
+        <button type="submit" id="admin-login-btn" class="btn btn-primary login-btn">Unlock</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="accounts.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
