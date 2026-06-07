@@ -190,10 +190,8 @@
       " ",
 	  "  chkdsk              Checks a disk and displays a status report.",
 	  "  hacker              Deploys selected game. hack.click",
-	  "  planetlaunch        Deploys selected game. planet.launch",
-	  "  quantumresearch     Deploys selected game. quantum.research",
-	  "  puddleplanet        Deploys selected game. puddle.planet",
 	  "  physicssim          Deploys selected game. physics.sim",	
+	  "  breadcrumbs         Deploy addon for youtube",
 	  "  list                List available games.",
       "  help                Show this help.",
       "  about               What is this?",
@@ -221,12 +219,6 @@
     ].join("\n"),
 	list: [
       "hack.click         Hacking idle game.",
-	  " ",
-	  "planet.launch      Idle spaceport manager.",
-	  " ",
-	  "quantum.research   Idle CERN.",
-	  " ",
-	  "puddle.planet      Thunderstorm Simulator.",
 	  " ",
 	  "physics.sim        Gravity Simulator.",
 	  " "
@@ -262,9 +254,6 @@
       "  ├─ /src",
       "  └─ /deploy",
 	  "    ├─ /hack.click",
-	  "    ├─ /planet.launch",
-	  "    ├─ /quantum.research",
-	  "    ├─ /puddle.planet",	
 	  "    └─ /physics.sim",
 	  " ",
       
@@ -305,6 +294,11 @@
 	  attaboy: {
 		url: "./attaboy/index.html",
 		script: ["Loading attaboy.gacha...", "Still loading...", "Someday maybe..."],
+		delay: 500, step: 1500, finalWait: 1000
+	  },
+	  breadcrumbs: {
+		url: "https://addons.mozilla.org/en-US/firefox/addon/youtube-breadcrumbs/",
+		script: ["Dropping Breadcrumbs...", "Still loading...", "Someday maybe..."],
 		delay: 500, step: 1500, finalWait: 1000
 	  }
 };
