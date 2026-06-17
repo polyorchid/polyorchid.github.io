@@ -15,6 +15,137 @@
            ======================================== */
         :root{
             --bg:#040a06; --panel:#0a1a10; --line:#0f2a18; --fg:#b6ffb6; --dim:#7bd07b; --accent:#7fffb7;
+            --body-bg: radial-gradient(1200px 600px at 30% -20%, #0b2a19 0%, transparent 100%), #020804;
+            --danger-border:#ff8080; --danger-fg:#ffd0d0;
+            --glow: rgba(182,255,182,.35);
+            --glow-soft: rgba(127,255,183,.12);
+            --glow-inset: rgba(127,255,183,.05);
+            --panel-top: rgba(15,48,30,.48);
+            --panel-bot: rgba(8,22,14,.48);
+            --btn-glow: rgba(160,255,160,.25);
+            --btn-hover-glow: rgba(160,255,160,.15);
+            --btn-hover-inset: rgba(160,255,160,.07);
+            --handle-tint: rgba(127,255,183,.1);
+            --handle-hover: rgba(127,255,183,.12);
+            --saved: #49be25;
+            --save-flash: #49be25;
+            --save-flash-mid: #7dff7d;
+            --save-flash-glow: rgba(73,190,37,.75);
+            --meter-bg: rgba(80,160,80,.2);
+            --meter-fill-a: #0f0;
+            --meter-fill-b: #8f8;
+            --scroll-track: #0a1a10;
+            --scroll-track-border: #0f2a18;
+            --scroll-thumb-a: #1f4a2d;
+            --scroll-thumb-b: #0c2818;
+            --scroll-thumb-border: #7bd07b;
+            --scroll-thumb-glow: rgba(127,255,183,.4);
+            --scroll-thumb-hover-a: #2a603e;
+            --scroll-thumb-hover-b: #104026;
+            --scroll-fx-thumb: #1f4a2d;
+            --scroll-fx-track: #0a1a10;
+            --crt-saturate: 0.8;
+        }
+        :root[data-theme="amber"]{
+            --bg:#0c0804; --panel:#1c1208; --line:#3a2814; --fg:#ffad5c; --dim:#a8652a; --accent:#ff8822;
+            --body-bg: radial-gradient(1100px 580px at 25% -18%, rgba(180,80,20,.22) 0%, transparent 55%), linear-gradient(180deg, #120c06 0%, #080604 100%);
+            --glow: rgba(255,120,40,.38); --glow-soft: rgba(255,100,30,.12); --glow-inset: rgba(255,130,50,.05);
+            --panel-top: rgba(56,28,8,.52); --panel-bot: rgba(28,14,4,.52);
+            --btn-glow: rgba(255,130,60,.26); --btn-hover-glow: rgba(255,100,40,.16); --btn-hover-inset: rgba(255,120,50,.07);
+            --handle-tint: rgba(255,100,40,.1); --handle-hover: rgba(255,130,60,.14);
+            --saved: #e87820; --save-flash: #ff8822; --save-flash-mid: #ffaa55; --save-flash-glow: rgba(255,120,40,.7);
+            --meter-bg: rgba(140,70,20,.28); --meter-fill-a: #ff7722; --meter-fill-b: #ffbb66;
+            --scroll-track: #1c1208; --scroll-track-border: #3a2814;
+            --scroll-thumb-a: #5a3010; --scroll-thumb-b: #321a08; --scroll-thumb-border: #a8652a;
+            --scroll-thumb-glow: rgba(255,120,50,.3);
+            --scroll-thumb-hover-a: #7a4014; --scroll-thumb-hover-b: #4a240c;
+            --scroll-fx-thumb: #5a3010; --scroll-fx-track: #1c1208;
+            --crt-saturate: 0.88;
+        }
+        :root[data-theme="blood"]{
+            --bg:#0a0404; --panel:#1a0a0a; --line:#2a1010; --fg:#ffaaaa; --dim:#cc6666; --accent:#ff6666;
+            --body-bg: radial-gradient(1200px 600px at 30% -20%, #2a0808 0%, transparent 100%), #080202;
+            --danger-border:#ff4444; --danger-fg:#ffcccc;
+            --glow: rgba(255,100,100,.4); --glow-soft: rgba(255,80,80,.14); --glow-inset: rgba(255,100,100,.06);
+            --panel-top: rgba(48,12,12,.5); --panel-bot: rgba(24,6,6,.5);
+            --btn-glow: rgba(255,120,120,.28); --btn-hover-glow: rgba(255,80,80,.18); --btn-hover-inset: rgba(255,100,100,.08);
+            --handle-tint: rgba(255,80,80,.12); --handle-hover: rgba(255,100,100,.16);
+            --saved: #ff5555; --save-flash: #ff4444; --save-flash-mid: #ff8888; --save-flash-glow: rgba(255,68,68,.75);
+            --meter-bg: rgba(160,40,40,.25); --meter-fill-a: #ff3333; --meter-fill-b: #ff9999;
+            --scroll-track: #1a0a0a; --scroll-track-border: #2a1010;
+            --scroll-thumb-a: #4a1010; --scroll-thumb-b: #2a0808; --scroll-thumb-border: #cc6666;
+            --scroll-thumb-glow: rgba(255,100,100,.35);
+            --scroll-thumb-hover-a: #6a1818; --scroll-thumb-hover-b: #3a0c0c;
+            --scroll-fx-thumb: #4a1010; --scroll-fx-track: #1a0a0a;
+            --crt-saturate: 0.9;
+        }
+        :root[data-theme="ice"]{
+            --bg:#04080a; --panel:#0a141a; --line:#102028; --fg:#a8e8ff; --dim:#6ab8d0; --accent:#66eeff;
+            --body-bg: radial-gradient(1200px 600px at 30% -20%, #082028 0%, transparent 100%), #020608;
+            --glow: rgba(120,220,255,.4); --glow-soft: rgba(100,200,255,.14); --glow-inset: rgba(120,220,255,.06);
+            --panel-top: rgba(12,32,48,.5); --panel-bot: rgba(6,16,28,.5);
+            --btn-glow: rgba(120,220,255,.28); --btn-hover-glow: rgba(100,200,255,.18); --btn-hover-inset: rgba(120,220,255,.08);
+            --handle-tint: rgba(100,200,255,.12); --handle-hover: rgba(120,220,255,.16);
+            --saved: #44ccee; --save-flash: #33bbee; --save-flash-mid: #88ddff; --save-flash-glow: rgba(68,200,238,.75);
+            --meter-bg: rgba(40,120,180,.25); --meter-fill-a: #33ccff; --meter-fill-b: #aaeeff;
+            --scroll-track: #0a141a; --scroll-track-border: #102028;
+            --scroll-thumb-a: #103040; --scroll-thumb-b: #081820; --scroll-thumb-border: #6ab8d0;
+            --scroll-thumb-glow: rgba(100,200,255,.35);
+            --scroll-thumb-hover-a: #184858; --scroll-thumb-hover-b: #0c2838;
+            --scroll-fx-thumb: #103040; --scroll-fx-track: #0a141a;
+            --crt-saturate: 0.95;
+        }
+        :root[data-theme="void"]{
+            --bg:#08040a; --panel:#140a1a; --line:#201028; --fg:#d4b6ff; --dim:#9a7bd0; --accent:#c77fff;
+            --body-bg: radial-gradient(1200px 600px at 30% -20%, #1a0828 0%, transparent 100%), #060208;
+            --glow: rgba(200,120,255,.4); --glow-soft: rgba(180,100,255,.14); --glow-inset: rgba(200,120,255,.06);
+            --panel-top: rgba(32,12,48,.5); --panel-bot: rgba(16,6,28,.5);
+            --btn-glow: rgba(200,120,255,.28); --btn-hover-glow: rgba(180,100,255,.18); --btn-hover-inset: rgba(200,120,255,.08);
+            --handle-tint: rgba(180,100,255,.12); --handle-hover: rgba(200,120,255,.16);
+            --saved: #bb66ff; --save-flash: #aa55ee; --save-flash-mid: #dd99ff; --save-flash-glow: rgba(170,85,238,.75);
+            --meter-bg: rgba(100,40,160,.25); --meter-fill-a: #aa44ff; --meter-fill-b: #dd99ff;
+            --scroll-track: #140a1a; --scroll-track-border: #201028;
+            --scroll-thumb-a: #281040; --scroll-thumb-b: #140820; --scroll-thumb-border: #9a7bd0;
+            --scroll-thumb-glow: rgba(180,100,255,.35);
+            --scroll-thumb-hover-a: #381858; --scroll-thumb-hover-b: #1c0c30;
+            --scroll-fx-thumb: #281040; --scroll-fx-track: #140a1a;
+            --crt-saturate: 0.95;
+        }
+        :root[data-theme="gold"]{
+            --bg:#030302; --panel:#12100a; --line:#4a4020; --fg:#fff8e1; --dim:#c9a227; --accent:#ffcc00;
+            --body-bg:
+                radial-gradient(ellipse 1000px 560px at 50% -12%, rgba(255,215,0,.38) 0%, transparent 55%),
+                radial-gradient(ellipse 600px 380px at 92% 88%, rgba(255,200,50,.2) 0%, transparent 50%),
+                radial-gradient(ellipse 400px 280px at 5% 75%, rgba(255,248,200,.1) 0%, transparent 42%),
+                linear-gradient(180deg, #0a0904 0%, #020201 100%);
+            --glow: rgba(255,215,0,.6); --glow-soft: rgba(255,200,0,.25); --glow-inset: rgba(255,223,0,.12);
+            --panel-top: rgba(80,64,16,.62); --panel-bot: rgba(32,26,8,.65);
+            --btn-glow: rgba(255,230,120,.4); --btn-hover-glow: rgba(255,215,0,.32); --btn-hover-inset: rgba(255,248,200,.14);
+            --handle-tint: rgba(255,215,0,.2); --handle-hover: rgba(255,235,150,.3);
+            --saved: #ffdf00; --save-flash: #ffcc00; --save-flash-mid: #fff8c0; --save-flash-glow: rgba(255,215,0,.9);
+            --meter-bg: rgba(180,140,20,.32); --meter-fill-a: #ffcc00; --meter-fill-b: #fffacd;
+            --scroll-track: #12100a; --scroll-track-border: #4a4020;
+            --scroll-thumb-a: #7a6018; --scroll-thumb-b: #443610; --scroll-thumb-border: #ffdf00;
+            --scroll-thumb-glow: rgba(255,215,0,.6);
+            --scroll-thumb-hover-a: #9a7818; --scroll-thumb-hover-b: #5a4810;
+            --scroll-fx-thumb: #7a6018; --scroll-fx-track: #12100a;
+            --crt-saturate: 1.25;
+        }
+        :root[data-theme="synth"]{
+            --bg:#0a040a; --panel:#140818; --line:#201028; --fg:#ff66cc; --dim:#cc44aa; --accent:#00ffff;
+            --body-bg: radial-gradient(1200px 600px at 70% -20%, #280828 0%, transparent 100%), linear-gradient(180deg, #06020a, #020408);
+            --glow: rgba(0,255,255,.4); --glow-soft: rgba(255,100,200,.16); --glow-inset: rgba(0,255,255,.06);
+            --panel-top: rgba(32,8,40,.5); --panel-bot: rgba(16,4,24,.5);
+            --btn-glow: rgba(255,100,200,.28); --btn-hover-glow: rgba(0,255,255,.2); --btn-hover-inset: rgba(255,100,200,.1);
+            --handle-tint: rgba(0,255,255,.12); --handle-hover: rgba(255,100,200,.16);
+            --saved: #00ffcc; --save-flash: #00ffff; --save-flash-mid: #ff66cc; --save-flash-glow: rgba(0,255,255,.75);
+            --meter-bg: rgba(160,40,140,.25); --meter-fill-a: #ff66cc; --meter-fill-b: #00ffff;
+            --scroll-track: #140818; --scroll-track-border: #201028;
+            --scroll-thumb-a: #401040; --scroll-thumb-b: #200820; --scroll-thumb-border: #ff66cc;
+            --scroll-thumb-glow: rgba(0,255,255,.4);
+            --scroll-thumb-hover-a: #581858; --scroll-thumb-hover-b: #2c0c2c;
+            --scroll-fx-thumb: #401040; --scroll-fx-track: #140818;
+            --crt-saturate: 1.1;
         }
 
         /* ========================================
@@ -25,7 +156,7 @@
         body{
             margin:0; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
-            color:var(--fg); background:radial-gradient(1200px 600px at 30% -20%, #0b2a19 0%, transparent 100%), #020804;
+            color:var(--fg); background:var(--body-bg);
         }
 
         /* ========================================
@@ -37,7 +168,7 @@
             display:grid;
             grid-template-rows:auto 1fr auto;
             padding:16px;
-            filter: contrast(1.1) saturate(0.8);
+            filter: contrast(1.1) saturate(var(--crt-saturate));
         }
 
         /* Vignette and curvature illusion overlay */
@@ -71,7 +202,7 @@
            ======================================== */
         header, footer{ position:relative; z-index:2; }
         header{ display:flex; gap:12px; align-items:center; justify-content:space-between; }
-        .title{ color:var(--accent); text-shadow:0 0 6px rgba(182,255,182,.35); font-weight:bold }
+        .title{ color:var(--accent); text-shadow:0 0 6px var(--glow); font-weight:bold }
         .status{ font-size:14px; color:var(--accent) }
 
         main{
@@ -91,10 +222,8 @@
             max-height:100%;
         }
         .panel{
-
-            background:linear-gradient(180deg, rgba(15,48,30,.48), rgba(8,22,14,.48));
-
-            border:1px solid var(--line); border-radius:8px; padding:12px; box-shadow:0 0 0 1px rgba(127,255,183,.05) inset;
+            background:linear-gradient(180deg, var(--panel-top), var(--panel-bot));
+            border:1px solid var(--line); border-radius:8px; padding:12px; box-shadow:0 0 0 1px var(--glow-inset) inset;
         }
 
         /* ========================================
@@ -105,13 +234,67 @@
         .mono-dim{ color:var(--dim) }
         .big{ font-size:30px; margin:0 }
         .sub{ font-size:12px }
-        .meter{ height:6px; background:rgba(80,160,80,.2); border-radius:999px; overflow:hidden }
-        .meter > i{ display:block; height:100%; background:linear-gradient(90deg,#0f0,#8f8); width:0% }
-        .console .saved {color: #49be25; font-weight: bold;}
-        .console .story {color: #ff4d4d; font-weight: bold;}
-        /* NEW: ASCII art styling */
-        .console .ascii { color: var(--accent); font-weight: 700; }
-        .console pre.ascii { color: var(--accent); font-weight: 700; margin: 6px 0 10px 0; line-height: 1.05; }
+        .meter{ height:6px; background:var(--meter-bg); border-radius:999px; overflow:hidden }
+        .meter > i{ display:block; height:100%; background:linear-gradient(90deg, var(--meter-fill-a), var(--meter-fill-b)); width:0% }
+        .console-terminal{
+            display:flex; flex-direction:column;
+            height:240px; overflow:hidden;
+            font-size:13px; line-height:1.35;
+            min-height:120px; max-height:85vh;
+        }
+        .console-output{
+            flex:1; min-height:0; overflow-y:auto; overflow-x:hidden;
+            white-space:pre-wrap; padding:8px 8px 4px;
+            display:flex; flex-direction:column;
+        }
+        .console-terminal .saved {color: var(--saved); font-weight: bold;}
+        .console-terminal .story {color: #ff4d4d; font-weight: bold;}
+        .console-terminal .ascii { color: var(--accent); font-weight: 700; }
+        .console-terminal pre.ascii { color: var(--accent); font-weight: 700; margin: 6px 0 10px 0; line-height: 1.05; }
+        .console-terminal b{ color:var(--accent) }
+        .console-user{ color:var(--accent); padding:0 8px }
+        .console-input-row{
+            display:flex; align-items:center; gap:6px;
+            border-top:1px solid var(--line);
+            padding:6px 8px;
+            background:rgba(0,0,0,.25);
+            flex-shrink:0;
+        }
+        .console-prompt{ color:var(--accent); font-weight:bold; user-select:none }
+        .console-input{
+            flex:1; min-width:0;
+            background:transparent; border:none;
+            color:var(--fg); font-family:inherit; font-size:13px;
+            outline:none; caret-color:var(--accent);
+        }
+        .console-input::placeholder{ color:var(--dim); opacity:.7 }
+        .console-terminal pre.terminal-out{
+            margin:2px 8px 6px; padding:0;
+            color:var(--fg); font-size:12px; line-height:1.32;
+            white-space:pre-wrap; font-weight:normal;
+        }
+        .console-resize-handle{
+            flex-shrink:0; height:10px; cursor:ns-resize;
+            border-top:1px solid var(--line);
+            background:linear-gradient(to bottom, transparent, var(--handle-tint));
+            touch-action:none;
+        }
+        .console-resize-handle:hover{ background:var(--handle-hover) }
+        .console-inline-host{ min-height:0 }
+        .console-placeholder{
+            display:flex; align-items:center; justify-content:space-between;
+            gap:8px; padding:10px 12px; font-size:12px;
+        }
+        .console-modal.frag-modal{
+            width:min(760px, 96vw); max-height:min(92vh, 900px);
+            display:flex; flex-direction:column; overflow:hidden;
+        }
+        .console-modal-host{
+            flex:1; min-height:280px; display:flex; flex-direction:column;
+        }
+        .console-modal-host .console-terminal{
+            flex:1; min-height:280px;
+        }
 
         /* ========================================
            BUTTONS: Terminal-style interactive elements
@@ -120,13 +303,21 @@
             background:transparent; color:var(--fg);
             border:1px solid var(--dim); border-radius:4px;
             padding:8px 10px; font-family:inherit; cursor:pointer;
-            text-shadow:0 0 6px rgba(160,255,160,.25);
+            text-shadow:0 0 6px var(--btn-glow);
         }
-        button:hover{ box-shadow:0 0 10px rgba(160,255,160,.15), inset 0 0 10px rgba(160,255,160,.07) }
+        button:hover{ box-shadow:0 0 10px var(--btn-hover-glow), inset 0 0 10px var(--btn-hover-inset) }
         button:disabled{ opacity:.45; cursor:not-allowed }
 
         .primary{ border-color:var(--accent); }
-        .danger{ border-color:#ff8080; color:#ffd0d0 }
+        .danger{ border-color:var(--danger-border); color:var(--danger-fg) }
+
+        @keyframes saveSuccess{
+            0%{ box-shadow:0 0 0 transparent; border-color:var(--accent); color:var(--fg); transform:scale(1) }
+            30%{ box-shadow:0 0 22px var(--save-flash-glow), inset 0 0 14px var(--glow-inset); border-color:var(--save-flash); color:var(--save-flash-mid); transform:scale(1.06) }
+            55%{ box-shadow:0 0 14px var(--glow-soft); border-color:var(--save-flash); color:var(--save-flash) }
+            100%{ box-shadow:0 0 6px var(--glow-inset); border-color:var(--accent); color:var(--fg); transform:scale(1) }
+        }
+        #saveBtn.save-success{ animation:saveSuccess .7s ease-out }
 
         /* ========================================
            LEFT COLUMN: Main action area styling
@@ -137,9 +328,6 @@
         }
         .clicker:before{ content:"> _ RUN PROBE"; color:var(--accent); margin-right:8px }
 
-        .console{ font-size:13px; line-height:1.35; height:240px; overflow:auto; white-space:pre-wrap }
-        .console b{ color:var(--accent) }
-
         /* ========================================
            RIGHT COLUMN: Shop and targets styling
            ======================================== */
@@ -148,7 +336,37 @@
         .entry{ display:grid; gap:6px; border:1px dashed var(--dim); padding:8px; border-radius:6px }
         .entry h4{ margin:0; font-size:15px }
         .entry .desc{ font-size:12px; color:var(--dim) }
-        .entry .row{ justify-content:space-between }
+        .entry.locked-tier{ opacity:.55 }
+        .entry.locked-tier h4::after{ content:' [TIER]'; font-size:11px; color:var(--dim) }
+        .frag-shop .entry{ border-style:solid }
+        .frag-shop .cat-label{ font-size:11px; color:var(--accent); letter-spacing:.08em; margin:4px 0 2px 0 }
+        .frag-shop .owned-theme{ outline:1px solid var(--accent); outline-offset:2px }
+
+        /* Fragment shop modal overlay */
+        .frag-overlay{
+            display:none; position:fixed; inset:0; z-index:100;
+            background:rgba(0,0,0,.75); align-items:center; justify-content:center;
+            padding:20px; backdrop-filter:blur(2px);
+        }
+        .frag-overlay.open{ display:flex }
+        .frag-modal{
+            width:min(580px, 96vw); max-height:min(88vh, 760px);
+            overflow-y:auto; margin:0;
+            box-shadow:0 0 40px var(--glow-soft), 0 0 0 1px var(--line);
+        }
+        .frag-modal .frag-shop{ max-height:none }
+        .frag-modal--compact{ width:min(460px, 96vw); max-height:none }
+        .utility-on .frag-lvl{ color:var(--accent) }
+        .prestige-modal-body{ display:grid; gap:10px; font-size:14px; line-height:1.45 }
+        .prestige-stat-row{ display:flex; justify-content:space-between; align-items:baseline; gap:12px }
+        .prestige-highlight b{ color:var(--accent); font-size:18px; text-shadow:0 0 8px var(--glow) }
+        .prestige-warn{ margin:4px 0 0; font-size:12px; border-left:2px solid var(--line); padding-left:8px }
+        .info-modal-body{ font-size:13px; line-height:1.5; color:var(--fg) }
+        .info-modal-body h3{ margin:12px 0 4px; font-size:13px; color:var(--accent) }
+        .info-modal-body h3:first-child{ margin-top:0 }
+        .info-modal-body p{ margin:0 0 8px }
+        .info-modal-body ul{ margin:0 0 8px; padding-left:18px }
+        .info-modal-body li{ margin-bottom:4px }
         .badge{ border:1px solid var(--dim); padding:2px 6px; border-radius:999px; font-size:11px }
 
         .kbd{ border:1px solid var(--dim); padding:0 6px; border-radius:3px; font-size:12px; margin-left:6px }
@@ -173,6 +391,9 @@
         .shop-item{ border:1px solid var(--line); border-radius:6px; padding:10px }
         .targets{ display:flex; flex-wrap:wrap; gap:6px; max-height:150px; overflow:auto }
         footer{ margin-top:16px; font-size:12px; opacity:.9 }
+        .help{ font-size:12px; color:var(--dim); line-height:1.4 }
+        .sep{ height:1px; background:var(--line); margin:8px 0 }
+        .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0 }
         @media (max-width: 920px){ main{ grid-template-columns: 1fr } }
 
         /* Scrollbar styling for CRT console theme */
@@ -184,26 +405,117 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #0a1a10;
-            border: 1px solid #0f2a18;
+            background: var(--scroll-track);
+            border: 1px solid var(--scroll-track-border);
             border-radius: 6px;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #1f4a2d, #0c2818);
-            border: 1px solid #7bd07b;
+            background: linear-gradient(180deg, var(--scroll-thumb-a), var(--scroll-thumb-b));
+            border: 1px solid var(--scroll-thumb-border);
             border-radius: 6px;
-            box-shadow: inset 0 0 4px rgba(127,255,183,.4);
+            box-shadow: inset 0 0 4px var(--scroll-thumb-glow);
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, #2a603e, #104026);
+            background: linear-gradient(180deg, var(--scroll-thumb-hover-a), var(--scroll-thumb-hover-b));
         }
 
         /* Firefox */
         * {
             scrollbar-width: auto;
-            scrollbar-color: #1f4a2d #0a1a10;
+            scrollbar-color: var(--scroll-fx-thumb) var(--scroll-fx-track);
+        }
+
+        /* Golden Root — metallic luxury (distinct from amber rust-orange) */
+        @keyframes goldShimmer{
+            0%, 100%{ opacity:.65 }
+            50%{ opacity:1 }
+        }
+        @keyframes goldTitlePulse{
+            0%, 100%{ text-shadow:0 0 10px rgba(255,215,0,.6), 0 0 26px rgba(255,200,0,.35), 0 0 48px rgba(255,180,0,.18) }
+            50%{ text-shadow:0 0 16px rgba(255,240,160,.9), 0 0 36px rgba(255,215,0,.55), 0 0 64px rgba(255,190,0,.28) }
+        }
+        @keyframes goldBorderGlint{
+            0%, 100%{ box-shadow:0 0 0 1px var(--glow-inset) inset, 0 0 14px rgba(255,215,0,.1) }
+            50%{ box-shadow:0 0 0 1px rgba(255,240,180,.25) inset, 0 0 24px rgba(255,215,0,.22) }
+        }
+        @keyframes goldButtonShine{
+            0%{ transform:translateX(-160%) skewX(-22deg); opacity:0 }
+            15%{ opacity:1 }
+            100%{ transform:translateX(260%) skewX(-22deg); opacity:0 }
+        }
+        @keyframes goldEntryFlash{
+            0%{ box-shadow:inset 0 0 0 rgba(255,215,0,0), 0 0 0 rgba(255,215,0,0); border-color:var(--line) }
+            35%{ box-shadow:inset 0 0 28px rgba(255,215,0,.4), 0 0 22px rgba(255,200,0,.35); border-color:#ffdf00 }
+            100%{ box-shadow:inset 0 0 0 rgba(255,215,0,0), 0 0 0 rgba(255,215,0,0); border-color:var(--line) }
+        }
+        @keyframes goldMoneyPulse{
+            0%, 100%{ transform:scale(1); filter:brightness(1) }
+            45%{ transform:scale(1.04); filter:brightness(1.35) }
+        }
+        [data-theme="gold"] button{
+            position:relative; overflow:hidden;
+            border-color:rgba(212,175,55,.5);
+            background:linear-gradient(180deg, rgba(255,215,0,.1) 0%, rgba(0,0,0,.25) 55%, rgba(255,200,0,.06) 100%);
+        }
+        [data-theme="gold"] button.gold-shine::after{
+            content:""; position:absolute; top:-60%; left:0;
+            width:45%; height:220%;
+            background:linear-gradient(105deg, transparent 0%, rgba(255,255,255,.12) 30%, rgba(255,252,220,.92) 50%, rgba(255,255,255,.12) 70%, transparent 100%);
+            animation:goldButtonShine .6s ease-out forwards;
+            pointer-events:none;
+        }
+        [data-theme="gold"] .entry.gold-entry-flash,
+        [data-theme="gold"] .shop-item.gold-entry-flash{
+            animation:goldEntryFlash .65s ease-out;
+        }
+        [data-theme="gold"] .big.gold-money-pulse{
+            animation:goldMoneyPulse .55s ease-out;
+        }
+        [data-theme="gold"] .title{
+            animation:goldTitlePulse 2.8s ease-in-out infinite;
+        }
+        [data-theme="gold"] .crt{
+            background:radial-gradient(ellipse 65% 42% at 50% 0%, rgba(255,215,0,.09) 0%, transparent 72%);
+        }
+        [data-theme="gold"] .crt::before{
+            background:
+                radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.32) 88%),
+                linear-gradient(105deg, transparent 38%, rgba(255,248,200,.08) 50%, transparent 62%);
+            background-size:100% 100%, 220% 100%;
+            animation:goldShimmer 5s ease-in-out infinite;
+        }
+        [data-theme="gold"] .panel{
+            animation:goldBorderGlint 3.5s ease-in-out infinite;
+            border-color:rgba(255,215,0,.4);
+            background:linear-gradient(145deg, var(--panel-top), var(--panel-bot)),
+                linear-gradient(105deg, transparent 42%, rgba(255,248,200,.04) 50%, transparent 58%);
+        }
+        [data-theme="gold"] .status,
+        [data-theme="gold"] .primary{
+            text-shadow:0 0 10px rgba(255,215,0,.4);
+        }
+        [data-theme="gold"] .big{
+            text-shadow:0 0 14px rgba(255,215,0,.45), 0 0 32px rgba(255,200,0,.22);
+        }
+        [data-theme="gold"] .clicker.primary{
+            border-color:rgba(255,215,0,.75);
+            box-shadow:0 0 18px rgba(255,215,0,.18), inset 0 0 22px rgba(255,215,0,.08);
+        }
+        [data-theme="gold"] .clicker.primary:hover{
+            box-shadow:0 0 28px rgba(255,215,0,.32), inset 0 0 28px rgba(255,248,200,.12);
+        }
+        [data-theme="gold"] .frag-modal{
+            box-shadow:0 0 55px rgba(255,215,0,.28), 0 0 0 1px rgba(255,223,0,.3);
+        }
+
+        /* Amber — warm rust-orange vintage phosphor (no metallic effects) */
+        [data-theme="amber"] .title{
+            text-shadow:0 0 8px rgba(255,100,40,.35);
+        }
+        [data-theme="amber"] .panel{
+            border-color:rgba(180,90,30,.35);
         }
 
     </style>
@@ -219,15 +531,19 @@
          HEADER: Title bar and status display
          ======================================== -->
     <header>
-        <div class="title">HACK//CLICKER <span class="mono-dim">— v1.3</span></div>
+        <div class="title">HACK//CLICKER <span class="mono-dim">— v1.5</span></div>
         <div class="row">
+            <div class="status">RUN:<span id="runTier">0</span></div>
+            <div id="prestigeCountWrap" class="status" style="display:none">PRST:<span id="prestigeCount">0</span></div>
             <div class="status">BAL:$<span id="money">0</span></div>
             <!-- Fragments (hidden until earned) -->
             <div id="fragmentsWrap" class="status" style="display:none">FRAG:<span id="fragments">0</span></div>
             <div class="status">IPS:<span id="ips">0</span></div>
             <div class="status">Target:<span id="targetName">LAN Users</span></div>
+            <button id="fragShopBtn" class="primary" style="display:none" title="Open Fragment Shop">[ FRAG SHOP ]</button>
             <button id="saveBtn" title="Force save (autosaves)" class="primary">[ SAVE ]</button>
             <button id="prestigeBtn" title="Reset for Fragments" class="primary">[ PRESTIGE ]</button>
+            <button id="infoBtn" title="How to play" class="primary">[ INFO ]</button>
             <button id="resetBtn" class="danger" title="Erase progress">[ RESET ]</button>
         </div>
     </header>
@@ -262,22 +578,32 @@
 
             <!-- Console log area -->
             <div>
-                <div class="row" style="justify-content:space-between"><b>/// CONSOLE</b><span class="mono-dim">(console.log)</span></div>
-                <div id="console" class="console panel" aria-live="polite" aria-atomic="false"></div>
+                <div class="row" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+                    <b>/// CONSOLE</b>
+                    <div class="row" style="gap:6px;align-items:center">
+                        <button id="consolePopoutBtn" type="button" class="primary" style="font-size:10px;padding:4px 8px" title="Pop out console">[ POP OUT ]</button>
+                        <span class="mono-dim">(type &amp; press ↵)</span>
+                    </div>
+                </div>
+                <div id="consoleInlineHost" class="console-inline-host">
+                    <div id="consoleTerminal" class="console-terminal panel">
+                        <div id="console" class="console-output" aria-live="polite" aria-atomic="false"></div>
+                        <form id="consoleForm" class="console-input-row" autocomplete="off">
+                            <span class="console-prompt" aria-hidden="true">&gt;</span>
+                            <input id="consoleInput" class="console-input" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Console command" placeholder="_" />
+                        </form>
+                        <div id="consoleResizeHandle" class="console-resize-handle" title="Drag to resize" aria-hidden="true"></div>
+                    </div>
+                </div>
+                <div id="consoleInlinePlaceholder" class="panel console-placeholder" style="display:none">
+                    <span class="mono-dim">Console popped out — drag edge to resize in window.</span>
+                    <button id="consoleDockBtnInline" type="button" class="primary" style="font-size:10px;padding:4px 8px">[ DOCK ]</button>
+                </div>
             </div>
         </section>
 
         <!-- RIGHT COLUMN: Shop and targets -->
         <section class="col">
-            <!-- Targets selection panel -->
-            <!-- Info/help panel -->
-            <div class="panel help">
-                <b>/// INFO</b>
-                <div class="sep"></div>
-                Autosaves every 5 min.
-                Use the<b><span class="kbd green">[SAVE]</span></b> button to force-save, or<b><span class="kbd red">[RESET]</span></b> to wipe progress.
-                <div class="mono-dim" style="margin-top:6px">Prestige converts current funds into <b>Fragments</b> (1 per order of magnitude starting at $1,000). Fragments permanently discount shop costs.</div>
-            </div>
             <div class="panel">
                 <div class="row" style="justify-content:space-between;align-items:center">
                     <b>/// TARGETS</b><span class="mono-dim">Select to change payout multiplier</span>
@@ -304,6 +630,100 @@
     </footer>
 </div>
 
+<!-- Fragment shop modal (opens over main game) -->
+<div id="fragShopOverlay" class="frag-overlay" aria-hidden="true">
+    <div class="frag-modal panel" role="dialog" aria-labelledby="fragShopTitle" aria-modal="true">
+        <div class="row" style="justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+            <b id="fragShopTitle">/// FRAGMENT SHOP</b>
+            <span class="mono-dim">Balance: <b id="fragShopFragBalance">0</b> FRAG</span>
+            <button id="fragShopClose" type="button" title="Close">[ CLOSE ]</button>
+        </div>
+        <div class="sep"></div>
+        <div id="fragShop" class="list frag-shop" aria-label="Fragment shop"></div>
+    </div>
+</div>
+
+<!-- Prestige confirmation modal -->
+<div id="prestigeOverlay" class="frag-overlay" aria-hidden="true">
+    <div class="frag-modal frag-modal--compact panel" role="dialog" aria-labelledby="prestigeModalTitle" aria-modal="true">
+        <b id="prestigeModalTitle">/// PRESTIGE RESET</b>
+        <div class="sep"></div>
+        <div id="prestigeModalBody" class="prestige-modal-body"></div>
+        <div class="sep"></div>
+        <div class="row" style="justify-content:flex-end; gap:8px; flex-wrap:wrap">
+            <button id="prestigeCancel" type="button">[ CANCEL ]</button>
+            <button id="prestigeConfirm" type="button" class="primary">[ PRESTIGE ]</button>
+        </div>
+    </div>
+</div>
+
+<!-- Reset confirmation modal -->
+<div id="resetOverlay" class="frag-overlay" aria-hidden="true">
+    <div class="frag-modal frag-modal--compact panel" role="dialog" aria-labelledby="resetModalTitle" aria-modal="true">
+        <b id="resetModalTitle">/// WIPE PROGRESS</b>
+        <div class="sep"></div>
+        <div class="prestige-modal-body">
+            <p class="prestige-warn">This will <b>permanently delete</b> all saved progress — money, items, targets, FRAG, prestige, themes, and upgrades. <b>There is no undo.</b></p>
+            <div class="prestige-stat-row"><span class="mono-dim">Current balance</span><b id="resetModalBalance">$0</b></div>
+            <div class="prestige-stat-row"><span class="mono-dim">FRAG balance</span><b id="resetModalFragBal">0</b></div>
+            <div class="prestige-stat-row"><span class="mono-dim">Lifetime FRAG earned</span><b id="resetModalFragEarned">0</b></div>
+        </div>
+        <div class="sep"></div>
+        <div class="row" style="justify-content:flex-end; gap:8px; flex-wrap:wrap">
+            <button id="resetCancel" type="button">[ CANCEL ]</button>
+            <button id="resetConfirm" type="button" class="danger">[ RESET ]</button>
+        </div>
+    </div>
+</div>
+
+<!-- How to play modal -->
+<div id="infoOverlay" class="frag-overlay" aria-hidden="true">
+    <div class="frag-modal frag-modal--compact panel" role="dialog" aria-labelledby="infoModalTitle" aria-modal="true">
+        <div class="row" style="justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+            <b id="infoModalTitle">/// OPERATOR BRIEFING</b>
+            <button id="infoClose" type="button" title="Close">[ CLOSE ]</button>
+        </div>
+        <div class="sep"></div>
+        <div class="info-modal-body">
+            <h3>Core loop</h3>
+            <p>Run <b>probes</b> with <span class="kbd">Space</span>, <span class="kbd">Enter</span>, or the big probe button to earn cash. Buy items in the <b>Hack Shop</b> for passive <b>IPS</b> (income per second). Pick <b>Targets</b> to raise your payout multiplier — higher targets unlock as your balance grows.</p>
+
+            <h3>Prestige &amp; fragments</h3>
+            <p>When you have at least <b>$1,000</b>, use <b>[ PRESTIGE ]</b> to wipe money, items, and targets in exchange for <b>FRAG</b> (Fragments). More money at prestige = more FRAG. After your first prestige, <b>[ FRAG SHOP ]</b> opens for permanent buffs, themes, and utilities.</p>
+
+            <h3>Run tier vs prestige count</h3>
+            <ul>
+                <li><b>RUN</b> tier gates which shop items and targets you can access. It advances from <b>lifetime FRAG earned</b>, not how many times you've prestiged.</li>
+                <li><b>PRST</b> is simply how many times you've prestiged.</li>
+                <li>Spending FRAG in the shop does <b>not</b> lower your run tier.</li>
+            </ul>
+
+            <h3>Saves &amp; tools</h3>
+            <ul>
+                <li>Progress <b>autosaves every 5 minutes</b> and when you tab away. Use <b>[ SAVE ]</b> to force a save.</li>
+                <li><b>[ RESET ]</b> permanently deletes all progress.</li>
+                <li>The <b>console</b> accepts commands — try <span class="kbd">help</span>. Use <b>[ POP OUT ]</b> for a larger terminal.</li>
+                <li><b>[ SCI: OFF/ON ]</b> toggles scientific notation for huge numbers.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Console pop-out modal -->
+<div id="consoleOverlay" class="frag-overlay" aria-hidden="true">
+    <div class="frag-modal panel console-modal" role="dialog" aria-labelledby="consoleModalTitle" aria-modal="true">
+        <div class="row" style="justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+            <b id="consoleModalTitle">/// CONSOLE</b>
+            <div class="row" style="gap:6px">
+                <button id="consoleDockBtn" type="button" title="Dock to main panel">[ DOCK ]</button>
+                <button id="consoleModalClose" type="button" title="Dock and close">[ CLOSE ]</button>
+            </div>
+        </div>
+        <div class="sep"></div>
+        <div id="consoleModalHost" class="console-modal-host"></div>
+    </div>
+</div>
+
 <script>
     (function(){
         /* ========================================
@@ -315,113 +735,256 @@
         // Clamp helper
         const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 
+        /* ========================================
+           BIGINT MONEY: Fixed-point micro-dollars (6 decimals)
+           ======================================== */
+        const MONEY_SCALE = 1_000_000n;
+        const MONEY_SCALE_NUM = 1_000_000;
+        const MAX_OFFLINE_SECONDS = 86400; // 24h offline cap
+        const TICK_MS = 100;
+        const MAX_DT = 1; // max seconds credited per tick (anti-exploit)
+        const COST_GROWTH_NUM = 118n; // 1.18× per owned copy (slower snowball)
+        const COST_GROWTH_DEN = 100n;
+        const FRAG_DISCOUNT_MAX = 0.65;   // asymptotic max shop discount from fragments
+        const FRAG_DISCOUNT_SCALE = 1200; // higher = slower discount growth
+        const FRAG_CLICK_MAX = 0.30;      // asymptotic max +30% click bonus from fragments
+        const FRAG_CLICK_SCALE = 1500;
+
+        function dollarsToMicro(v){
+            if (typeof v === 'bigint') return v;
+            let s = String(v).trim();
+            if (!s || s === 'NaN' || s === 'Infinity') return 0n;
+            const neg = s.startsWith('-');
+            if (neg) s = s.slice(1);
+            if (/e/i.test(s)){
+                const [mant, expStr] = s.toLowerCase().split('e');
+                const exp = parseInt(expStr, 10);
+                const [whole, frac = ''] = mant.split('.');
+                const digits = (whole || '0') + frac;
+                const decimalPlaces = frac.length;
+                const shift = exp - decimalPlaces + 6;
+                let micro;
+                if (shift >= 0){
+                    micro = BigInt(digits || '0') * (10n ** BigInt(shift));
+                } else {
+                    micro = BigInt(digits || '0') / (10n ** BigInt(-shift));
+                }
+                return neg ? -micro : micro;
+            }
+            const [whole, frac = ''] = s.split('.');
+            const frac6 = (frac + '000000').slice(0, 6);
+            const micro = BigInt(whole || '0') * MONEY_SCALE + BigInt(frac6);
+            return neg ? -micro : micro;
+        }
+
+        function microToNumber(micro){
+            if (micro === 0n) return 0;
+            if (micro <= BigInt(Number.MAX_SAFE_INTEGER) && micro >= -BigInt(Number.MAX_SAFE_INTEGER)){
+                return Number(micro) / MONEY_SCALE_NUM;
+            }
+            const s = (micro < 0n ? '-' : '') + (micro < 0n ? -micro : micro).toString();
+            const exp = s.length - 7;
+            const mantissa = parseFloat(s.slice(0, Math.min(4, s.length)) + '.' + s.slice(Math.min(4, s.length), Math.min(6, s.length)));
+            return (micro < 0n ? -1 : 1) * mantissa * Math.pow(10, exp);
+        }
+
+        function microLog10Dollars(micro){
+            if (micro <= 0n) return -Infinity;
+            return (micro.toString().length - 1) - 6;
+        }
+
+        function fmtMicro(micro, moneyStyle = false){
+            const n = microToNumber(micro);
+            if (moneyStyle) return fmtMoney(n);
+            if (state.scientificNotation && Math.abs(n) >= 1000) return n.toExponential(2);
+            return n.toLocaleString(undefined, { maximumFractionDigits: 2 });
+        }
+
         // Format large numbers with suffixes (K, M, B) or scientific notation
         const fmtMoney = n => {
-            if (state.scientificNotation && n >= 1000) {
-                return n.toExponential(2);
+            const num = typeof n === 'bigint' ? microToNumber(n) : n;
+            if (state.scientificNotation && num >= 1000) {
+                return num.toExponential(2);
             }
-            return (n>=1e9? (n/1e9).toFixed(2)+"B" : n>=1e6? (n/1e6).toFixed(2)+"M" : n>=1e3? (n/1e3).toFixed(2)+"K" : n.toFixed(0));
+            return (num>=1e9? (num/1e9).toFixed(2)+"B" : num>=1e6? (num/1e6).toFixed(2)+"M" : num>=1e3? (num/1e3).toFixed(2)+"K" : num.toFixed(0));
         };
 
         // Format numbers with locale-specific separators or scientific notation
         const fmt = n => {
-            if (state.scientificNotation && n >= 1000) {
-                return Number(n).toExponential(2);
+            const num = typeof n === 'bigint' ? microToNumber(n) : Number(n);
+            if (state.scientificNotation && num >= 1000) {
+                return num.toExponential(2);
             }
-            return Number(n).toLocaleString(undefined,{maximumFractionDigits:2});
+            return num.toLocaleString(undefined,{maximumFractionDigits:2});
         };
+
+        function formatDuration(seconds){
+            if (seconds < 60) return `${Math.floor(seconds)}s`;
+            if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            return m > 0 ? `${h}h ${m}m` : `${h}h`;
+        }
+
+        function gteMicro(a, b){ return a >= b; }
 
         /* ========================================
            GAME STATE: Core data storage
            ======================================== */
         const state = {
-            money: 0,           // Player's current money
-            clicks: 0,          // Total clicks performed
-            items: {},          // Owned items and quantities
-            targets: {},        // Unlocked targets status
-            activeTarget: 'lan', // Currently selected target
-            lastTime: performance.now(), // For delta time calculations
-            scientificNotation: false, // Toggle for scientific notation display
-            fragments: 0,       // Prestige currency (Fragments) — persists through prestiges
+            moneyMicro: 0n,       // Player money (micro-dollars, BigInt)
+            clicks: 0,
+            items: {},
+            targets: {},
+            activeTarget: 'lan',
+            lastTickAt: Date.now(), // Wall-clock for offline + income ticks
+            scientificNotation: false,
+            fragments: 0,
+            prestigeCount: 0,        // times prestiged (opens fragment shop at 1+)
+            totalFragmentsEarned: 0, // lifetime FRAG earned — gates run tier
+            runTier: 0,              // max unlocked run tier (0–7), from totalFragmentsEarned
+            fragUpgrades: {},    // id -> level purchased
+            activeTheme: 'default',
+            autoProbeResidual: 0,
         };
 
         /* ========================================
            GAME DATA: Items and targets definitions
            ======================================== */
-        // Shop items that generate passive income
+        // Shop items — tier gates force multiple prestiges; income tuned ~40% slower than legacy
         const ITEMS = [
-            {id:'keylogger', name:'Keylogger.js', baseCost:25, income:0.1, desc:'console.log(credentials)'},
-            {id:'phish', name:'Phishing Framework', baseCost:150, income:0.8, desc:'Social engineering as a service.'},
-            {id:'ransom', name:'Crypto Locker', baseCost:800, income:4, desc:'Your files are now .encrypted'},
-            {id:'botnet', name:'Zombie Network', baseCost:4500, income:15, desc:'10k IoT devices can\'t be wrong.'},
-            {id:'zeroday', name:'0-Day Exploit', baseCost:25000, income:60, desc:'CVE-2024-PROFIT'},
-            {id:'rootkit', name:'Rootkit Suite', baseCost:120000, income:220, desc:'Ring 0 access granted.'},
-            {id:'quantum', name:'Quantum Debugger', baseCost:650000, income:900, desc:'Entangled qubits, untangled profits.'},
-            {id:'cluster', name:'Kubernetes Cluster', baseCost:3200000, income:4000, desc:'Pods scheduled for maximum gain.'},
-            {id:'neural', name:'Neural Net Farm', baseCost:18000000, income:18000, desc:'Deep learning, deeper pockets.'},
-            {id:'blockchain', name:'Blockchain Miner', baseCost:95000000, income:75000, desc:'Proof of Wealth consensus.'},
-            {id:'ai', name:'AGI Assistant', baseCost:480000000, income:320000, desc:'Sudo make me rich.'},
-            {id:'backdoor', name:'Kernel Backdoor', baseCost:2400000000, income:1300000, desc:'syscall(PROFIT, MAXIMUM)'},
-            {id:'matrix', name:'Reality Debugger', baseCost:12000000000, income:5500000, desc:'Breaking the fourth firewall.'},
-            {id:'timeloop', name:'Git Time Machine', baseCost:60000000000, income:24000000, desc:'git revert --to-profitable'},
-            {id:'multiverse', name:'Fork Bomb Reality', baseCost:300000000000, income:110000000, desc:':(){ :|:& };: but for universes.'},
-            {id:'blackhole', name:'Event Horizon Server', baseCost:1500000000000, income:480000000, desc:'Nothing escapes, especially profits.'},
-            {id:'bigbang', name:'Genesis Block', baseCost:7500000000000, income:2100000000, desc:'Block 0 of reality chain.'},
-            {id:'infinity', name:'Recursive Function', baseCost:37500000000000, income:9200000000, desc:'Stack overflow in spacetime.'},
-            {id:'omninet', name:'IPv∞ Protocol', baseCost:187500000000000, income:40000000000, desc:'Addressing every atom.'},
-            {id:'godmode', name:'Sudo Reality', baseCost:937500000000000, income:175000000000, desc:'Permission level: YES'},
-            {id:'omega', name:'Halt Problem Solver', baseCost:4687500000000000, income:760000000000, desc:'Turing is turning in his grave.'},
-            {id:'transcend', name:'Buffer Overflow God', baseCost:23437500000000000, income:3300000000000, desc:'Segfault in the divine.'},
-            {id:'singularity', name:'rm -rf /universe', baseCost:117187500000000000, income:14500000000000, desc:'Sudo was implied.'},
-            {id:'eternity', name:'while(true) Loop', baseCost:585937500000000000, income:63000000000000, desc:'Break condition: heat death.'},
-            {id:'void', name:'/dev/null Exploit', baseCost:2929687500000000000, income:275000000000000, desc:'Finding profit in nothing.'},
-            {id:'genesis', name:'BIOS of Reality', baseCost:14648437500000000000, income:1200000000000000, desc:'POST check: PROFIT OK'},
-            {id:'absolute', name:'Assembly of Truth', baseCost:73242187500000000000, income:5200000000000000, desc:'MOV RAX, [INFINITE_MONEY]'},
-            {id:'beyond', name:'Undefined Behavior', baseCost:366210937500000000000, income:22500000000000000, desc:'Nasal demons generating cash.'},
-            {id:'ultimate', name:'Core Dump Universe', baseCost:1831054687500000000000, income:98000000000000000, desc:'Analyzing reality.core...'},
-            {id:'infinite', name:'∞ Recursion Engine', baseCost:9155273437500000000000, income:425000000000000000, desc:'return hack(hack(hack(...)))'},
-            {id:'end', name:'CTRL+ALT+DELETE', baseCost:45776367187500000000000, income:1850000000000000000, desc:'Task Manager of existence.'},
+            {id:'keylogger', name:'Keylogger.js', tier:0, baseCost:40, income:0.09, desc:'console.log(credentials)'},
+            {id:'phish', name:'Phishing Framework', tier:0, baseCost:250, income:0.6, desc:'Social engineering as a service.'},
+            {id:'ransom', name:'Crypto Locker', tier:0, baseCost:1600, income:3.2, desc:'Your files are now .encrypted'},
+            {id:'botnet', name:'Zombie Network', tier:0, baseCost:10000, income:13, desc:'10k IoT devices can\'t be wrong.'},
+            {id:'zeroday', name:'0-Day Exploit', tier:0, baseCost:60000, income:48, desc:'CVE-2024-PROFIT'},
+            {id:'rootkit', name:'Rootkit Suite', tier:0, baseCost:350000, income:170, desc:'Ring 0 access granted.'},
+            {id:'quantum', name:'Quantum Debugger', tier:0, baseCost:2000000, income:600, desc:'Entangled qubits, untangled profits.'},
+            {id:'cluster', name:'Kubernetes Cluster', tier:0, baseCost:12000000, income:2300, desc:'Pods scheduled for maximum gain.'},
+            {id:'neural', name:'Neural Net Farm', tier:1, baseCost:75000000, income:8200, desc:'Deep learning, deeper pockets.'},
+            {id:'blockchain', name:'Blockchain Miner', tier:1, baseCost:420000000, income:30000, desc:'Proof of Wealth consensus.'},
+            {id:'ai', name:'AGI Assistant', tier:1, baseCost:2400000000, income:105000, desc:'Sudo make me rich.'},
+            {id:'backdoor', name:'Kernel Backdoor', tier:2, baseCost:14000000000, income:380000, desc:'syscall(PROFIT, MAXIMUM)'},
+            {id:'matrix', name:'Reality Debugger', tier:2, baseCost:80000000000, income:1400000, desc:'Breaking the fourth firewall.'},
+            {id:'timeloop', name:'Git Time Machine', tier:2, baseCost:450000000000, income:5000000, desc:'git revert --to-profitable'},
+            {id:'multiverse', name:'Fork Bomb Reality', tier:2, baseCost:2600000000000, income:18000000, desc:':(){ :|:& };: but for universes.'},
+            {id:'blackhole', name:'Event Horizon Server', tier:3, baseCost:15000000000000, income:62000000, desc:'Nothing escapes, especially profits.'},
+            {id:'bigbang', name:'Genesis Block', tier:3, baseCost:85000000000000, income:220000000, desc:'Block 0 of reality chain.'},
+            {id:'infinity', name:'Recursive Function', tier:3, baseCost:480000000000000, income:780000000, desc:'Stack overflow in spacetime.'},
+            {id:'omninet', name:'IPv∞ Protocol', tier:3, baseCost:2700000000000000, income:2700000000, desc:'Addressing every atom.'},
+            {id:'godmode', name:'Sudo Reality', tier:4, baseCost:15000000000000000, income:9200000000, desc:'Permission level: YES'},
+            {id:'omega', name:'Halt Problem Solver', tier:4, baseCost:85000000000000000, income:31000000000, desc:'Turing is turning in his grave.'},
+            {id:'transcend', name:'Buffer Overflow God', tier:4, baseCost:'480000000000000000', income:'105000000000000', desc:'Segfault in the divine.'},
+            {id:'singularity', name:'rm -rf /universe', tier:4, baseCost:'2700000000000000000', income:'360000000000000', desc:'Sudo was implied.'},
+            {id:'eternity', name:'while(true) Loop', tier:5, baseCost:'15000000000000000000', income:'1200000000000000', desc:'Break condition: heat death.'},
+            {id:'void', name:'/dev/null Exploit', tier:5, baseCost:'85000000000000000000', income:'4000000000000000', desc:'Finding profit in nothing.'},
+            {id:'genesis', name:'BIOS of Reality', tier:5, baseCost:'480000000000000000000', income:'14000000000000000', desc:'POST check: PROFIT OK'},
+            {id:'absolute', name:'Assembly of Truth', tier:6, baseCost:'2700000000000000000000', income:'48000000000000000', desc:'MOV RAX, [INFINITE_MONEY]'},
+            {id:'beyond', name:'Undefined Behavior', tier:6, baseCost:'15000000000000000000000', income:'160000000000000000', desc:'Nasal demons generating cash.'},
+            {id:'ultimate', name:'Core Dump Universe', tier:6, baseCost:'85000000000000000000000', income:'520000000000000000', desc:'Analyzing reality.core...'},
+            {id:'infinite', name:'∞ Recursion Engine', tier:7, baseCost:'480000000000000000000000', income:'1700000000000000000', desc:'return hack(hack(hack(...)))'},
+            {id:'end', name:'CTRL+ALT+DELETE', tier:7, baseCost:'2700000000000000000000000', income:'5500000000000000000', desc:'Task Manager of existence.'},
         ];
 
-        // Targets that provide income multipliers
+        // Targets — softer mult curve, higher unlock thresholds, tier gates on late networks
         const TARGETS = [
-            {id:'lan', name:'localhost:3000', unlockAt:0, mult:1.00, desc:'127.0.0.1 might as well test this locally'},
-            {id:'smb', name:'SMB Share', unlockAt:3000, mult:1.25, desc:'//WORKGROUP/C$/treasure'},
-            {id:'startup', name:'Docker Registry', unlockAt:15000, mult:1.60, desc:'Unprotected port 5000.'},
-            {id:'bank', name:'REST API v1', unlockAt:75000, mult:2.00, desc:'Bearer token: "please"'},
-            {id:'hospital', name:'DICOM Server', unlockAt:350000, mult:2.50, desc:'Medical records = digital gold.'},
-            {id:'megacorp', name:'Active Directory', unlockAt:1500000, mult:3.20, desc:'Domain Admin speedrun any%'},
-            {id:'military', name:'SIPRNET Node', unlockAt:7500000, mult:4.10, desc:'Classified profits.'},
-            {id:'gov', name:'Root DNS Server', unlockAt:35000000, mult:5.30, desc:'Hijacking the backbone.'},
-            {id:'satellite', name:'Starlink Constellation', unlockAt:180000000, mult:6.80, desc:'Low orbit, high profit.'},
-            {id:'planet', name:'Global CDN', unlockAt:900000000, mult:8.80, desc:'Cloudflare for Earth.'},
-            {id:'solar', name:'Mars Ansible', unlockAt:4500000000, mult:11.40, desc:'Ping: 14 minutes. Worth it.'},
-            {id:'galactic', name:'Dyson Sphere API', unlockAt:22500000000, mult:14.80, desc:'Type II civilization profits.'},
-            {id:'cluster', name:'Galactic GitHub', unlockAt:112500000000, mult:19.20, desc:'Forking entire star systems.'},
-            {id:'universe', name:'Cosmic Blockchain', unlockAt:562500000000, mult:25.00, desc:'Mining with black holes.'},
-            {id:'multiverse', name:'Quantum Git Branch', unlockAt:2812500000000, mult:32.50, desc:'All merge conflicts resolved.'},
-            {id:'dimension', name:'5D Chess Server', unlockAt:14062500000000, mult:42.25, desc:'Checkmate in all timelines.'},
-            {id:'timeline', name:'Temporal Database', unlockAt:70312500000000, mult:55.00, desc:'SELECT * FROM future'},
-            {id:'quantum', name:'Qubit Mainframe', unlockAt:351562500000000, mult:71.50, desc:'P = NP = PROFIT'},
-            {id:'void', name:'NULL Pointer', unlockAt:1757812500000000, mult:93.00, desc:'Dereferencing the void.'},
-            {id:'concept', name:'Platonic Server', unlockAt:8789062500000000, mult:121.00, desc:'The ideal form of profit.'},
-            {id:'infinity', name:'∞.∞.∞.∞/0', unlockAt:43945312500000000, mult:157.30, desc:'CIDR block of everything.'},
-            {id:'absolute', name:'sudo su -', unlockAt:219726562500000000, mult:204.50, desc:'Root of all roots.'},
+            {id:'lan', name:'localhost:3000', tier:0, unlockAt:0, mult:1.00, desc:'127.0.0.1 might as well test this locally'},
+            {id:'smb', name:'SMB Share', tier:0, unlockAt:8000, mult:1.12, desc:'//WORKGROUP/C$/treasure'},
+            {id:'startup', name:'Docker Registry', tier:0, unlockAt:45000, mult:1.25, desc:'Unprotected port 5000.'},
+            {id:'bank', name:'REST API v1', tier:0, unlockAt:280000, mult:1.40, desc:'Bearer token: "please"'},
+            {id:'hospital', name:'DICOM Server', tier:0, unlockAt:1500000, mult:1.55, desc:'Medical records = digital gold.'},
+            {id:'megacorp', name:'Active Directory', tier:0, unlockAt:8000000, mult:1.72, desc:'Domain Admin speedrun any%'},
+            {id:'military', name:'SIPRNET Node', tier:1, unlockAt:45000000, mult:1.95, desc:'Classified profits.'},
+            {id:'gov', name:'Root DNS Server', tier:1, unlockAt:280000000, mult:2.20, desc:'Hijacking the backbone.'},
+            {id:'satellite', name:'Starlink Constellation', tier:1, unlockAt:1600000000, mult:2.50, desc:'Low orbit, high profit.'},
+            {id:'planet', name:'Global CDN', tier:1, unlockAt:9000000000, mult:2.85, desc:'Cloudflare for Earth.'},
+            {id:'solar', name:'Mars Ansible', tier:2, unlockAt:55000000000, mult:3.25, desc:'Ping: 14 minutes. Worth it.'},
+            {id:'galactic', name:'Dyson Sphere API', tier:2, unlockAt:320000000000, mult:3.70, desc:'Type II civilization profits.'},
+            {id:'cluster', name:'Galactic GitHub', tier:2, unlockAt:1800000000000, mult:4.25, desc:'Forking entire star systems.'},
+            {id:'universe', name:'Cosmic Blockchain', tier:2, unlockAt:10000000000000, mult:4.90, desc:'Mining with black holes.'},
+            {id:'multiverse', name:'Quantum Git Branch', tier:3, unlockAt:65000000000000, mult:5.70, desc:'All merge conflicts resolved.'},
+            {id:'dimension', name:'5D Chess Server', tier:3, unlockAt:380000000000000, mult:6.60, desc:'Checkmate in all timelines.'},
+            {id:'timeline', name:'Temporal Database', tier:3, unlockAt:2200000000000000, mult:7.70, desc:'SELECT * FROM future'},
+            {id:'quantum', name:'Qubit Mainframe', tier:4, unlockAt:13000000000000000, mult:9.00, desc:'P = NP = PROFIT'},
+            {id:'void', name:'NULL Pointer', tier:4, unlockAt:75000000000000000, mult:10.50, desc:'Dereferencing the void.'},
+            {id:'concept', name:'Platonic Server', tier:5, unlockAt:450000000000000000, mult:12.50, desc:'The ideal form of profit.'},
+            {id:'infinity', name:'∞.∞.∞.∞/0', tier:5, unlockAt:'2700000000000000000', mult:15.00, desc:'CIDR block of everything.'},
+            {id:'absolute', name:'sudo su -', tier:6, unlockAt:'16000000000000000000', mult:18.50, desc:'Root of all roots.'},
+        ];
+
+        // Total lifetime FRAG earned required to unlock each run tier (index = tier)
+        // Tuned for ~59 FRAG per $1B prestige — multiple strong runs per tier band
+        const RUN_TIER_THRESHOLDS = [0, 35, 110, 260, 580, 1150, 2300, 4200];
+
+        // Fragment shop — permanent upgrades (spends fragments; unlocks after 1st prestige)
+        const FRAG_CATEGORIES = [
+            { id: 'buff', label: '/// BUFFS' },
+            { id: 'theme', label: '/// THEMES' },
+            { id: 'utility', label: '/// UTILITIES' },
+        ];
+        const FRAG_UPGRADES = [
+            { id:'overclock', category:'buff', name:'Overclocked CPU', cost:25, costScale:1.32, maxLevel:10,
+              desc:'+2% passive IPS per level.', effect:'ips', perLevel:0.02 },
+            { id:'stacksmash', category:'buff', name:'Stack Smasher', cost:30, costScale:1.32, maxLevel:10,
+              desc:'+3% probe click power per level.', effect:'click', perLevel:0.03 },
+            { id:'dns_poison', category:'buff', name:'DNS Poison', cost:45, costScale:1.35, maxLevel:8,
+              desc:'+1.5% effective target multiplier per level.', effect:'target', perLevel:0.015 },
+            { id:'cold_storage', category:'buff', name:'Cold Storage', cost:55, costScale:1.4, maxLevel:5,
+              desc:'+4h offline income cap per level.', effect:'offline', perLevel:14400 },
+            { id:'cron_job', category:'buff', name:'Cron Exploit', cost:65, costScale:1.38, maxLevel:5,
+              desc:'+0.5 auto-probes per second per level.', effect:'autoclick', perLevel:0.5 },
+            { id:'loot_sniper', category:'buff', name:'Loot Sniper', cost:80, costScale:1.36, maxLevel:8,
+              desc:'+4% fragments earned on prestige per level.', effect:'frag_gain', perLevel:0.04 },
+            { id:'cost_cutter', category:'buff', name:'Supply Chain Hack', cost:100, costScale:1.42, maxLevel:5,
+              desc:'+3% hack-shop discount per level (stacks with FRAG hoard).', effect:'shop_disc', perLevel:0.03 },
+
+            { id:'theme_default', category:'theme', name:'Matrix Green', cost:0, maxLevel:1, theme:'default',
+              desc:'Original green phosphor CRT. Free.' },
+            { id:'theme_amber', category:'theme', name:'Amber Phoenix', cost:150, theme:'amber',
+              desc:'Rust-orange vintage CRT phosphor. Warm, not metallic.' },
+            { id:'theme_blood', category:'theme', name:'Blood Terminal', cost:150, theme:'blood',
+              desc:'Red alert war-room aesthetic.' },
+            { id:'theme_ice', category:'theme', name:'Ice Core', cost:200, theme:'ice',
+              desc:'Frost-blue mainframe shell.' },
+            { id:'theme_void', category:'theme', name:'Void Purple', cost:250, theme:'void',
+              desc:'Eldritch deep-purple operator UI.' },
+            { id:'theme_synth', category:'theme', name:'Synthwave', cost:350, theme:'synth',
+              desc:'Hot pink and cyan retro grid.' },
+            { id:'theme_gold', category:'theme', name:'Golden Root', cost:400, theme:'gold',
+              desc:'Metallic champagne gold — shine sweeps on every click, extra flash on purchases.' },
+
+            { id:'quiet_mode', category:'utility', name:'Stealth Shell', cost:0, toggle:true,
+              desc:'Random console events fire ~3× less often. Free toggle.' },
+            { id:'deep_log', category:'utility', name:'Deep Buffer Log', cost:0, toggle:true,
+              desc:'Console keeps 400 lines instead of 200. Free toggle.' },
+            { id:'no_flicker', category:'utility', name:'Stable CRT', cost:0, toggle:true,
+              desc:'Disable screen flicker effect. Free toggle.' },
+            { id:'no_scanlines', category:'utility', name:'Flat Panel', cost:0, toggle:true,
+              desc:'Disable scanline overlay. Free toggle.' },
         ];
 
         /* ========================================
            STATE INITIALIZATION: Set up game data
            ======================================== */
-        // Initialize derived state
-        ITEMS.forEach(i=> state.items[i.id] = {count:0});
-        TARGETS.forEach(t=> state.targets[t.id] = {unlocked: false});
+        // Initialize derived state + precompute BigInt micro values
+        ITEMS.forEach(i => {
+            state.items[i.id] = {count:0};
+            i.baseCostMicro = dollarsToMicro(i.baseCost);
+            i.incomeMicro = dollarsToMicro(i.income);
+        });
+        TARGETS.forEach(t => {
+            state.targets[t.id] = {unlocked: false};
+            t.unlockAtMicro = dollarsToMicro(t.unlockAt);
+        });
         state.targets['lan'].unlocked = true;
+        FRAG_UPGRADES.forEach(u => { state.fragUpgrades[u.id] = 0; });
 
         /* ========================================
            AFFORDABILITY TRACKING: For optimized shop updates
            ======================================== */
-        // Track previous affordability state to avoid unnecessary renders
         let previousAffordability = {};
+        const shopNodes = {};
+        const fragShopNodes = {};
 
         /* ========================================
            DOM REFERENCES: Cache element lookups
@@ -434,26 +997,666 @@
         const multEl = el('mult');
         const targetNameEl = el('targetName');
         const consoleEl = el('console');
+        const consoleForm = el('consoleForm');
+        const consoleInput = el('consoleInput');
+        const consoleTerminal = el('consoleTerminal');
+        const consoleInlineHost = el('consoleInlineHost');
+        const consoleInlinePlaceholder = el('consoleInlinePlaceholder');
+        const consolePopoutBtn = el('consolePopoutBtn');
+        const consoleOverlay = el('consoleOverlay');
+        const consoleModalHost = el('consoleModalHost');
+        const consoleDockBtn = el('consoleDockBtn');
+        const consoleDockBtnInline = el('consoleDockBtnInline');
+        const consoleModalClose = el('consoleModalClose');
         const shopEl = el('shop');
         const targetsEl = el('targets');
         const clickBtn = el('clickBtn');
         const saveBtn = el('saveBtn');
         const resetBtn = el('resetBtn');
+        const infoBtn = el('infoBtn');
+        const infoOverlay = el('infoOverlay');
+        const infoClose = el('infoClose');
         const sciNotationBtn = el('sciNotationBtn');
         const prestigeBtn = el('prestigeBtn');
         const fragmentsWrap = el('fragmentsWrap');
         const fragmentsEl = el('fragments');
+        const prestigeCountEl = el('prestigeCount');
+        const prestigeCountWrap = el('prestigeCountWrap');
+        const runTierEl = el('runTier');
+        const fragShopBtn = el('fragShopBtn');
+        const fragShopOverlay = el('fragShopOverlay');
+        const fragShopClose = el('fragShopClose');
+        const fragShopFragBalance = el('fragShopFragBalance');
+        const fragShopEl = el('fragShop');
+        const prestigeOverlay = el('prestigeOverlay');
+        const prestigeModalBody = el('prestigeModalBody');
+        const prestigeCancel = el('prestigeCancel');
+        const prestigeConfirm = el('prestigeConfirm');
+        const resetOverlay = el('resetOverlay');
+        const resetCancel = el('resetCancel');
+        const resetConfirm = el('resetConfirm');
+        const resetModalBalance = el('resetModalBalance');
+        const resetModalFragBal = el('resetModalFragBal');
+        const resetModalFragEarned = el('resetModalFragEarned');
+        const crtEl = document.querySelector('.crt');
 
         /* ========================================
            CONSOLE LOGGING: Game event messages
            ======================================== */
-        // Add timestamped message to console
+        const MAX_CONSOLE_LINES = 200;
+
+        function maxConsoleLines(){
+            return fragLevel('deep_log') > 0 ? 400 : MAX_CONSOLE_LINES;
+        }
+
+        function fragShopUnlocked(){
+            return state.prestigeCount >= 1;
+        }
+
+        function computeRunTier(totalEarned){
+            let tier = 0;
+            for (let t = RUN_TIER_THRESHOLDS.length - 1; t >= 0; t--){
+                if (totalEarned >= RUN_TIER_THRESHOLDS[t]){ tier = t; break; }
+            }
+            return tier;
+        }
+
+        function fragReqForRunTier(tier){
+            return RUN_TIER_THRESHOLDS[tier] ?? RUN_TIER_THRESHOLDS[RUN_TIER_THRESHOLDS.length - 1];
+        }
+
+        function recalcRunTier(){
+            state.runTier = computeRunTier(state.totalFragmentsEarned);
+        }
+
+        function nextRunTierProgress(){
+            const next = state.runTier + 1;
+            if (next >= RUN_TIER_THRESHOLDS.length) return null;
+            return { tier: next, required: RUN_TIER_THRESHOLDS[next] };
+        }
+
+        function fragLevel(id){
+            return state.fragUpgrades[id] || 0;
+        }
+
+        function fragUpgradeCost(upgrade){
+            const lvl = fragLevel(upgrade.id);
+            const max = upgrade.maxLevel ?? 1;
+            if (lvl >= max) return null;
+            return Math.floor(upgrade.cost * Math.pow(upgrade.costScale || 1, lvl));
+        }
+
+        function maxOfflineSeconds(){
+            return MAX_OFFLINE_SECONDS + fragLevel('cold_storage') * 14400;
+        }
+
+        function effectiveTargetMult(){
+            return currentTarget().mult * (1 + fragLevel('dns_poison') * 0.015);
+        }
+
+        function ipsBuffMult(){
+            return 1 + fragLevel('overclock') * 0.02;
+        }
+
+        function clickBuffMult(){
+            return 1 + fragLevel('stacksmash') * 0.03;
+        }
+
+        function fragGainMult(){
+            return 1 + fragLevel('loot_sniper') * 0.04;
+        }
+
+        function applyTheme(themeId){
+            state.activeTheme = themeId || 'default';
+            if (state.activeTheme === 'default'){
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.dataset.theme = state.activeTheme;
+            }
+        }
+
+        function isGoldTheme(){
+            return state.activeTheme === 'gold';
+        }
+
+        function restartAnimClass(el, cls){
+            if (!el) return;
+            el.classList.remove(cls);
+            void el.offsetWidth;
+            el.classList.add(cls);
+        }
+
+        function playGoldShine(btn){
+            if (!isGoldTheme() || !btn) return;
+            restartAnimClass(btn, 'gold-shine');
+        }
+
+        function playGoldEntryFlash(entry){
+            if (!isGoldTheme() || !entry) return;
+            restartAnimClass(entry, 'gold-entry-flash');
+        }
+
+        function playGoldPurchaseCelebration(entry){
+            if (!isGoldTheme()) return;
+            playGoldEntryFlash(entry);
+            const bigEl = moneyBigEl?.closest('.big');
+            if (bigEl) restartAnimClass(bigEl, 'gold-money-pulse');
+        }
+
+        function initGoldThemeEffects(){
+            document.addEventListener('click', (e) => {
+                if (!isGoldTheme()) return;
+                const btn = e.target.closest('button');
+                if (!btn || btn.disabled) return;
+                playGoldShine(btn);
+            });
+        }
+
+        function applyVisualUpgrades(){
+            if (!crtEl) return;
+            crtEl.classList.toggle('flicker', fragLevel('no_flicker') === 0);
+            crtEl.classList.toggle('scanlines', fragLevel('no_scanlines') === 0);
+        }
+
+        function updateFragShopVisibility(){
+            const unlocked = fragShopUnlocked();
+            if (fragShopBtn) fragShopBtn.style.display = unlocked ? '' : 'none';
+            if (unlocked){
+                if (fragLevel('theme_default') === 0) state.fragUpgrades.theme_default = 1;
+                if (Object.keys(fragShopNodes).length === 0) buildFragShop();
+            } else {
+                closeFragShop();
+            }
+        }
+
+        function isFragShopOpen(){
+            return fragShopOverlay?.classList.contains('open');
+        }
+
+        function isPrestigeModalOpen(){
+            return prestigeOverlay?.classList.contains('open');
+        }
+
+        function isConsolePopoutOpen(){
+            return consoleOverlay?.classList.contains('open');
+        }
+
+        function isInfoModalOpen(){
+            return infoOverlay?.classList.contains('open');
+        }
+
+        function isResetModalOpen(){
+            return resetOverlay?.classList.contains('open');
+        }
+
+        function isGameModalOpen(){
+            return isFragShopOpen() || isPrestigeModalOpen() || isConsolePopoutOpen() || isInfoModalOpen() || isResetModalOpen();
+        }
+
+        const CONSOLE_HEIGHT_MIN = 120;
+        const CONSOLE_HEIGHT_MAX_INLINE = 520;
+        let consoleResizeDrag = null;
+
+        function consoleHeightMax(){
+            if (isConsolePopoutOpen()) return Math.min(window.innerHeight * 0.72, 720);
+            return CONSOLE_HEIGHT_MAX_INLINE;
+        }
+
+        function setConsoleHeight(px){
+            if (!consoleTerminal) return;
+            const h = Math.max(CONSOLE_HEIGHT_MIN, Math.min(px, consoleHeightMax()));
+            consoleTerminal.style.height = h + 'px';
+        }
+
+        function onConsoleResizeMove(e){
+            if (!consoleResizeDrag) return;
+            const dy = e.clientY - consoleResizeDrag.startY;
+            setConsoleHeight(consoleResizeDrag.startH + dy);
+        }
+
+        function onConsoleResizeEnd(){
+            consoleResizeDrag = null;
+            document.removeEventListener('mousemove', onConsoleResizeMove);
+            document.removeEventListener('mouseup', onConsoleResizeEnd);
+        }
+
+        function initConsoleResize(){
+            const handle = el('consoleResizeHandle');
+            if (!handle || !consoleTerminal) return;
+            handle.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                consoleResizeDrag = { startY: e.clientY, startH: consoleTerminal.offsetHeight };
+                document.addEventListener('mousemove', onConsoleResizeMove);
+                document.addEventListener('mouseup', onConsoleResizeEnd);
+            });
+        }
+
+        function scrollConsoleToBottom(){
+            if (!consoleEl) return;
+            requestAnimationFrame(() => {
+                consoleEl.scrollTop = consoleEl.scrollHeight;
+            });
+        }
+
+        function openConsolePopout(){
+            if (!consoleOverlay || !consoleModalHost || !consoleTerminal) return;
+            closeFragShop();
+            closePrestigeModal();
+            closeInfoModal();
+            closeResetModal();
+            consoleModalHost.appendChild(consoleTerminal);
+            if (consoleInlinePlaceholder) consoleInlinePlaceholder.style.display = '';
+            consoleOverlay.classList.add('open');
+            consoleOverlay.setAttribute('aria-hidden', 'false');
+            setConsoleHeight(Math.max(consoleTerminal.offsetHeight, 380));
+            scrollConsoleToBottom();
+            requestAnimationFrame(() => consoleInput?.focus());
+        }
+
+        function dockConsole(){
+            if (!consoleOverlay || !consoleInlineHost || !consoleTerminal) return;
+            consoleInlineHost.appendChild(consoleTerminal);
+            if (consoleInlinePlaceholder) consoleInlinePlaceholder.style.display = 'none';
+            consoleOverlay.classList.remove('open');
+            consoleOverlay.setAttribute('aria-hidden', 'true');
+            scrollConsoleToBottom();
+        }
+
+        function openInfoModal(){
+            closeFragShop();
+            closePrestigeModal();
+            closeResetModal();
+            dockConsole();
+            if (!infoOverlay) return;
+            infoOverlay.classList.add('open');
+            infoOverlay.setAttribute('aria-hidden', 'false');
+            infoClose?.focus();
+        }
+
+        function closeInfoModal(){
+            if (!infoOverlay) return;
+            infoOverlay.classList.remove('open');
+            infoOverlay.setAttribute('aria-hidden', 'true');
+        }
+
+        function openResetModal(){
+            closeFragShop();
+            closePrestigeModal();
+            closeInfoModal();
+            dockConsole();
+            if (!resetOverlay) return;
+            if (resetModalBalance) resetModalBalance.textContent = '$' + fmtMoney(microToNumber(state.moneyMicro));
+            if (resetModalFragBal) resetModalFragBal.textContent = fmt(state.fragments);
+            if (resetModalFragEarned) resetModalFragEarned.textContent = fmt(state.totalFragmentsEarned);
+            resetOverlay.classList.add('open');
+            resetOverlay.setAttribute('aria-hidden', 'false');
+            resetCancel?.focus();
+        }
+
+        function closeResetModal(){
+            if (!resetOverlay) return;
+            resetOverlay.classList.remove('open');
+            resetOverlay.setAttribute('aria-hidden', 'true');
+        }
+
+        function openFragShop(){
+            if (!fragShopUnlocked() || !fragShopOverlay) return;
+            closePrestigeModal();
+            closeInfoModal();
+            closeResetModal();
+            dockConsole();
+            fragShopOverlay.classList.add('open');
+            fragShopOverlay.setAttribute('aria-hidden', 'false');
+            if (fragShopFragBalance) fragShopFragBalance.textContent = fmt(state.fragments);
+            syncFragShop();
+        }
+
+        function closeFragShop(){
+            if (!fragShopOverlay) return;
+            fragShopOverlay.classList.remove('open');
+            fragShopOverlay.setAttribute('aria-hidden', 'true');
+        }
+
+        function syncFragShopBalance(){
+            if (fragShopFragBalance) fragShopFragBalance.textContent = fmt(state.fragments);
+        }
+
+        function trimConsole(){
+            while (consoleEl.childElementCount > maxConsoleLines()) {
+                consoleEl.firstElementChild.remove();
+            }
+        }
+
+        // Add timestamped message to console (capped to avoid unbounded DOM growth)
         function log(msg, cls = '') {
             const ts = new Date().toLocaleTimeString();
             const line = document.createElement('div');
-            if (cls) line.className = cls;        // <- attach class if provided
+            if (cls) line.className = cls;
             line.innerHTML = `<b>[${ts}]</b> ${msg}`;
-            consoleEl.prepend(line);
+            consoleEl.appendChild(line);
+            trimConsole();
+            scrollConsoleToBottom();
+        }
+
+        function logUserInput(text){
+            const line = document.createElement('div');
+            line.className = 'console-user';
+            line.textContent = '> ' + text;
+            consoleEl.appendChild(line);
+            trimConsole();
+            scrollConsoleToBottom();
+        }
+
+        function logTerminalBlock(text){
+            const pre = document.createElement('pre');
+            pre.className = 'terminal-out';
+            pre.textContent = text.replace(/\n$/, '');
+            consoleEl.appendChild(pre);
+            trimConsole();
+            scrollConsoleToBottom();
+        }
+
+        function afterConsoleCheat(){
+            renderStats();
+            updateUnlocks();
+            syncShop();
+            syncFragShop();
+            updateFragShopVisibility();
+            save(true);
+        }
+
+        const CONSOLE_ALIASES = {
+            ifconfig: 'ipconfig', ls: 'dir', clear: 'cls',
+            traceroute: 'tracert', 'help.exe': 'help',
+        };
+
+        const CONSOLE_COMMANDS = {
+            help(){
+                return { type: 'block', text: `
+HACK//CLICKER shell — available commands:
+
+  System     ipconfig, ping, chkdsk, scandisk, ver, systeminfo
+             hostname, whoami, netstat, tasklist, tracert, nslookup
+  Files      dir, format
+  Unix vibes sudo, rm, apt, git, npm
+  Misc       cls, shutdown, help
+
+  Dev        foostus (random ASCII art)` };
+            },
+            foostus(){
+                log('Operator <b>Foostus</b> authenticated. Payload delivered.', 'saved');
+                const art = randomAsciiArt();
+                if (art) logAscii(art);
+                return null;
+            },
+            cls(){
+                consoleEl.innerHTML = '';
+                return null;
+            },
+            ipconfig(){
+                const bal = fmtMoney(microToNumber(state.moneyMicro));
+                return { type: 'block', text: `
+Windows IP Configuration
+
+Ethernet adapter HackNet0:
+
+   Connection-specific DNS Suffix  . : darkweb.local
+   Link-local IPv6 Address . . . . . : fe80::1337:c0de:dead:beef%69
+   IPv4 Address. . . . . . . . . . : 127.0.0.1
+   Subnet Mask . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . : 10.0.0.1 (FBI surveillance van)
+   DNS Servers . . . . . . . . . . : 8.8.8.8
+                                       1.1.1.1 (logs enabled)
+
+Tunnel adapter VPN-PIVOT:
+
+   IPv4 Address. . . . . . . . . . : 198.18.0.42
+   Wallet Route. . . . . . . . . . : ${bal} (routing table full)` };
+            },
+            ping(){
+                return { type: 'block', text: `
+Pinging api.bank.internal [203.0.113.42] with 32 bytes of data:
+Reply from 203.0.113.42: bytes=32 time<1ms TTL=64
+Reply from 203.0.113.42: bytes=32 time<1ms TTL=64
+Reply from 203.0.113.42: bytes=32 time<1ms TTL=64
+Reply from 203.0.113.42: bytes=32 time<1ms TTL=64
+
+Ping statistics for 203.0.113.42:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+(Suspiciously perfect. They're not even trying.)` };
+            },
+            chkdsk(){
+                return { type: 'block', text: `
+The type of the file system is PROFIT-NTFS.
+CHKDSK is verifying files (stage 1 of 5)...
+  12 percent complete. (${Math.floor(Math.random()*9)+3} hours remaining)
+
+Verifying indexes (stage 2 of 5)...
+  Found orphaned index entry: illegal_gains.db
+  Found cross-linked file: receipts.pdf -> /dev/null
+
+CHKDSK is verifying security descriptors (stage 3 of 5)...
+  ACL on C:\\Windows\\System32: Everyone(FULL CONTROL)  [OK]
+
+Windows has scanned the file system and found no problems.
+(It is absolutely lying to you.)` };
+            },
+            scandisk(){
+                return { type: 'block', text: `
+Microsoft ScanDisk for Windows — Copyright 1995 Microsoft Corp.
+
+Drive C:
+ScanDisk checked 2,147,483,647 clusters.
+Found 1 lost allocation unit in 1 chain.
+Converted lost chain to file: C:\\SCANDISK\\FOUND.000
+
+  FOUND.000 appears to contain $4,294,967,295.
+  Recommend: rename to taxes_2024.txt and forget.` };
+            },
+            dir(){
+                const ips = fmt(totalIPS());
+                return { type: 'block', text: `
+ Volume in drive C is ROOTKIT
+ Volume Serial Number is 1337-DEAD
+
+ Directory of C:\\Users\\operator
+
+06/17/2026  03:14 AM    <DIR>          .
+06/17/2026  03:14 AM    <DIR>          ..
+06/17/2026  03:14 AM    <DIR>          node_modules (4.7 GB)
+06/17/2026  03:14 AM         4,294,967,295  definitely_not_stolen.dat
+06/17/2026  03:14 AM                42  answer.txt
+06/17/2026  03:14 AM               ${ips.padStart(8)}  passive_income.log
+               3 File(s)     too_many_bytes
+               3 Dir(s)   0 bytes free (skill issue)` };
+            },
+            whoami(){
+                return { type: 'block', text: `WORKGROUP\\operator\n(Elevation: sudo implied)` };
+            },
+            hostname(){
+                return { type: 'block', text: 'HACK-CLICKER-01' };
+            },
+            ver(){
+                return { type: 'block', text: `
+Microsoft Windows [HACK//CLICKER Edition]
+Version 10.0.1337 (Build 31337)
+(c) 2026 FOOSTUS Corp. All rights reversed.` };
+            },
+            systeminfo(){
+                const run = state.runTier;
+                const prst = state.prestigeCount;
+                const frag = fmt(state.fragments);
+                return { type: 'block', text: `
+Host Name:                 HACK-CLICKER-01
+OS Name:                   Microsoft Windows Hacker Edition
+OS Version:                10.0.1337 N/A Build 31337
+System Manufacturer:       FOOSTUS
+System Model:              ClickerStation 9000
+System Type:               x64 morally-ambiguous PC
+Processor(s):              1 Processor(s) Installed.
+                           [010]: AMD64 Overclocked CPU
+Total Physical Memory:     64,000 MB (of which 63,900 MB is node_modules)
+Available Physical Memory: not enough
+Run Tier:                  ${run}
+Prestige Count:            ${prst}
+Fragment Balance:          ${frag} FRAG
+Domain:                    WORKGROUP
+Logon Server:              \\\\localhost
+Hotfix(s):                 847,291 installed (npm audit pending)` };
+            },
+            netstat(){
+                return { type: 'block', text: `
+Active Connections
+
+  Proto  Local Address          Foreign Address        State
+  TCP    127.0.0.1:3000         0.0.0.0:0              LISTENING
+  TCP    127.0.0.1:3389         boss.pc:3389           ESTABLISHED
+  TCP    192.168.1.42:443       bank.com:443           TIME_WAIT
+  TCP    192.168.1.42:31337     nsa.gov:443            SYN_SENT
+  TCP    192.168.1.42:8080      docker.internal:5000   CLOSE_WAIT
+  UDP    0.0.0.0:53             dns.poisoned:53        LISTENING` };
+            },
+            tasklist(){
+                return { type: 'block', text: `
+Image Name                     PID Session#    Mem Usage
+========================= ======== ========= ============
+System Idle Process              0 Services       24 K
+svchost.exe                    420 Console     8,192 K
+node.exe                      1337 Console   847,291 K
+crypto_miner.exe              8008 Console     4,096 K
+keylogger.js                  9001 Console       256 K
+procrastinate.exe             9999 Console   999,999 K
+System                          4 Services         8 K` };
+            },
+            tracert(){
+                return { type: 'block', text: `
+Tracing route to target.bank.com [203.0.113.42]
+over a maximum of 30 hops:
+
+  1    <1 ms    <1 ms    <1 ms  192.168.1.1 [router.local]
+  2    12 ms    14 ms    11 ms  isp-gateway.net
+  3    28 ms    30 ms    29 ms  somewhere.midwest
+  4    45 ms    44 ms    46 ms  cloudflare-edge
+  5     *        *        *     Request timed out. (VPN hop)
+  6    89 ms    88 ms    90 ms  offshore.shell.company
+  7   120 ms   118 ms   121 ms  probably.fine.datacenter
+  8   133 ms   132 ms   134 ms  target.bank.com
+
+Trace complete. You shouldn't have been able to see hop 5.` };
+            },
+            nslookup(){
+                return { type: 'block', text: `
+Server:  dns.poisoned.local
+Address:  127.0.0.1
+
+Non-authoritative answer:
+Name:    api.bank.internal
+Address:  203.0.113.42
+Aliases:  money.printer.go.brrr` };
+            },
+            format(){
+                return { type: 'block', text: `
+Insert new disk for drive C:
+and press ENTER when ready...
+
+(Just kidding. We're not formatting anything.
+ Your save file sends its regards.)` };
+            },
+            shutdown(){
+                return { type: 'block', text: `
+Access is denied.
+
+This machine only powers UP.
+Passive income continues. Nice try.` };
+            },
+            sudo(){
+                return { type: 'block', text: `
+[sudo] password for operator: ********
+Sorry, try again.
+[sudo] password for operator: ********
+Permission granted. (Morally questionable.)
+
+Remember: with great sudo comes great audit logs.` };
+            },
+            rm(){
+                return { type: 'block', text: `
+rm: cannot remove '/': Permission denied
+rm: cannot remove 'node_modules': Directory not empty (it never is)
+rm: removed 'prod_database.sql' — wait, that was production?
+
+...restoring from backup dated tomorrow.` };
+            },
+            apt(){
+                return { type: 'block', text: `
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following NEW packages will be installed:
+  wealth unlimited-money hacker-tools
+0 upgraded, 3 newly installed, 0 to remove and 847,291 not upgraded.
+Need to get 4.2 GB of archives.
+After this operation, 42 GB of additional disk space will be used.
+E: You don't have enough moral fiber.` };
+            },
+            git(){
+                return { type: 'block', text: `
+On branch main
+Your branch is ahead of 'origin/main' by 847 commits.
+  (use "git push" to shame)
+
+Changes not staged for commit:
+  (use "git add" to file" to update what will be committed)
+        modified:   production.env (CRITICAL)
+        deleted:    security.log
+        new file:   oops.sql
+
+no changes added to commit (use "git add" and/or "git commit -a")` };
+            },
+            npm(){
+                return { type: 'block', text: `
+npm WARN deprecated morality@1.0.0: Package no longer supported
+npm WARN deprecated security@0.0.1: Use 'hope' instead
+
+added 847291 packages, and audited 847292 packages in 47m
+
+847,291 vulnerabilities (1 low, 0 moderate, 1 high, 847,290 critical)
+
+To address all issues, run:
+  npm audit fix --force
+
+(Run at your own risk. And ours. Mostly yours.)` };
+            },
+        };
+
+        function handleConsoleCommand(raw){
+            const trimmed = raw.trim();
+            if (!trimmed) return;
+            logUserInput(trimmed);
+            const parts = trimmed.toLowerCase().split(/\s+/);
+            let key = parts[0];
+            if (CONSOLE_ALIASES[key]) key = CONSOLE_ALIASES[key];
+            // npm install, git status → npm, git
+            const handler = CONSOLE_COMMANDS[key];
+            if (handler){
+                const result = handler(trimmed, parts);
+                if (!result) return;
+                if (result.type === 'block') logTerminalBlock(result.text);
+                else if (result.type === 'log') log(result.msg, result.cls || '');
+                return;
+            }
+            const ts = new Date().toLocaleTimeString();
+            const line = document.createElement('div');
+            line.className = 'story';
+            line.innerHTML = `<b>[${ts}]</b> '`;
+            const code = document.createElement('span');
+            code.textContent = parts[0];
+            line.appendChild(code);
+            line.appendChild(document.createTextNode("' is not recognized as an internal or external command, operable program or batch file."));
+            consoleEl.appendChild(line);
+            trimConsole();
+            scrollConsoleToBottom();
         }
 
         // Specialized logger for ASCII art (HTML-safe, preserves spacing)
@@ -468,79 +1671,104 @@
             wrap.appendChild(tsEl);
             wrap.appendChild(document.createTextNode(' '));
             wrap.appendChild(pre);
-            consoleEl.prepend(wrap);
+            consoleEl.appendChild(wrap);
+            trimConsole();
+            scrollConsoleToBottom();
         }
 
         /* ========================================
            GAME CALCULATIONS: Core math functions
            ======================================== */
-        // Discount from Fragments — 1% per Fragment, capped at 90% to avoid zero/negative pricing
+        // Diminishing fragment bonuses — thousands of frags approach caps, never break economy
+        function fragmentDiscountPercent(){
+            if (state.fragments <= 0) return 0;
+            return FRAG_DISCOUNT_MAX * 100 * (1 - Math.exp(-state.fragments / FRAG_DISCOUNT_SCALE));
+        }
+
         function fragmentDiscountFactor(){
-            const pct = clamp(state.fragments, 0, 90); // cap at 90%
-            return 1 - (pct / 100);
+            const hoard = fragmentDiscountPercent() / 100;
+            const upgrade = fragLevel('cost_cutter') * 0.03;
+            return 1 - Math.min(0.80, hoard + upgrade);
         }
 
-        // Calculate current cost of an item (increases with ownership) WITH fragment discount
+        function fragmentClickMultiplier(){
+            if (state.fragments <= 0) return 1;
+            return 1 + FRAG_CLICK_MAX * (1 - Math.exp(-state.fragments / FRAG_CLICK_SCALE));
+        }
+
+        function itemTierUnlocked(it){
+            return state.runTier >= (it.tier ?? 0);
+        }
+
+        function targetTierUnlocked(t){
+            return state.runTier >= (t.tier ?? 0);
+        }
+
+        // Exact rational cost: base * (118/100)^n * fragment factor
+        function itemCostMicroAt(item, n, factor){
+            let price = item.baseCostMicro;
+            for (let i = 0; i < n; i++) price = price * COST_GROWTH_NUM / COST_GROWTH_DEN;
+            const factorScaled = BigInt(Math.round(factor * 1000));
+            price = price * factorScaled / 1000n;
+            return price < MONEY_SCALE ? MONEY_SCALE : price;
+        }
+
         function itemCost(item){
-            const base = item.baseCost;
-            const n = state.items[item.id].count;
-            const discounted = base * Math.pow(1.15, n) * fragmentDiscountFactor();
-            return Math.max(1, Math.floor(discounted));
+            return itemCostMicroAt(item, state.items[item.id].count, fragmentDiscountFactor());
         }
 
-        // Calculate maximum affordable quantity of an item
-        function maxAffordable(item){
-            const base = item.baseCost;
-            const currentCount = state.items[item.id].count;
-            const money = state.money;
-            const factor = fragmentDiscountFactor();
-
-            // Binary search to find max affordable
-            let low = 0;
-            let high = 1000; // reasonable upper bound
-
-            while (low < high) {
-                const mid = Math.floor((low + high + 1) / 2);
-                const totalCost = calculateBulkCost(item, currentCount, mid, factor);
-
-                if (totalCost <= money) {
-                    low = mid;
-                } else {
-                    high = mid - 1;
-                }
-            }
-
-            return low;
-        }
-
-        // Calculate total cost for buying multiple items (applies discount per step)
         function calculateBulkCost(item, startCount, quantity, factor = fragmentDiscountFactor()){
-            const base = item.baseCost;
-            let totalCost = 0;
-
-            for(let i = 0; i < quantity; i++){
-                const price = base * Math.pow(1.15, startCount + i) * factor;
-                totalCost += Math.max(1, Math.floor(price));
+            let totalCost = 0n;
+            for (let i = 0; i < quantity; i++){
+                totalCost += itemCostMicroAt(item, startCount + i, factor);
             }
-
             return totalCost;
         }
 
-        // Calculate total income per second from all items
-        function totalIPS(){
-            const mult = currentTarget().mult;
-            let sum = 0;
-            for(const it of ITEMS){
-                sum += it.income * state.items[it.id].count;
+        function maxAffordable(item){
+            const currentCount = state.items[item.id].count;
+            const money = state.moneyMicro;
+            const factor = fragmentDiscountFactor();
+
+            let low = 0;
+            let high = 1;
+            while (high <= 1000000 && calculateBulkCost(item, currentCount, high, factor) <= money) {
+                low = high;
+                high *= 2;
             }
-            return sum * mult;
+            high = Math.min(high, 1000000);
+
+            while (low < high) {
+                const mid = Math.floor((low + high + 1) / 2);
+                if (calculateBulkCost(item, currentCount, mid, factor) <= money) low = mid;
+                else high = mid - 1;
+            }
+            return low;
         }
 
-        // Clicks grant 1% of current IPS to encourage active play
+        function totalIPSMicro(){
+            const multScaled = BigInt(Math.round(effectiveTargetMult() * ipsBuffMult() * 10000));
+            let sum = 0n;
+            for (const it of ITEMS){
+                sum += it.incomeMicro * BigInt(state.items[it.id].count);
+            }
+            return sum * multScaled / 10000n;
+        }
+
+        function totalIPS(){
+            return microToNumber(totalIPSMicro());
+        }
+
+        function clickValueMicro(){
+            const ips = totalIPSMicro();
+            let base = ips / 100n;
+            if (base < MONEY_SCALE) base = MONEY_SCALE;
+            const clickMult = BigInt(Math.round(fragmentClickMultiplier() * clickBuffMult() * 10000));
+            return base * clickMult / 10000n;
+        }
+
         function clickValue(){
-            const ips = totalIPS();
-            const base = Math.max(1, ips * 0.01);
-            return state.fragments > 0 ? base * state.fragments : base;
+            return microToNumber(clickValueMicro());
         }
 
 
@@ -554,11 +1782,12 @@
             return TARGETS.find(t=> t.id === state.activeTarget) || TARGETS[0];
         }
 
-        // Compute Fragments you would earn if you prestige with a given money amount
-        function fragmentsForMoney(money){
-            if (money < 1000) return 0;
-            const p = Math.floor(Math.log10(money)); // order of magnitude
-            return Math.max(0, p - 2); // 10^3 => 1, 10^4 => 2, etc.
+        function fragmentsForMoney(moneyMicro){
+            const logD = microLog10Dollars(moneyMicro);
+            if (logD < 3) return 0;
+            const base = logD - 2;
+            const raw = Math.max(1, Math.floor(Math.pow(base, 1.22) * 5.5));
+            return Math.max(0, Math.floor(raw * fragGainMult()));
         }
 
         /* ========================================
@@ -568,35 +1797,28 @@
         function updateUnlocks(){
             let hasNewUnlocks = false;
             for(const t of TARGETS){
-                if(!state.targets[t.id].unlocked && state.money >= t.unlockAt){
+                if(!targetTierUnlocked(t)) continue;
+                if(!state.targets[t.id].unlocked && gteMicro(state.moneyMicro, t.unlockAtMicro)){
                     state.targets[t.id].unlocked = true;
                     log(`Target unlocked: <b>${t.name}</b> (mult ${t.mult.toFixed(2)}×)`);
                     hasNewUnlocks = true;
                 }
             }
-            if(hasNewUnlocks) {
-                renderTargets(); // Only re-render targets when something unlocks
-            }
+            if(hasNewUnlocks) renderTargets();
         }
 
-        // Check if shop affordability changed (optimized for tick function)
         function updateShopAffordability(){
             let affordabilityChanged = false;
-
             for(const it of ITEMS){
                 const cost = itemCost(it);
-                const affordable = state.money >= cost;
+                const affordable = gteMicro(state.moneyMicro, cost);
                 const wasAffordable = previousAffordability[it.id] || false;
-
                 if(affordable !== wasAffordable){
                     affordabilityChanged = true;
                     previousAffordability[it.id] = affordable;
                 }
             }
-
-            if(affordabilityChanged){
-                renderShop(); // Only rebuild shop when affordability changes
-            }
+            if(affordabilityChanged) syncShop();
         }
 
         /* ========================================
@@ -605,68 +1827,271 @@
         // Update all stat displays in header and main panel
         function renderStats(){
             const ips = totalIPS();
-            moneyEl.textContent = fmtMoney(state.money);
-            moneyBigEl.textContent = fmtMoney(state.money);
+            moneyEl.textContent = fmtMoney(microToNumber(state.moneyMicro));
+            moneyBigEl.textContent = fmtMoney(microToNumber(state.moneyMicro));
             ipsEl.textContent = fmt(ips);
             ipsBigEl.textContent = fmt(ips);
             clickValEl.textContent = fmt(clickValue());
-            multEl.textContent = currentTarget().mult.toFixed(2)+"×";
+            multEl.textContent = effectiveTargetMult().toFixed(2)+"×";
             targetNameEl.textContent = currentTarget().name;
 
-            // Fragments visibility & value
-            if(state.fragments > 0){
+            runTierEl.textContent = state.runTier;
+            if (state.prestigeCount > 0){
+                prestigeCountWrap.style.display = '';
+                prestigeCountEl.textContent = state.prestigeCount;
+            } else {
+                prestigeCountWrap.style.display = 'none';
+            }
+
+            if(state.fragments > 0 || fragShopUnlocked()){
                 fragmentsWrap.style.display = '';
                 fragmentsEl.textContent = fmt(state.fragments);
             } else {
                 fragmentsWrap.style.display = 'none';
             }
+            syncFragShopBalance();
         }
 
-        // Rebuild shop items list with current prices and availability
-        function renderShop(){
-            shopEl.innerHTML = '';
-            const discountPct = clamp(state.fragments, 0, 90);
-            for(const it of ITEMS){
-                const cost = itemCost(it);
-                const affordable = state.money >= cost;
-                const maxQty = maxAffordable(it);
-                const hasMax = maxQty > 0;
+        function syncShopItem(it){
+            const nodes = shopNodes[it.id];
+            if (!nodes) return;
+            const tierLocked = !itemTierUnlocked(it);
+            const cost = itemCost(it);
+            const affordable = !tierLocked && gteMicro(state.moneyMicro, cost);
+            const maxQty = tierLocked ? 0 : maxAffordable(it);
+            const discountPct = Math.round((1 - fragmentDiscountFactor()) * 100);
 
+            nodes.card.classList.toggle('locked-tier', tierLocked);
+            nodes.owned.textContent = state.items[it.id].count;
+            if (tierLocked){
+                nodes.cost.innerHTML = `<span class="mono-dim">Requires run tier <b>${it.tier}</b> (${fmt(fragReqForRunTier(it.tier))} total FRAG earned)</span>`;
+            } else {
+                nodes.cost.innerHTML = `Cost: ${fmtMicro(cost, true)}${state.fragments > 0 ? ` <span class="badge shop-frag">-${discountPct}% FRAG</span>` : ''}`;
+            }
+            nodes.buyBtn.disabled = tierLocked || !affordable;
+            nodes.buyMaxBtn.disabled = tierLocked || maxQty <= 0;
+            nodes.buyMaxBtn.title = tierLocked ? `Unlock at run tier ${it.tier} (${fmt(fragReqForRunTier(it.tier))} FRAG earned)` : `Buy ${maxQty} max affordable`;
+            previousAffordability[it.id] = affordable;
+        }
+
+        function syncShop(ids = ITEMS){
+            const list = ids === ITEMS ? ITEMS : ids.map(id => ITEMS.find(x => x.id === id)).filter(Boolean);
+            for (const it of list) syncShopItem(it);
+        }
+
+        function buildShop(){
+            shopEl.innerHTML = '';
+            for (const id of Object.keys(shopNodes)) delete shopNodes[id];
+            for(const it of ITEMS){
                 const card = document.createElement('div');
                 card.className = 'entry';
+                card.dataset.itemId = it.id;
                 card.innerHTML = `
-        <div class="row"><h4>${it.name}</h4><span class="badge">Owned: <b>${state.items[it.id].count}</b></span></div>
+        <div class="row"><h4>${it.name}</h4><span class="badge">Owned: <b class="shop-owned">0</b></span></div>
         <div class="desc">${it.desc} <span class="mono-dim">(+${fmt(it.income)} IPS)</span></div>
         <div class="row">
-          <span class="mono-dim">Cost: ${fmt(cost)}${state.fragments>0 ? ` <span class="badge">-${discountPct}% FRAG</span>`: ''}</span>
+          <span class="mono-dim shop-cost">Cost: 0</span>
           <div style="display: flex; gap: 4px;">
-            <button ${affordable?'' : 'disabled'} data-buy="${it.id}">[ BUY ]</button>
-            <button ${hasMax?'' : 'disabled'} data-buy-max="${it.id}" title="Buy ${maxQty} max affordable">[ BUY MAX ]</button>
+            <button data-buy="${it.id}">[ BUY ]</button>
+            <button data-buy-max="${it.id}">[ BUY MAX ]</button>
           </div>
-        </div>
-      `;
+        </div>`;
+                shopNodes[it.id] = {
+                    card,
+                    owned: card.querySelector('.shop-owned'),
+                    cost: card.querySelector('.shop-cost'),
+                    buyBtn: card.querySelector('[data-buy]'),
+                    buyMaxBtn: card.querySelector('[data-buy-max]'),
+                };
                 shopEl.appendChild(card);
             }
+            syncShop();
+        }
+
+        function renderShop(){
+            if (Object.keys(shopNodes).length === 0) buildShop();
+            else syncShop();
         }
 
         // Rebuild targets list with unlock status and activation
         function renderTargets(){
             targetsEl.innerHTML = '';
             for(const t of TARGETS){
-                const unlocked = state.targets[t.id].unlocked;
+                const tierLocked = !targetTierUnlocked(t);
+                const unlocked = !tierLocked && state.targets[t.id].unlocked;
                 const active = state.activeTarget === t.id;
+                const lockMsg = tierLocked
+                    ? `LOCKED — run tier <b>${t.tier}</b> (${fmt(fragReqForRunTier(t.tier))} total FRAG earned)`
+                    : `LOCKED — need ${fmtMicro(t.unlockAtMicro, true)}`;
                 const card = document.createElement('div');
-                card.className = 'entry';
+                card.className = 'entry' + (tierLocked ? ' locked-tier' : '');
                 card.innerHTML = `
         <div class="row"><h4>${t.name}</h4><span class="badge">${t.mult.toFixed(2)}×</span></div>
-        <div class="desc">${unlocked? t.desc : `LOCKED — need ${fmt(t.unlockAt)}`}</div>
+        <div class="desc">${unlocked ? t.desc : lockMsg}</div>
         <div class="row">
-          <span class="mono-dim">${unlocked? 'Unlocked' : 'Locked'}</span>
-          <button ${unlocked? '' : 'disabled'} data-target="${t.id}">${active? '[ ACTIVE ]' : '[ ACTIVATE ]'}</button>
+          <span class="mono-dim">${unlocked ? 'Unlocked' : (tierLocked ? `Need ${fmt(fragReqForRunTier(t.tier))} FRAG earned` : 'Locked')}</span>
+          <button ${unlocked ? '' : 'disabled'} data-target="${t.id}">${active ? '[ ACTIVE ]' : '[ ACTIVATE ]'}</button>
         </div>
       `;
                 targetsEl.appendChild(card);
             }
+        }
+
+        /* ========================================
+           FRAGMENT SHOP: Permanent upgrades
+           ======================================== */
+        function syncFragShopItem(upgrade){
+            const nodes = fragShopNodes[upgrade.id];
+            if (!nodes) return;
+            const lvl = fragLevel(upgrade.id);
+            const max = upgrade.maxLevel ?? 1;
+            const cost = fragUpgradeCost(upgrade);
+            const isTheme = upgrade.category === 'theme';
+            const isToggle = upgrade.toggle === true;
+            const owned = isTheme ? lvl >= 1 : (!isToggle && lvl >= max);
+            const active = isTheme && upgrade.theme === state.activeTheme;
+
+            nodes.card.classList.toggle('owned-theme', isTheme && active);
+            nodes.card.classList.toggle('utility-on', isToggle && lvl > 0);
+
+            if (isToggle){
+                const on = lvl > 0;
+                nodes.level.textContent = on ? 'ON' : 'OFF';
+                nodes.cost.textContent = 'Free toggle';
+                nodes.actionBtn.disabled = false;
+                nodes.actionBtn.textContent = on ? '[ DISABLE ]' : '[ ENABLE ]';
+                nodes.actionBtn.dataset.fragToggle = upgrade.id;
+                delete nodes.actionBtn.dataset.fragBuy;
+                delete nodes.actionBtn.dataset.fragEquip;
+            } else if (isTheme){
+                nodes.level.textContent = active ? 'Active' : (lvl >= 1 ? 'Owned' : 'Locked');
+                if (lvl >= 1){
+                    nodes.cost.textContent = cost === 0 ? 'Free' : (active ? 'Equipped' : 'Owned');
+                    nodes.actionBtn.disabled = active;
+                    nodes.actionBtn.textContent = active ? '[ ACTIVE ]' : '[ EQUIP ]';
+                    nodes.actionBtn.dataset.fragEquip = upgrade.id;
+                    delete nodes.actionBtn.dataset.fragBuy;
+                    delete nodes.actionBtn.dataset.fragToggle;
+                } else {
+                    const affordable = cost !== null && state.fragments >= cost;
+                    nodes.cost.textContent = cost === 0 ? 'Free' : `${fmt(cost)} FRAG`;
+                    nodes.actionBtn.disabled = !affordable;
+                    nodes.actionBtn.textContent = '[ BUY ]';
+                    nodes.actionBtn.dataset.fragBuy = upgrade.id;
+                    delete nodes.actionBtn.dataset.fragEquip;
+                    delete nodes.actionBtn.dataset.fragToggle;
+                }
+            } else if (owned){
+                nodes.level.textContent = `MAX Lv.${lvl}`;
+                nodes.cost.textContent = 'MAXED';
+                nodes.actionBtn.disabled = true;
+                nodes.actionBtn.textContent = '[ MAXED ]';
+                delete nodes.actionBtn.dataset.fragBuy;
+                delete nodes.actionBtn.dataset.fragEquip;
+                delete nodes.actionBtn.dataset.fragToggle;
+            } else {
+                nodes.level.textContent = `Lv.${lvl}/${max}`;
+                const affordable = cost !== null && state.fragments >= cost;
+                nodes.cost.textContent = cost !== null ? `${fmt(cost)} FRAG` : '—';
+                nodes.actionBtn.disabled = !affordable;
+                nodes.actionBtn.textContent = '[ BUY ]';
+                nodes.actionBtn.dataset.fragBuy = upgrade.id;
+                delete nodes.actionBtn.dataset.fragEquip;
+                delete nodes.actionBtn.dataset.fragToggle;
+            }
+        }
+
+        function syncFragShop(){
+            for (const u of FRAG_UPGRADES) syncFragShopItem(u);
+        }
+
+        function buildFragShop(){
+            if (!fragShopEl) return;
+            fragShopEl.innerHTML = '';
+            for (const id of Object.keys(fragShopNodes)) delete fragShopNodes[id];
+
+            let lastCat = '';
+            for (const u of FRAG_UPGRADES){
+                if (u.category !== lastCat){
+                    lastCat = u.category;
+                    const label = FRAG_CATEGORIES.find(c => c.id === u.category);
+                    const catEl = document.createElement('div');
+                    catEl.className = 'cat-label';
+                    catEl.textContent = label ? label.label : u.category.toUpperCase();
+                    fragShopEl.appendChild(catEl);
+                }
+                const card = document.createElement('div');
+                card.className = 'entry';
+                card.dataset.fragId = u.id;
+                card.innerHTML = `
+        <div class="row"><h4>${u.name}</h4><span class="badge frag-lvl">Lv.0</span></div>
+        <div class="desc">${u.desc}</div>
+        <div class="row">
+          <span class="mono-dim frag-cost">—</span>
+          <button type="button" data-frag-buy="${u.id}">[ BUY ]</button>
+        </div>`;
+                fragShopNodes[u.id] = {
+                    card,
+                    level: card.querySelector('.frag-lvl'),
+                    cost: card.querySelector('.frag-cost'),
+                    actionBtn: card.querySelector('button'),
+                };
+                fragShopEl.appendChild(card);
+            }
+            syncFragShop();
+        }
+
+        function toggleFragUtility(id){
+            if (!fragShopUnlocked()) return;
+            const upgrade = FRAG_UPGRADES.find(u => u.id === id);
+            if (!upgrade?.toggle) return;
+            const on = fragLevel(id) > 0;
+            state.fragUpgrades[id] = on ? 0 : 1;
+            if (id === 'no_flicker' || id === 'no_scanlines') applyVisualUpgrades();
+            if (id === 'deep_log'){
+                while (consoleEl.childElementCount > maxConsoleLines()){
+                    consoleEl.firstElementChild.remove();
+                }
+            }
+            log(`${upgrade.name}: <b>${on ? 'disabled' : 'enabled'}</b>`, 'saved');
+            syncFragShop();
+            save(true);
+        }
+
+        function buyFragUpgrade(id){
+            if (!fragShopUnlocked()) return;
+            const upgrade = FRAG_UPGRADES.find(u => u.id === id);
+            if (!upgrade || upgrade.toggle) return;
+            const cost = fragUpgradeCost(upgrade);
+            if (cost === null || state.fragments < cost) return;
+
+            state.fragments -= cost;
+            state.fragUpgrades[id] = fragLevel(id) + 1;
+
+            if (upgrade.category === 'theme'){
+                applyTheme(upgrade.theme);
+                log(`Theme unlocked & equipped: <b>${upgrade.name}</b> (−${fmt(cost)} FRAG)`, 'saved');
+            } else {
+                log(`Fragment upgrade: <b>${upgrade.name}</b> → Lv.${fragLevel(id)} (−${fmt(cost)} FRAG)`, 'saved');
+            }
+
+            playGoldPurchaseCelebration(fragShopNodes[id]?.card);
+
+            if (upgrade.id === 'no_flicker' || upgrade.id === 'no_scanlines') applyVisualUpgrades();
+
+            renderStats();
+            syncFragShop();
+            syncShop();
+            save(true);
+        }
+
+        function equipFragTheme(id){
+            const upgrade = FRAG_UPGRADES.find(u => u.id === id);
+            if (!upgrade || upgrade.category !== 'theme' || fragLevel(id) < 1) return;
+            applyTheme(upgrade.theme);
+            log(`Theme equipped: <b>${upgrade.name}</b>`, 'saved');
+            syncFragShop();
+            save(true);
         }
 
         /* ========================================
@@ -675,44 +2100,46 @@
         // Purchase an item from the shop
         function buy(id){
             const it = ITEMS.find(x=> x.id===id);
-            if(!it) return;
+            if(!it || !itemTierUnlocked(it)) return;
             const cost = itemCost(it);
-            if(state.money >= cost){
-                state.money -= cost;
+            if(gteMicro(state.moneyMicro, cost)){
+                state.moneyMicro -= cost;
                 state.items[id].count++;
-                log(`Purchased <b>${it.name}</b> for ${fmt(cost)} (+${fmt(it.income)} IPS)`);
-                renderAll();
+                log(`Purchased <b>${it.name}</b> for ${fmtMicro(cost, true)} (+${fmt(it.income)} IPS)`);
+                playGoldPurchaseCelebration(shopNodes[id]?.card);
+                renderStats();
+                updateUnlocks();
+                syncShopItem(it);
             }
         }
 
-        // Purchase maximum affordable quantity of an item
         function buyMax(id){
             const it = ITEMS.find(x=> x.id===id);
-            if(!it) return;
-
+            if(!it || !itemTierUnlocked(it)) return;
             const maxQty = maxAffordable(it);
             if(maxQty <= 0) return;
-
             const totalCost = calculateBulkCost(it, state.items[id].count, maxQty);
-
-            if(state.money >= totalCost){
-                state.money -= totalCost;
+            if(gteMicro(state.moneyMicro, totalCost)){
+                state.moneyMicro -= totalCost;
                 state.items[id].count += maxQty;
                 const totalIncome = it.income * maxQty;
-                log(`Bulk purchased <b>${maxQty}x ${it.name}</b> for ${fmt(totalCost)} (+${fmt(totalIncome)} IPS)`);
-                renderAll();
+                log(`Bulk purchased <b>${maxQty}x ${it.name}</b> for ${fmtMicro(totalCost, true)} (+${fmt(totalIncome)} IPS)`);
+                playGoldPurchaseCelebration(shopNodes[id]?.card);
+                renderStats();
+                updateUnlocks();
+                syncShopItem(it);
             }
         }
 
-        // Switch to a different target
         function setTarget(id){
             if(!state.targets[id]?.unlocked) return;
             state.activeTarget = id;
-            log(`Target set to <b>${currentTarget().name}</b> (mult ${currentTarget().mult.toFixed(2)}×)`);
-            renderAll();
+            log(`Target set to <b>${currentTarget().name}</b> (mult ${effectiveTargetMult().toFixed(2)}×)`);
+            renderStats();
+            syncShop();
+            renderTargets();
         }
 
-        // Master render function - updates entire UI
         function renderAll(){
             updateUnlocks();
             renderStats();
@@ -720,86 +2147,195 @@
             renderTargets();
         }
 
+        function afterMoneyChange(){
+            renderStats();
+            updateUnlocks();
+            updateShopAffordability();
+        }
+
         /* ========================================
            PRESTIGE SYSTEM: Fragments and reset
            ======================================== */
-        function doPrestige(){
-            const toGain = fragmentsForMoney(state.money);
-            const msg = toGain > 0
-                ? `Prestige now? You will gain <b>${toGain} Fragment${toGain!==1?'s':''}</b> based on your current $${fmtMoney(state.money)}. This will wipe money, items, and targets but keep Fragments.`
-                : `Prestige now? You currently have less than $1,000, so you'll gain <b>0 Fragments</b>. You can still prestige to reset and start fresh.`;
-            const ok = confirm(stripHtml(msg));
-            if(!ok) return;
+        function openPrestigeModal(){
+            closeFragShop();
+            closeInfoModal();
+            closeResetModal();
+            dockConsole();
+            const toGain = fragmentsForMoney(state.moneyMicro);
+            const money = fmtMoney(microToNumber(state.moneyMicro));
+            const fragLabel = toGain === 1 ? 'Fragment' : 'Fragments';
+            const totalAfter = state.fragments + toGain;
+            const earnedAfter = state.totalFragmentsEarned + toGain;
+            const runAfter = computeRunTier(earnedAfter);
+            const nextProgress = nextRunTierProgress();
+            const tierUp = runAfter > state.runTier;
 
-            // Apply gain & persist Fragments
-            if(toGain > 0){
-                state.fragments += toGain;
+            if (prestigeModalBody){
+                let tierLine = `<div class="prestige-stat-row"><span class="mono-dim">Run tier after</span><b>${runAfter}</b>${tierUp ? ' <span class="badge">TIER UP</span>' : ''}</div>`;
+                if (nextProgress && earnedAfter < nextProgress.required){
+                    tierLine += `<div class="prestige-stat-row"><span class="mono-dim">Next run tier (${nextProgress.tier})</span><b>${fmt(earnedAfter)} / ${fmt(nextProgress.required)} FRAG earned</b></div>`;
+                } else if (!nextProgress){
+                    tierLine += `<div class="prestige-stat-row"><span class="mono-dim">Run tier</span><b>MAX</b></div>`;
+                }
+
+                prestigeModalBody.innerHTML = `
+        <div class="prestige-stat-row"><span class="mono-dim">Current balance</span><b>$${money}</b></div>
+        <div class="prestige-stat-row prestige-highlight"><span class="mono-dim">You will gain</span><b>+${fmt(toGain)} ${fragLabel}</b></div>
+        <div class="prestige-stat-row"><span class="mono-dim">FRAG balance after</span><b>${fmt(totalAfter)}</b></div>
+        <div class="prestige-stat-row"><span class="mono-dim">Lifetime FRAG earned</span><b>${fmt(earnedAfter)}</b></div>
+        ${tierLine}
+        <div class="prestige-stat-row"><span class="mono-dim">Prestige count after</span><b>${state.prestigeCount + 1}</b></div>
+        <p class="prestige-warn">${toGain > 0
+            ? 'Prestige wipes <b>money</b>, <b>items</b>, and <b>targets</b>. <b>Run tier</b> advances from <b>lifetime FRAG earned</b>, not prestige count alone. Shop upgrades & themes kept.'
+            : 'Balance under <b>$1,000</b> — <b>0 Fragments</b> gained. Run tier won\'t advance without FRAG. Progress wipes; upgrades & themes kept.'}</p>`;
             }
 
-            // Reset progress but keep Fragments & settings
-            state.money = 0;
+            prestigeOverlay.classList.add('open');
+            prestigeOverlay.setAttribute('aria-hidden', 'false');
+            prestigeConfirm.focus();
+        }
+
+        function closePrestigeModal(){
+            if (!prestigeOverlay) return;
+            prestigeOverlay.classList.remove('open');
+            prestigeOverlay.setAttribute('aria-hidden', 'true');
+        }
+
+        function executePrestige(){
+            const toGain = fragmentsForMoney(state.moneyMicro);
+            closePrestigeModal();
+
+            const oldRunTier = state.runTier;
+            if (toGain > 0){
+                state.fragments += toGain;
+                state.totalFragmentsEarned += toGain;
+            }
+            state.prestigeCount++;
+            recalcRunTier();
+
+            state.moneyMicro = 0n;
             state.clicks = 0;
             for(const k in state.items){ state.items[k].count = 0; }
             for(const k in state.targets){ state.targets[k].unlocked = false; }
             state.targets['lan'].unlocked = true;
             state.activeTarget = 'lan';
+            state.lastTickAt = Date.now();
+            resetAffordabilityCache();
 
             renderAll();
-            save();
+            updateFragShopVisibility();
+            syncFragShop();
 
-            log(`Prestige complete: gained <b>${toGain}</b> Fragment${toGain!==1?'s':''}. Total Fragments: <b>${state.fragments}</b>. Progress reset.`);
-        }
+            if (state.prestigeCount === 1){
+                log('Fragment shop online. Use <b>[ FRAG SHOP ]</b> in the header.', 'saved');
+            }
+            if (state.runTier > oldRunTier){
+                log(`Run tier <b>${state.runTier}</b> unlocked! (${fmt(state.totalFragmentsEarned)} total FRAG earned)`, 'saved');
+            }
 
-        // Helper to confirm with readable text (strip tags)
-        function stripHtml(html){
-            const tmp = document.createElement('div');
-            tmp.innerHTML = html;
-            return tmp.textContent || tmp.innerText || '';
+            save(true);
+
+            log(`Prestige complete: <b>PRST ${state.prestigeCount}</b> — gained <b>${toGain}</b> Fragment${toGain!==1?'s':''}. Run tier <b>${state.runTier}</b>. Balance: <b>${state.fragments}</b> FRAG.`);
         }
 
         /* ========================================
-           GAME LOOP: Passive income and animation
+           GAME LOOP: Passive income (runs in background tabs)
            ======================================== */
-        // Main game tick - handles passive income over time
-        function tick(){
-            const now = performance.now();
-            const dt = (now - state.lastTime) / 1000; // seconds
-            state.lastTime = now;
-            state.money += totalIPS() * dt;
+        let tickTimer = null;
 
-            // Update stats every frame
+        function addPassiveIncome(dt){
+            const dtMs = BigInt(Math.max(0, Math.floor(dt * 1000)));
+            if (dtMs === 0n) return;
+            state.moneyMicro += totalIPSMicro() * dtMs / 1000n;
+        }
+
+        function gameTick(){
+            const now = Date.now();
+            const dt = Math.min((now - state.lastTickAt) / 1000, MAX_DT);
+            state.lastTickAt = now;
+            addPassiveIncome(dt);
+
+            const autoRate = fragLevel('cron_job') * 0.5;
+            if (autoRate > 0){
+                state.autoProbeResidual += autoRate * dt;
+                const probes = Math.floor(state.autoProbeResidual);
+                if (probes > 0){
+                    state.autoProbeResidual -= probes;
+                    state.moneyMicro += clickValueMicro() * BigInt(probes);
+                }
+            }
+
             renderStats();
-
-            // Check for unlocks and shop affordability changes
             updateUnlocks();
             updateShopAffordability();
-
-            requestAnimationFrame(tick);
         }
+
+        function startGameLoop(){
+            if (tickTimer) clearInterval(tickTimer);
+            tickTimer = setInterval(gameTick, TICK_MS);
+        }
+
+        function applyOfflineProgress(){
+            const elapsed = (Date.now() - state.lastTickAt) / 1000;
+            if (elapsed <= 5) return;
+            const offline = Math.min(Math.max(0, elapsed), maxOfflineSeconds());
+            const ips = totalIPSMicro();
+            if (ips > 0n && offline > 0){
+                const gainMicro = ips * BigInt(Math.floor(offline * 1000)) / 1000n;
+                state.moneyMicro += gainMicro;
+                log(`Offline for <b>${formatDuration(offline)}</b>: earned <b>$${fmtMoney(microToNumber(gainMicro))}</b>`, 'saved');
+            }
+            state.lastTickAt = Date.now();
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) return;
+            const elapsed = (Date.now() - state.lastTickAt) / 1000;
+            if (elapsed > 2){
+                const credited = Math.min(elapsed, maxOfflineSeconds());
+                addPassiveIncome(credited);
+                state.lastTickAt = Date.now();
+                afterMoneyChange();
+            }
+        });
 
         /* ========================================
            EVENT HANDLERS: User input processing
            ======================================== */
         // Handle main click button
         clickBtn.addEventListener('click', ()=>{
-            const gain = clickValue();
-            state.money += gain;
+            const gainMicro = clickValueMicro();
+            state.moneyMicro += gainMicro;
             state.clicks++;
-            if(state.clicks % 10 === 0) log(`Probe pulse returned $${fmt(gain)} (click chain ${state.clicks})`);
-            renderAll();
+            if(state.clicks % 10 === 0) log(`Probe pulse returned $${fmtMicro(gainMicro, true)} (click chain ${state.clicks})`);
+            afterMoneyChange();
         });
 
-        // Handle spacebar for clicking
+        // Handle Space / Enter for probing; Escape closes modals
         document.addEventListener('keydown',(e)=>{
-            if(e.code==='Space'){ e.preventDefault(); clickBtn.click(); }
+            if (e.code === 'Escape'){
+                if (isPrestigeModalOpen()){ closePrestigeModal(); return; }
+                if (isResetModalOpen()){ closeResetModal(); return; }
+                if (isFragShopOpen()){ closeFragShop(); return; }
+                if (isConsolePopoutOpen()){ dockConsole(); return; }
+                if (isInfoModalOpen()){ closeInfoModal(); return; }
+            }
+            if (e.target === consoleInput) return;
+            if (isGameModalOpen()) return;
+            if (e.code !== 'Space' && e.code !== 'Enter') return;
+            if (e.target.closest('button') && e.target !== clickBtn) return;
+            if (document.activeElement === clickBtn) return;
+            e.preventDefault();
+            clickBtn.click();
         });
 
         // Handle scientific notation toggle
         sciNotationBtn.addEventListener('click', ()=>{
             state.scientificNotation = !state.scientificNotation;
             sciNotationBtn.textContent = state.scientificNotation ? '[ SCI: ON ]' : '[ SCI: OFF ]';
-            renderStats(); // Update all displayed numbers immediately
-            renderShop(); // Update shop prices
+            renderStats();
+            renderShop();
+            renderTargets();
         });
 
         // Handle shop purchases
@@ -818,62 +2354,181 @@
         });
 
         // Prestige button
-        prestigeBtn.addEventListener('click', doPrestige);
+        prestigeBtn.addEventListener('click', openPrestigeModal);
+        prestigeCancel.addEventListener('click', closePrestigeModal);
+        prestigeConfirm.addEventListener('click', executePrestige);
+        prestigeOverlay.addEventListener('click', (e) => {
+            if (e.target === prestigeOverlay) closePrestigeModal();
+        });
+
+        resetBtn.addEventListener('click', openResetModal);
+        resetCancel.addEventListener('click', closeResetModal);
+        resetOverlay.addEventListener('click', (e) => {
+            if (e.target === resetOverlay) closeResetModal();
+        });
+
+        consoleForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const cmd = consoleInput.value;
+            consoleInput.value = '';
+            handleConsoleCommand(cmd);
+        });
+
+        if (consolePopoutBtn) consolePopoutBtn.addEventListener('click', openConsolePopout);
+        if (consoleDockBtn) consoleDockBtn.addEventListener('click', dockConsole);
+        if (consoleDockBtnInline) consoleDockBtnInline.addEventListener('click', openConsolePopout);
+        if (consoleModalClose) consoleModalClose.addEventListener('click', dockConsole);
+        if (consoleOverlay) consoleOverlay.addEventListener('click', (e) => {
+            if (e.target === consoleOverlay) dockConsole();
+        });
+
+        if (infoBtn) infoBtn.addEventListener('click', openInfoModal);
+        if (infoClose) infoClose.addEventListener('click', closeInfoModal);
+        if (infoOverlay) infoOverlay.addEventListener('click', (e) => {
+            if (e.target === infoOverlay) closeInfoModal();
+        });
+
+        fragShopBtn.addEventListener('click', openFragShop);
+        fragShopClose.addEventListener('click', closeFragShop);
+        fragShopOverlay.addEventListener('click', (e) => {
+            if (e.target === fragShopOverlay) closeFragShop();
+        });
+
+        fragShopEl.addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const buyId = btn.getAttribute('data-frag-buy');
+            const equipId = btn.getAttribute('data-frag-equip');
+            const toggleId = btn.getAttribute('data-frag-toggle');
+            if (buyId) buyFragUpgrade(buyId);
+            if (equipId) equipFragTheme(equipId);
+            if (toggleId) toggleFragUtility(toggleId);
+        });
 
         /* ========================================
            SAVE SYSTEM: Persistence management
            ======================================== */
-        const SAVE_KEY = 'hackclicker_save_v1';
+        const SAVE_KEY = 'hackclicker_save_v5';
+        const SAVE_KEY_V4 = 'hackclicker_save_v4';
+        const SAVE_KEY_V3 = 'hackclicker_save_v3';
+        const SAVE_KEY_LEGACY = 'hackclicker_save_v1';
+        const SAVE_KEY_V2 = 'hackclicker_save_v2';
 
-        // Save current game state to localStorage
-        function save(){
+        function resetAffordabilityCache(){
+            previousAffordability = {};
+        }
+
+        let saveAnimTimer = null;
+        const SAVE_BTN_LABEL = '[ SAVE ]';
+
+        function playSaveSuccessAnimation(){
+            if (!saveBtn) return;
+            if (saveAnimTimer) clearTimeout(saveAnimTimer);
+            saveBtn.textContent = '[ SAVED ]';
+            saveBtn.classList.remove('save-success');
+            void saveBtn.offsetWidth;
+            saveBtn.classList.add('save-success');
+            saveAnimTimer = setTimeout(() => {
+                saveBtn.textContent = SAVE_BTN_LABEL;
+                saveBtn.classList.remove('save-success');
+                saveAnimTimer = null;
+            }, 1200);
+        }
+
+        function save(silent = false){
             const data = {
-                money: state.money,
+                version: 5,
+                moneyMicro: state.moneyMicro.toString(),
                 clicks: state.clicks,
                 items: state.items,
                 targets: state.targets,
                 activeTarget: state.activeTarget,
                 scientificNotation: state.scientificNotation,
                 fragments: state.fragments,
+                prestigeCount: state.prestigeCount,
+                totalFragmentsEarned: state.totalFragmentsEarned,
+                runTier: state.runTier,
+                fragUpgrades: state.fragUpgrades,
+                activeTheme: state.activeTheme,
+                lastTickAt: state.lastTickAt,
             };
             localStorage.setItem(SAVE_KEY, JSON.stringify(data));
-            log('Progress saved.', 'saved');
+            if (!silent){
+                log('Progress saved.', 'saved');
+                playSaveSuccessAnimation();
+            }
         }
 
-        // Load game state from localStorage
         function load(){
             try{
-                const raw = localStorage.getItem(SAVE_KEY);
+                let raw = localStorage.getItem(SAVE_KEY);
+                if (!raw) raw = localStorage.getItem(SAVE_KEY_V4);
+                if (!raw) raw = localStorage.getItem(SAVE_KEY_V3);
+                if (!raw) raw = localStorage.getItem(SAVE_KEY_V2);
+                if (!raw) raw = localStorage.getItem(SAVE_KEY_LEGACY);
                 if(!raw) return;
                 const data = JSON.parse(raw);
-                state.money = data.money ?? 0;
-                state.clicks = data.clicks ?? 0;
+
+                if (data.moneyMicro != null){
+                    state.moneyMicro = dollarsToMicro(data.moneyMicro);
+                } else {
+                    state.moneyMicro = dollarsToMicro(Number.isFinite(data.money) ? Math.max(0, data.money) : 0);
+                }
+
+                state.clicks = Number.isFinite(data.clicks) ? Math.max(0, data.clicks) : 0;
                 state.scientificNotation = data.scientificNotation ?? false;
-                state.fragments = data.fragments ?? 0;
-                // merge items/targets to handle new versions gracefully
+                state.fragments = Number.isFinite(data.fragments) ? Math.max(0, data.fragments) : 0;
+                state.prestigeCount = Number.isFinite(data.prestigeCount) ? Math.max(0, data.prestigeCount)
+                    : (Number.isFinite(data.prestigeLevel) ? Math.max(0, data.prestigeLevel) : 0);
+                if (Number.isFinite(data.totalFragmentsEarned)){
+                    state.totalFragmentsEarned = Math.max(0, data.totalFragmentsEarned);
+                } else {
+                    const legacyPrestige = Number.isFinite(data.prestigeLevel) ? data.prestigeLevel : state.prestigeCount;
+                    const legacyFloor = fragReqForRunTier(Math.min(legacyPrestige, RUN_TIER_THRESHOLDS.length - 1));
+                    state.totalFragmentsEarned = Math.max(state.fragments, legacyFloor);
+                }
+                recalcRunTier();
+                state.activeTheme = data.activeTheme || 'default';
+                for (const u of FRAG_UPGRADES){
+                    const lv = data.fragUpgrades?.[u.id];
+                    state.fragUpgrades[u.id] = Number.isFinite(lv) ? Math.max(0, Math.min(lv, u.maxLevel ?? 1)) : 0;
+                }
+                state.lastTickAt = Number.isFinite(data.lastTickAt) ? data.lastTickAt : Date.now();
+
                 for(const k in data.items || {}){
                     if(state.items[k]) state.items[k].count = Number(data.items[k].count||0);
                 }
                 for(const k in data.targets || {}){
                     if(state.targets[k]) state.targets[k].unlocked = !!data.targets[k].unlocked;
                 }
-                state.activeTarget = data.activeTarget || 'lan';
+                const savedTarget = data.activeTarget || 'lan';
+                state.activeTarget = (state.targets[savedTarget]?.unlocked) ? savedTarget : 'lan';
 
-                // Update button text based on loaded preference
                 sciNotationBtn.textContent = state.scientificNotation ? '[ SCI: ON ]' : '[ SCI: OFF ]';
+                applyTheme(state.activeTheme);
+                applyVisualUpgrades();
+                updateFragShopVisibility();
+                resetAffordabilityCache();
 
+                applyOfflineProgress();
                 log('Save loaded. Welcome back, operator.');
             }catch(e){ console.warn('Load failed', e) }
         }
 
         // Wire up save/reset buttons
-        saveBtn.addEventListener('click', save);
-        resetBtn.addEventListener('click', ()=>{
-            if(confirm('Are you sure you want to delete all progress?')){
-                localStorage.removeItem(SAVE_KEY);
-                location.reload();
-            }
-        });
+        saveBtn.addEventListener('click', () => save());
+
+        function executeReset(){
+            closeResetModal();
+            localStorage.removeItem(SAVE_KEY);
+            localStorage.removeItem(SAVE_KEY_V4);
+            localStorage.removeItem(SAVE_KEY_V3);
+            localStorage.removeItem(SAVE_KEY_V2);
+            localStorage.removeItem(SAVE_KEY_LEGACY);
+            location.reload();
+        }
+
+        resetConfirm.addEventListener('click', executeReset);
 
         // Random console story/status generator
 
@@ -1052,8 +2707,9 @@
 
         // Example hook: every few minutes, print a random line to console
         setInterval(() => {
-            log(randomStoryLine(), 'story'); // assumes the `log` function from your main game
-        }, 120000); // once per 120 seconds
+            if (fragLevel('quiet_mode') > 0 && Math.random() > 0.33) return;
+            log(randomStoryLine(), 'story');
+        }, 120000);
 
         /* ========================================
            ASCII ART DICTIONARY & SCHEDULER (every 10 minutes)
@@ -1670,21 +3326,29 @@
             _lastAscii = idx;
             return ASCII_ARTS[idx];
         }
-        // Post one ASCII art every 10 minutes (600000 ms)
-        setInterval(()=>{
+        // Post one ASCII art every 10 minutes
+        setInterval(() => {
+            if (fragLevel('quiet_mode') > 0 && Math.random() > 0.33) return;
             const art = randomAsciiArt();
-            if(art) logAscii(art);
-        }, 400000);
+            if (art) logAscii(art);
+        }, 600000);
 
-        // Auto-save every 5 minutes
-        setInterval(save, 300000);
+        // Auto-save every 5 minutes (silent — no console spam)
+        setInterval(() => save(true), 300000);
 
         /* ========================================
            INIT: Load, render, start loop
            ======================================== */
         load();
-        renderAll();
-        requestAnimationFrame(tick);
+        applyTheme(state.activeTheme);
+        applyVisualUpgrades();
+        initConsoleResize();
+        initGoldThemeEffects();
+        buildShop();
+        updateFragShopVisibility();
+        renderTargets();
+        renderStats();
+        startGameLoop();
         log('Boot sequence complete. Begin operations.');
 
     })();
