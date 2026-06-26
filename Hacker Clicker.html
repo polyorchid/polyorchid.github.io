@@ -721,7 +721,7 @@
 
             <h3>Saves &amp; tools</h3>
             <ul>
-                <li>Progress <b>autosaves every 5 minutes</b> and when you leave the page. Use <b>[ SAVE ]</b> before closing if you want an instant snapshot.</li>
+                <li>Progress <b>autosaves every 5 minutes</b> and when you leave the page. Balance is restored from your last save — passive income only accrues while the tab is open and visible.</li>
                 <li>Browser storage is <b>per URL</b> — foostus.com and a local copy do not share saves automatically.</li>
                 <li><b>[ RESET ]</b> permanently deletes all progress.</li>
                 <li>The <b>console</b> accepts commands — try <span class="kbd">help</span>. Use <b>[ POP OUT ]</b> for a larger terminal.</li>
@@ -793,9 +793,7 @@
            ======================================== */
         const MONEY_SCALE = 1_000_000n;
         const MONEY_SCALE_NUM = 1_000_000;
-        const MAX_OFFLINE_SECONDS = 86400; // 24h offline cap
         const TICK_MS = 100;
-        const MAX_DT = 1; // max seconds credited per tick (anti-exploit)
         const COST_GROWTH_NUM = 118n; // 1.18× per owned copy (slower snowball)
         const COST_GROWTH_DEN = 100n;
         const FRAG_DISCOUNT_MAX = 0.65;   // asymptotic max shop discount from fragments
@@ -828,6 +826,16 @@
             const frac6 = (frac + '000000').slice(0, 6);
             const micro = BigInt(whole || '0') * MONEY_SCALE + BigInt(frac6);
             return neg ? -micro : micro;
+        }
+
+        // v5+ saves store moneyMicro as an integer string of micro-dollars (not dollar amounts).
+        function microFromSave(v){
+            if (typeof v === 'bigint') return v < 0n ? 0n : v;
+            if (v == null) return 0n;
+            const s = String(v).trim();
+            if (!s || s === 'NaN' || s === 'Infinity') return 0n;
+            if (/^\d+$/.test(s)) return BigInt(s);
+            return dollarsToMicro(v);
         }
 
         function microToNumber(micro){
@@ -871,14 +879,6 @@
             return num.toLocaleString(undefined,{maximumFractionDigits:2});
         };
 
-        function formatDuration(seconds){
-            if (seconds < 60) return `${Math.floor(seconds)}s`;
-            if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
-            const h = Math.floor(seconds / 3600);
-            const m = Math.floor((seconds % 3600) / 60);
-            return m > 0 ? `${h}h ${m}m` : `${h}h`;
-        }
-
         function gteMicro(a, b){ return a >= b; }
 
         /* ========================================
@@ -890,7 +890,6 @@
             items: {},
             targets: {},
             activeTarget: 'lan',
-            lastTickAt: Date.now(), // Wall-clock for offline + income ticks
             scientificNotation: false,
             fragments: 0,
             prestigeCount: 0,        // times prestiged (opens fragment shop at 1+)
@@ -983,7 +982,7 @@
             { id:'dns_poison', category:'buff', name:'DNS Poison', cost:45, costScale:1.35, maxLevel:8,
               desc:'+1.5% effective target multiplier per level.', effect:'target', perLevel:0.015 },
             { id:'cold_storage', category:'buff', name:'Cold Storage', cost:55, costScale:1.4, maxLevel:5,
-              desc:'+4h offline income cap per level.', effect:'offline', perLevel:14400 },
+              desc:'+1% passive IPS per level.', effect:'ips', perLevel:0.01 },
             { id:'cron_job', category:'buff', name:'Cron Exploit', cost:65, costScale:1.38, maxLevel:5,
               desc:'+0.5 auto-probes per second per level.', effect:'autoclick', perLevel:0.5 },
             { id:'loot_sniper', category:'buff', name:'Loot Sniper', cost:80, costScale:1.36, maxLevel:8,
@@ -1151,16 +1150,12 @@
             return Math.floor(upgrade.cost * Math.pow(upgrade.costScale || 1, lvl));
         }
 
-        function maxOfflineSeconds(){
-            return MAX_OFFLINE_SECONDS + fragLevel('cold_storage') * 14400;
-        }
-
         function effectiveTargetMult(){
             return currentTarget().mult * (1 + fragLevel('dns_poison') * 0.015);
         }
 
         function ipsBuffMult(){
-            return 1 + fragLevel('overclock') * 0.02;
+            return 1 + fragLevel('overclock') * 0.02 + fragLevel('cold_storage') * 0.01;
         }
 
         function clickBuffMult(){
@@ -2320,7 +2315,6 @@ To address all issues, run:
             for(const k in state.targets){ state.targets[k].unlocked = false; }
             state.targets['lan'].unlocked = true;
             state.activeTarget = 'lan';
-            state.lastTickAt = Date.now();
             resetAffordabilityCache();
 
             renderAll();
@@ -2340,9 +2334,10 @@ To address all issues, run:
         }
 
         /* ========================================
-           GAME LOOP: Passive income (runs in background tabs)
+           GAME LOOP: Passive income (active tab only)
            ======================================== */
         let tickTimer = null;
+        const TICK_DT = TICK_MS / 1000;
 
         function addPassiveIncome(dt){
             const dtMs = BigInt(Math.max(0, Math.floor(dt * 1000)));
@@ -2351,14 +2346,11 @@ To address all issues, run:
         }
 
         function gameTick(){
-            const now = Date.now();
-            const dt = Math.min((now - state.lastTickAt) / 1000, MAX_DT);
-            state.lastTickAt = now;
-            addPassiveIncome(dt);
+            addPassiveIncome(TICK_DT);
 
             const autoRate = fragLevel('cron_job') * 0.5;
             if (autoRate > 0){
-                state.autoProbeResidual += autoRate * dt;
+                state.autoProbeResidual += autoRate * TICK_DT;
                 const probes = Math.floor(state.autoProbeResidual);
                 if (probes > 0){
                     state.autoProbeResidual -= probes;
@@ -2371,41 +2363,36 @@ To address all issues, run:
             updateShopAffordability();
         }
 
-        function startGameLoop(){
-            if (tickTimer) clearInterval(tickTimer);
-            tickTimer = setInterval(gameTick, TICK_MS);
+        function stopGameLoop(){
+            if (tickTimer){
+                clearInterval(tickTimer);
+                tickTimer = null;
+            }
         }
 
-        function applyOfflineProgress(){
-            const elapsed = (Date.now() - state.lastTickAt) / 1000;
-            if (elapsed > 5){
-                const offline = Math.min(Math.max(0, elapsed), maxOfflineSeconds());
-                const ips = totalIPSMicro();
-                if (ips > 0n && offline > 0){
-                    const gainMicro = ips * BigInt(Math.floor(offline * 1000)) / 1000n;
-                    state.moneyMicro += gainMicro;
-                    log(`Offline for <b>${formatDuration(offline)}</b>: earned <b>$${fmtMoney(microToNumber(gainMicro))}</b>`, 'saved');
-                }
-            }
-            state.lastTickAt = Date.now();
+        function startGameLoop(){
+            if (document.hidden || tickTimer) return;
+            tickTimer = setInterval(gameTick, TICK_MS);
         }
 
         document.addEventListener('visibilitychange', () => {
             if (document.hidden){
+                stopGameLoop();
                 save(true);
                 return;
             }
-            if (Date.now() - loadSettledAt < 3000) return;
-            const elapsed = (Date.now() - state.lastTickAt) / 1000;
-            if (elapsed > 2){
-                const credited = Math.min(elapsed, maxOfflineSeconds());
-                addPassiveIncome(credited);
-                state.lastTickAt = Date.now();
-                afterMoneyChange();
-            }
+            startGameLoop();
         });
 
-        window.addEventListener('pagehide', () => save(true));
+        window.addEventListener('pagehide', () => {
+            stopGameLoop();
+            if (saveSuppressed) return;
+            save(true);
+        });
+        window.addEventListener('beforeunload', () => {
+            if (saveSuppressed) return;
+            save(true);
+        });
 
         /* ========================================
            EVENT HANDLERS: User input processing
@@ -2574,7 +2561,7 @@ To address all issues, run:
         }
 
         let saveAnimTimer = null;
-        let loadSettledAt = 0;
+        let saveSuppressed = false;
         let linkedSaveHandle = null;
         const SAVE_BTN_LABEL = '[ SAVE ]';
         const PORTABLE_PREFIX = 'HC1:';
@@ -2612,13 +2599,14 @@ To address all issues, run:
                 runTier: state.runTier,
                 fragUpgrades: state.fragUpgrades,
                 activeTheme: state.activeTheme,
-                lastTickAt: state.lastTickAt,
-                savedAt: state.lastTickAt,
+                savedAt: Date.now(),
             };
         }
 
         function saveTimestamp(data){
-            return Number(data?.savedAt || data?.lastTickAt || 0);
+            const raw = data?.savedAt ?? data?.lastIncomeEpochMs ?? data?.lastTickAt;
+            const n = typeof raw === 'number' ? raw : Number(raw);
+            return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
         }
 
         function obfuscateSaveBytes(bytes){
@@ -2659,7 +2647,7 @@ To address all issues, run:
 
         function applySaveData(data, opts = {}){
             if (data.moneyMicro != null){
-                state.moneyMicro = dollarsToMicro(data.moneyMicro);
+                state.moneyMicro = microFromSave(data.moneyMicro);
             } else {
                 state.moneyMicro = dollarsToMicro(Number.isFinite(data.money) ? Math.max(0, data.money) : 0);
             }
@@ -2682,7 +2670,6 @@ To address all issues, run:
                 const lv = data.fragUpgrades?.[u.id];
                 state.fragUpgrades[u.id] = Number.isFinite(lv) ? Math.max(0, Math.min(lv, u.maxLevel ?? 1)) : 0;
             }
-            state.lastTickAt = Number.isFinite(data.lastTickAt) ? data.lastTickAt : Date.now();
 
             for (const k in data.items || {}){
                 if (state.items[k]) state.items[k].count = Number(data.items[k].count || 0);
@@ -2699,8 +2686,6 @@ To address all issues, run:
             updateFragShopVisibility();
             resetAffordabilityCache();
 
-            if (!opts.skipOffline) applyOfflineProgress();
-            loadSettledAt = Date.now();
             renderStats();
             renderShop();
             renderTargets();
@@ -2790,7 +2775,9 @@ To address all issues, run:
             const localTs = saveTimestamp(localData);
             if (forceApply || fileTs > localTs){
                 localStorage.setItem(SAVE_KEY, JSON.stringify(data));
-                applySaveData(data, { logMessage: forceApply ? 'Linked save file loaded.' : 'Linked save file was newer — applied.' });
+                applySaveData(data, {
+                    logMessage: forceApply ? 'Linked save file loaded.' : 'Linked save file was newer — applied.',
+                });
                 return true;
             }
             if (localTs > fileTs){
@@ -2800,12 +2787,15 @@ To address all issues, run:
         }
 
         async function tryRestoreLinkedSaveFile(){
+            if (sessionStorage.getItem('hackclicker_skip_linked_restore')){
+                sessionStorage.removeItem('hackclicker_skip_linked_restore');
+                return;
+            }
             if (!window.showOpenFilePicker) return;
             try {
                 const handle = await getStoredLinkedFileHandle();
                 if (!handle) return;
                 linkedSaveHandle = handle;
-                await syncFromLinkedFile(false);
                 updateSyncLinkStatus();
             } catch (e) {
                 console.warn('Linked save restore failed', e);
@@ -2871,8 +2861,34 @@ To address all issues, run:
             writeLinkedSaveFile(data).catch(() => {});
         }
 
+        function buildFreshSavePayload(){
+            const now = Date.now();
+            const items = {};
+            ITEMS.forEach((i) => { items[i.id] = { count: 0 }; });
+            const targets = {};
+            TARGETS.forEach((t) => { targets[t.id] = { unlocked: t.id === 'lan' }; });
+            const fragUpgrades = {};
+            FRAG_UPGRADES.forEach((u) => { fragUpgrades[u.id] = 0; });
+            return {
+                version: 5,
+                moneyMicro: '0',
+                clicks: 0,
+                items,
+                targets,
+                activeTarget: 'lan',
+                scientificNotation: false,
+                fragments: 0,
+                prestigeCount: 0,
+                totalFragmentsEarned: 0,
+                runTier: 0,
+                fragUpgrades,
+                activeTheme: 'default',
+                savedAt: now,
+            };
+        }
+
         function save(silent = false){
-            state.lastTickAt = Date.now();
+            if (saveSuppressed) return;
             const data = getSavePayload();
             localStorage.setItem(SAVE_KEY, JSON.stringify(data));
             writeLinkedSaveFile(data).catch(() => {});
@@ -2898,17 +2914,34 @@ To address all issues, run:
         // Wire up save/reset buttons
         saveBtn.addEventListener('click', () => save());
 
-        function executeReset(){
+        async function executeReset(){
             closeResetModal();
+            saveSuppressed = true;
+            sessionStorage.setItem('hackclicker_skip_linked_restore', '1');
+
             localStorage.removeItem(SAVE_KEY);
             localStorage.removeItem(SAVE_KEY_V4);
             localStorage.removeItem(SAVE_KEY_V3);
             localStorage.removeItem(SAVE_KEY_V2);
             localStorage.removeItem(SAVE_KEY_LEGACY);
+            localStorage.removeItem(DEV_SYNC_UNLOCK_KEY);
+
+            const fresh = buildFreshSavePayload();
+            localStorage.setItem(SAVE_KEY, JSON.stringify(fresh));
+
+            try {
+                await clearStoredLinkedFileHandle();
+            } catch (e) {
+                console.warn('Linked save handle clear failed', e);
+            }
+            linkedSaveHandle = null;
+
             location.reload();
         }
 
-        resetConfirm.addEventListener('click', executeReset);
+        resetConfirm.addEventListener('click', () => {
+            executeReset().catch((e) => console.warn('Reset failed', e));
+        });
 
         // Random console story/status generator
 
