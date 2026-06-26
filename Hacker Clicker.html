@@ -210,7 +210,9 @@
             display:grid; gap:16px; height:100%;
             grid-template-columns: 1.2fr 1fr; /* left stats, right shop */
             overflow:hidden;
+            min-height:0;
         }
+        main > section{ min-height:0; }
         @media(max-width: 980px){ main{ grid-template-columns: 1fr; overflow:hidden } }
 
         /* ========================================
@@ -238,14 +240,16 @@
         .meter > i{ display:block; height:100%; background:linear-gradient(90deg, var(--meter-fill-a), var(--meter-fill-b)); width:0% }
         .console-terminal{
             display:flex; flex-direction:column;
-            height:240px; overflow:hidden;
+            flex:1 1 auto;
+            height:240px; min-height:120px; max-height:100%;
+            overflow:hidden;
             font-size:13px; line-height:1.35;
-            min-height:120px; max-height:85vh;
         }
         .console-output{
             flex:1; min-height:0; overflow-y:auto; overflow-x:hidden;
             white-space:pre-wrap; padding:8px 8px 4px;
             display:flex; flex-direction:column;
+            overscroll-behavior:contain;
         }
         .console-terminal .saved {color: var(--saved); font-weight: bold;}
         .console-terminal .story {color: #ff4d4d; font-weight: bold;}
@@ -280,7 +284,10 @@
             touch-action:none;
         }
         .console-resize-handle:hover{ background:var(--handle-hover) }
-        .console-inline-host{ min-height:0 }
+        .console-inline-host{
+            flex:1; min-height:0;
+            display:flex; flex-direction:column;
+        }
         .console-placeholder{
             display:flex; align-items:center; justify-content:space-between;
             gap:8px; padding:10px 12px; font-size:12px;
@@ -322,7 +329,14 @@
         /* ========================================
            LEFT COLUMN: Main action area styling
            ======================================== */
-        .big-action{ display:grid; gap:10px }
+        .big-action{
+            display:flex; flex-direction:column; gap:10px;
+            min-height:0; overflow:hidden;
+        }
+        .console-block{
+            flex:1; min-height:0;
+            display:flex; flex-direction:column; gap:6px;
+        }
         .clicker{
             font-size:18px; padding:18px; text-align:left; position:relative
         }
@@ -367,6 +381,12 @@
         .info-modal-body p{ margin:0 0 8px }
         .info-modal-body ul{ margin:0 0 8px; padding-left:18px }
         .info-modal-body li{ margin-bottom:4px }
+        .sync-import-area{
+            width:100%; min-height:72px; resize:vertical;
+            background:rgba(0,0,0,.35); border:1px solid var(--line); border-radius:6px;
+            color:var(--fg); font-family:inherit; font-size:11px; padding:8px;
+        }
+        .sync-import-area:focus{ outline:1px solid var(--accent); }
         .badge{ border:1px solid var(--dim); padding:2px 6px; border-radius:999px; font-size:11px }
 
         .kbd{ border:1px solid var(--dim); padding:0 6px; border-radius:3px; font-size:12px; margin-left:6px }
@@ -390,7 +410,7 @@
         .shop{ display:flex; flex-direction:column; gap:8px; max-height:520px; overflow:auto }
         .shop-item{ border:1px solid var(--line); border-radius:6px; padding:10px }
         .targets{ display:flex; flex-wrap:wrap; gap:6px; max-height:150px; overflow:auto }
-        footer{ margin-top:16px; font-size:12px; opacity:.9 }
+        footer{ margin-top:8px; font-size:12px; opacity:.9; flex-shrink:0 }
         .help{ font-size:12px; color:var(--dim); line-height:1.4 }
         .sep{ height:1px; background:var(--line); margin:8px 0 }
         .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0 }
@@ -542,6 +562,7 @@
             <div class="status">Target:<span id="targetName">LAN Users</span></div>
             <button id="fragShopBtn" class="primary" style="display:none" title="Open Fragment Shop">[ FRAG SHOP ]</button>
             <button id="saveBtn" title="Force save (autosaves)" class="primary">[ SAVE ]</button>
+            <button id="syncBtn" title="Export, import, or link a portable save file" class="primary" hidden>[ SYNC ]</button>
             <button id="prestigeBtn" title="Reset for Fragments" class="primary">[ PRESTIGE ]</button>
             <button id="infoBtn" title="How to play" class="primary">[ INFO ]</button>
             <button id="resetBtn" class="danger" title="Erase progress">[ RESET ]</button>
@@ -577,7 +598,7 @@
             <div class="sep"></div>
 
             <!-- Console log area -->
-            <div>
+            <div class="console-block">
                 <div class="row" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
                     <b>/// CONSOLE</b>
                     <div class="row" style="gap:6px;align-items:center">
@@ -700,11 +721,43 @@
 
             <h3>Saves &amp; tools</h3>
             <ul>
-                <li>Progress <b>autosaves every 5 minutes</b> and when you tab away. Use <b>[ SAVE ]</b> to force a save.</li>
+                <li>Progress <b>autosaves every 5 minutes</b> and when you leave the page. Use <b>[ SAVE ]</b> before closing if you want an instant snapshot.</li>
+                <li>Browser storage is <b>per URL</b> — foostus.com and a local copy do not share saves automatically.</li>
                 <li><b>[ RESET ]</b> permanently deletes all progress.</li>
                 <li>The <b>console</b> accepts commands — try <span class="kbd">help</span>. Use <b>[ POP OUT ]</b> for a larger terminal.</li>
                 <li><b>[ SCI: OFF/ON ]</b> toggles scientific notation for huge numbers.</li>
             </ul>
+        </div>
+    </div>
+</div>
+
+    </div>
+</div>
+
+<!-- Portable save sync modal -->
+<div id="syncOverlay" class="frag-overlay" aria-hidden="true">
+    <div class="frag-modal frag-modal--compact panel" role="dialog" aria-labelledby="syncModalTitle" aria-modal="true">
+        <div class="row" style="justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+            <b id="syncModalTitle">/// SAVE SYNC</b>
+            <button id="syncClose" type="button" title="Close">[ CLOSE ]</button>
+        </div>
+        <div class="sep"></div>
+        <div class="info-modal-body">
+            <p class="mono-dim">Use one portable save across live (foostus.com) and local testing. Saves are encoded — not cheat-proof, but not plain JSON in DevTools.</p>
+            <div class="row" style="gap:8px;flex-wrap:wrap;margin:10px 0">
+                <button id="syncExportBtn" type="button" class="primary">[ EXPORT FILE ]</button>
+                <button id="syncCopyBtn" type="button" class="primary">[ COPY CODE ]</button>
+                <button id="syncLinkBtn" type="button" class="primary">[ LINK FILE ]</button>
+                <button id="syncUnlinkBtn" type="button">[ UNLINK ]</button>
+            </div>
+            <p id="syncLinkStatus" class="mono-dim" style="font-size:11px;margin:0 0 10px"></p>
+            <label for="syncImportArea" class="mono-dim" style="display:block;margin-bottom:4px">Paste save code or import file:</label>
+            <textarea id="syncImportArea" class="sync-import-area" rows="4" spellcheck="false" placeholder="HC1:... or paste exported save"></textarea>
+            <div class="row" style="gap:8px;margin-top:8px">
+                <button id="syncImportBtn" type="button" class="primary">[ IMPORT ]</button>
+                <input id="syncFileInput" type="file" accept=".hcsave,.txt,application/octet-stream" hidden>
+                <button id="syncImportFileBtn" type="button">[ IMPORT FILE ]</button>
+            </div>
         </div>
     </div>
 </div>
@@ -1015,6 +1068,18 @@
         const resetBtn = el('resetBtn');
         const infoBtn = el('infoBtn');
         const infoOverlay = el('infoOverlay');
+        const syncOverlay = el('syncOverlay');
+        const syncBtn = el('syncBtn');
+        const syncClose = el('syncClose');
+        const syncExportBtn = el('syncExportBtn');
+        const syncCopyBtn = el('syncCopyBtn');
+        const syncLinkBtn = el('syncLinkBtn');
+        const syncUnlinkBtn = el('syncUnlinkBtn');
+        const syncImportBtn = el('syncImportBtn');
+        const syncImportFileBtn = el('syncImportFileBtn');
+        const syncFileInput = el('syncFileInput');
+        const syncImportArea = el('syncImportArea');
+        const syncLinkStatus = el('syncLinkStatus');
         const infoClose = el('infoClose');
         const sciNotationBtn = el('sciNotationBtn');
         const prestigeBtn = el('prestigeBtn');
@@ -1184,13 +1249,16 @@
         function isInfoModalOpen(){
             return infoOverlay?.classList.contains('open');
         }
+        function isSyncModalOpen(){
+            return syncOverlay?.classList.contains('open');
+        }
 
         function isResetModalOpen(){
             return resetOverlay?.classList.contains('open');
         }
 
         function isGameModalOpen(){
-            return isFragShopOpen() || isPrestigeModalOpen() || isConsolePopoutOpen() || isInfoModalOpen() || isResetModalOpen();
+            return isFragShopOpen() || isPrestigeModalOpen() || isConsolePopoutOpen() || isInfoModalOpen() || isSyncModalOpen() || isResetModalOpen();
         }
 
         const CONSOLE_HEIGHT_MIN = 120;
@@ -1199,6 +1267,7 @@
 
         function consoleHeightMax(){
             if (isConsolePopoutOpen()) return Math.min(window.innerHeight * 0.72, 720);
+            if (consoleInlineHost?.clientHeight > 0) return consoleInlineHost.clientHeight;
             return CONSOLE_HEIGHT_MAX_INLINE;
         }
 
@@ -1266,6 +1335,7 @@
             closeFragShop();
             closePrestigeModal();
             closeResetModal();
+            closeSyncModal();
             dockConsole();
             if (!infoOverlay) return;
             infoOverlay.classList.add('open');
@@ -1277,6 +1347,33 @@
             if (!infoOverlay) return;
             infoOverlay.classList.remove('open');
             infoOverlay.setAttribute('aria-hidden', 'true');
+        }
+
+        function openSyncModal(){
+            dockConsole();
+            closeFragShop();
+            closePrestigeModal();
+            closeResetModal();
+            closeInfoModal();
+            if (!syncOverlay) return;
+            updateSyncLinkStatus();
+            syncOverlay.classList.add('open');
+            syncOverlay.setAttribute('aria-hidden', 'false');
+        }
+        function closeSyncModal(){
+            if (!syncOverlay) return;
+            syncOverlay.classList.remove('open');
+            syncOverlay.setAttribute('aria-hidden', 'true');
+        }
+        function updateSyncLinkStatus(){
+            if (!syncLinkStatus) return;
+            if (linkedSaveHandle){
+                syncLinkStatus.textContent = 'Linked file active — saves mirror to disk on every save.';
+            } else if (window.showOpenFilePicker){
+                syncLinkStatus.textContent = 'Link a .hcsave file on disk, then pick the same file here and on foostus.com.';
+            } else {
+                syncLinkStatus.textContent = 'File linking needs HTTPS or localhost. Use Export/Import on file:// copies.';
+            }
         }
 
         function openResetModal(){
@@ -1634,6 +1731,10 @@ To address all issues, run:
             const trimmed = raw.trim();
             if (!trimmed) return;
             logUserInput(trimmed);
+            if (trimmed.toLowerCase() === DEV_SYNC_PHRASE){
+                unlockSyncDev();
+                return;
+            }
             const parts = trimmed.toLowerCase().split(/\s+/);
             let key = parts[0];
             if (CONSOLE_ALIASES[key]) key = CONSOLE_ALIASES[key];
@@ -2277,19 +2378,24 @@ To address all issues, run:
 
         function applyOfflineProgress(){
             const elapsed = (Date.now() - state.lastTickAt) / 1000;
-            if (elapsed <= 5) return;
-            const offline = Math.min(Math.max(0, elapsed), maxOfflineSeconds());
-            const ips = totalIPSMicro();
-            if (ips > 0n && offline > 0){
-                const gainMicro = ips * BigInt(Math.floor(offline * 1000)) / 1000n;
-                state.moneyMicro += gainMicro;
-                log(`Offline for <b>${formatDuration(offline)}</b>: earned <b>$${fmtMoney(microToNumber(gainMicro))}</b>`, 'saved');
+            if (elapsed > 5){
+                const offline = Math.min(Math.max(0, elapsed), maxOfflineSeconds());
+                const ips = totalIPSMicro();
+                if (ips > 0n && offline > 0){
+                    const gainMicro = ips * BigInt(Math.floor(offline * 1000)) / 1000n;
+                    state.moneyMicro += gainMicro;
+                    log(`Offline for <b>${formatDuration(offline)}</b>: earned <b>$${fmtMoney(microToNumber(gainMicro))}</b>`, 'saved');
+                }
             }
             state.lastTickAt = Date.now();
         }
 
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden) return;
+            if (document.hidden){
+                save(true);
+                return;
+            }
+            if (Date.now() - loadSettledAt < 3000) return;
             const elapsed = (Date.now() - state.lastTickAt) / 1000;
             if (elapsed > 2){
                 const credited = Math.min(elapsed, maxOfflineSeconds());
@@ -2298,6 +2404,8 @@ To address all issues, run:
                 afterMoneyChange();
             }
         });
+
+        window.addEventListener('pagehide', () => save(true));
 
         /* ========================================
            EVENT HANDLERS: User input processing
@@ -2319,6 +2427,7 @@ To address all issues, run:
                 if (isFragShopOpen()){ closeFragShop(); return; }
                 if (isConsolePopoutOpen()){ dockConsole(); return; }
                 if (isInfoModalOpen()){ closeInfoModal(); return; }
+                if (isSyncModalOpen()){ closeSyncModal(); return; }
             }
             if (e.target === consoleInput) return;
             if (isGameModalOpen()) return;
@@ -2388,6 +2497,35 @@ To address all issues, run:
             if (e.target === infoOverlay) closeInfoModal();
         });
 
+        if (syncBtn) syncBtn.addEventListener('click', openSyncModal);
+        if (syncClose) syncClose.addEventListener('click', closeSyncModal);
+        if (syncOverlay) syncOverlay.addEventListener('click', (e) => {
+            if (e.target === syncOverlay) closeSyncModal();
+        });
+        if (syncExportBtn) syncExportBtn.addEventListener('click', exportPortableSaveDownload);
+        if (syncCopyBtn) syncCopyBtn.addEventListener('click', () => exportPortableSaveClipboard());
+        if (syncLinkBtn) syncLinkBtn.addEventListener('click', () => linkSaveFile().catch((e) => log(`Link failed: ${e.message}`, 'story')));
+        if (syncUnlinkBtn) syncUnlinkBtn.addEventListener('click', () => unlinkSaveFile().catch(() => {}));
+        if (syncImportBtn) syncImportBtn.addEventListener('click', () => {
+            try {
+                importPortableSaveText(syncImportArea?.value || '');
+                if (syncImportArea) syncImportArea.value = '';
+                closeSyncModal();
+            } catch (e) {
+                log(`Import failed: ${e.message}`, 'story');
+            }
+        });
+        if (syncImportFileBtn && syncFileInput) syncImportFileBtn.addEventListener('click', () => syncFileInput.click());
+        if (syncFileInput) syncFileInput.addEventListener('change', () => {
+            const file = syncFileInput.files?.[0];
+            syncFileInput.value = '';
+            if (!file) return;
+            file.text().then((text) => {
+                importPortableSaveText(text);
+                closeSyncModal();
+            }).catch((e) => log(`Import failed: ${e.message}`, 'story'));
+        });
+
         fragShopBtn.addEventListener('click', openFragShop);
         fragShopClose.addEventListener('click', closeFragShop);
         fragShopOverlay.addEventListener('click', (e) => {
@@ -2413,13 +2551,37 @@ To address all issues, run:
         const SAVE_KEY_V3 = 'hackclicker_save_v3';
         const SAVE_KEY_LEGACY = 'hackclicker_save_v1';
         const SAVE_KEY_V2 = 'hackclicker_save_v2';
+        const DEV_SYNC_UNLOCK_KEY = 'hackclicker_dev_sync_unlock';
+
+        function isSyncDevUnlocked(){
+            try { return localStorage.getItem(DEV_SYNC_UNLOCK_KEY) === '1'; } catch { return false; }
+        }
+
+        function unlockSyncDev(){
+            try { localStorage.setItem(DEV_SYNC_UNLOCK_KEY, '1'); } catch { /* ignore */ }
+            if (syncBtn) syncBtn.hidden = false;
+            log('Dev save sync unlocked. <b>[ SYNC ]</b> is now in the header.', 'saved');
+        }
+
+        function initSyncDevVisibility(){
+            if (syncBtn) syncBtn.hidden = !isSyncDevUnlocked();
+        }
+
+        const DEV_SYNC_PHRASE = 'foostus kicks ass';
 
         function resetAffordabilityCache(){
             previousAffordability = {};
         }
 
         let saveAnimTimer = null;
+        let loadSettledAt = 0;
+        let linkedSaveHandle = null;
         const SAVE_BTN_LABEL = '[ SAVE ]';
+        const PORTABLE_PREFIX = 'HC1:';
+        const SAVE_OBF_KEY = 'hackclicker:foostus:portable:v1';
+        const LINKED_FILE_IDB = 'hackclicker_meta_v1';
+        const LINKED_FILE_STORE = 'handles';
+        const LINKED_FILE_KEY = 'linkedSave';
 
         function playSaveSuccessAnimation(){
             if (!saveBtn) return;
@@ -2435,8 +2597,8 @@ To address all issues, run:
             }, 1200);
         }
 
-        function save(silent = false){
-            const data = {
+        function getSavePayload(){
+            return {
                 version: 5,
                 moneyMicro: state.moneyMicro.toString(),
                 clicks: state.clicks,
@@ -2451,8 +2613,269 @@ To address all issues, run:
                 fragUpgrades: state.fragUpgrades,
                 activeTheme: state.activeTheme,
                 lastTickAt: state.lastTickAt,
+                savedAt: state.lastTickAt,
             };
+        }
+
+        function saveTimestamp(data){
+            return Number(data?.savedAt || data?.lastTickAt || 0);
+        }
+
+        function obfuscateSaveBytes(bytes){
+            const key = new TextEncoder().encode(SAVE_OBF_KEY);
+            for (let i = 0; i < bytes.length; i++) bytes[i] ^= key[i % key.length];
+            return bytes;
+        }
+
+        function bytesToB64(bytes){
+            let s = '';
+            for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
+            return btoa(s);
+        }
+
+        function b64ToBytes(b64){
+            const s = atob(b64);
+            const bytes = new Uint8Array(s.length);
+            for (let i = 0; i < s.length; i++) bytes[i] = s.charCodeAt(i);
+            return bytes;
+        }
+
+        function encodePortableSave(payload){
+            const json = JSON.stringify(payload);
+            const bytes = obfuscateSaveBytes(new TextEncoder().encode(json));
+            return PORTABLE_PREFIX + bytesToB64(bytes);
+        }
+
+        function decodePortableSave(raw){
+            const text = String(raw || '').trim();
+            if (!text) throw new Error('Empty save');
+            if (text.startsWith(PORTABLE_PREFIX)){
+                const bytes = obfuscateSaveBytes(b64ToBytes(text.slice(PORTABLE_PREFIX.length)));
+                return JSON.parse(new TextDecoder().decode(bytes));
+            }
+            if (text.startsWith('{')) return JSON.parse(text);
+            throw new Error('Unrecognized save format');
+        }
+
+        function applySaveData(data, opts = {}){
+            if (data.moneyMicro != null){
+                state.moneyMicro = dollarsToMicro(data.moneyMicro);
+            } else {
+                state.moneyMicro = dollarsToMicro(Number.isFinite(data.money) ? Math.max(0, data.money) : 0);
+            }
+
+            state.clicks = Number.isFinite(data.clicks) ? Math.max(0, data.clicks) : 0;
+            state.scientificNotation = data.scientificNotation ?? false;
+            state.fragments = Number.isFinite(data.fragments) ? Math.max(0, data.fragments) : 0;
+            state.prestigeCount = Number.isFinite(data.prestigeCount) ? Math.max(0, data.prestigeCount)
+                : (Number.isFinite(data.prestigeLevel) ? Math.max(0, data.prestigeLevel) : 0);
+            if (Number.isFinite(data.totalFragmentsEarned)){
+                state.totalFragmentsEarned = Math.max(0, data.totalFragmentsEarned);
+            } else {
+                const legacyPrestige = Number.isFinite(data.prestigeLevel) ? data.prestigeLevel : state.prestigeCount;
+                const legacyFloor = fragReqForRunTier(Math.min(legacyPrestige, RUN_TIER_THRESHOLDS.length - 1));
+                state.totalFragmentsEarned = Math.max(state.fragments, legacyFloor);
+            }
+            recalcRunTier();
+            state.activeTheme = data.activeTheme || 'default';
+            for (const u of FRAG_UPGRADES){
+                const lv = data.fragUpgrades?.[u.id];
+                state.fragUpgrades[u.id] = Number.isFinite(lv) ? Math.max(0, Math.min(lv, u.maxLevel ?? 1)) : 0;
+            }
+            state.lastTickAt = Number.isFinite(data.lastTickAt) ? data.lastTickAt : Date.now();
+
+            for (const k in data.items || {}){
+                if (state.items[k]) state.items[k].count = Number(data.items[k].count || 0);
+            }
+            for (const k in data.targets || {}){
+                if (state.targets[k]) state.targets[k].unlocked = !!data.targets[k].unlocked;
+            }
+            const savedTarget = data.activeTarget || 'lan';
+            state.activeTarget = (state.targets[savedTarget]?.unlocked) ? savedTarget : 'lan';
+
+            sciNotationBtn.textContent = state.scientificNotation ? '[ SCI: ON ]' : '[ SCI: OFF ]';
+            applyTheme(state.activeTheme);
+            applyVisualUpgrades();
+            updateFragShopVisibility();
+            resetAffordabilityCache();
+
+            if (!opts.skipOffline) applyOfflineProgress();
+            loadSettledAt = Date.now();
+            renderStats();
+            renderShop();
+            renderTargets();
+            syncFragShop();
+            updateShopAffordability();
+            if (opts.logMessage) log(opts.logMessage, 'saved');
+        }
+
+        function openSaveIdb(){
+            return new Promise((resolve, reject) => {
+                const req = indexedDB.open(LINKED_FILE_IDB, 1);
+                req.onupgradeneeded = () => {
+                    if (!req.result.objectStoreNames.contains(LINKED_FILE_STORE)){
+                        req.result.createObjectStore(LINKED_FILE_STORE);
+                    }
+                };
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        async function storeLinkedFileHandle(handle){
+            const db = await openSaveIdb();
+            await new Promise((resolve, reject) => {
+                const tx = db.transaction(LINKED_FILE_STORE, 'readwrite');
+                tx.objectStore(LINKED_FILE_STORE).put(handle, LINKED_FILE_KEY);
+                tx.oncomplete = () => resolve();
+                tx.onerror = () => reject(tx.error);
+            });
+            db.close();
+        }
+
+        async function getStoredLinkedFileHandle(){
+            const db = await openSaveIdb();
+            const handle = await new Promise((resolve, reject) => {
+                const tx = db.transaction(LINKED_FILE_STORE, 'readonly');
+                const req = tx.objectStore(LINKED_FILE_STORE).get(LINKED_FILE_KEY);
+                req.onsuccess = () => resolve(req.result || null);
+                req.onerror = () => reject(req.error);
+            });
+            db.close();
+            return handle;
+        }
+
+        async function clearStoredLinkedFileHandle(){
+            const db = await openSaveIdb();
+            await new Promise((resolve, reject) => {
+                const tx = db.transaction(LINKED_FILE_STORE, 'readwrite');
+                tx.objectStore(LINKED_FILE_STORE).delete(LINKED_FILE_KEY);
+                tx.oncomplete = () => resolve();
+                tx.onerror = () => reject(tx.error);
+            });
+            db.close();
+        }
+
+        async function verifyLinkedFilePermission(handle, write = false){
+            const opts = { mode: write ? 'readwrite' : 'read' };
+            if ((await handle.queryPermission(opts)) === 'granted') return true;
+            if ((await handle.requestPermission(opts)) === 'granted') return true;
+            return false;
+        }
+
+        async function readLinkedSavePayload(){
+            if (!linkedSaveHandle) return null;
+            if (!await verifyLinkedFilePermission(linkedSaveHandle, false)) return null;
+            const file = await linkedSaveHandle.getFile();
+            if (!file.size) return null;
+            return decodePortableSave(await file.text());
+        }
+
+        async function writeLinkedSaveFile(payload){
+            if (!linkedSaveHandle) return false;
+            if (!await verifyLinkedFilePermission(linkedSaveHandle, true)) return false;
+            const writable = await linkedSaveHandle.createWritable();
+            await writable.write(encodePortableSave(payload || getSavePayload()));
+            await writable.close();
+            return true;
+        }
+
+        async function syncFromLinkedFile(forceApply){
+            const data = await readLinkedSavePayload();
+            if (!data) return false;
+            const localRaw = localStorage.getItem(SAVE_KEY);
+            let localData = null;
+            try { if (localRaw) localData = JSON.parse(localRaw); } catch { /* ignore */ }
+            const fileTs = saveTimestamp(data);
+            const localTs = saveTimestamp(localData);
+            if (forceApply || fileTs > localTs){
+                localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+                applySaveData(data, { logMessage: forceApply ? 'Linked save file loaded.' : 'Linked save file was newer — applied.' });
+                return true;
+            }
+            if (localTs > fileTs){
+                await writeLinkedSaveFile(localData);
+            }
+            return false;
+        }
+
+        async function tryRestoreLinkedSaveFile(){
+            if (!window.showOpenFilePicker) return;
+            try {
+                const handle = await getStoredLinkedFileHandle();
+                if (!handle) return;
+                linkedSaveHandle = handle;
+                await syncFromLinkedFile(false);
+                updateSyncLinkStatus();
+            } catch (e) {
+                console.warn('Linked save restore failed', e);
+            }
+        }
+
+        async function linkSaveFile(){
+            if (!window.showOpenFilePicker){
+                log('Link save file requires HTTPS or localhost. Use Export/Import.', 'story');
+                return;
+            }
+            const [handle] = await window.showOpenFilePicker({
+                types: [{ description: 'Hack Clicker Save', accept: { 'application/octet-stream': ['.hcsave'] } }],
+                multiple: false,
+            });
+            linkedSaveHandle = handle;
+            await storeLinkedFileHandle(handle);
+            const hadFile = await syncFromLinkedFile(true);
+            if (!hadFile){
+                save(true);
+                await writeLinkedSaveFile(getSavePayload());
+                log('Save file linked. Current progress written to disk.', 'saved');
+            }
+            updateSyncLinkStatus();
+        }
+
+        async function unlinkSaveFile(){
+            linkedSaveHandle = null;
+            await clearStoredLinkedFileHandle();
+            updateSyncLinkStatus();
+            log('Save file unlinked. Browser copy kept.', 'saved');
+        }
+
+        function exportPortableSaveDownload(){
+            save(true);
+            const encoded = encodePortableSave(getSavePayload());
+            const blob = new Blob([encoded], { type: 'application/octet-stream' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'hackclicker.hcsave';
+            a.click();
+            URL.revokeObjectURL(a.href);
+            log('Save exported to hackclicker.hcsave', 'saved');
+        }
+
+        async function exportPortableSaveClipboard(){
+            save(true);
+            const encoded = encodePortableSave(getSavePayload());
+            try {
+                await navigator.clipboard.writeText(encoded);
+                log('Save code copied to clipboard.', 'saved');
+            } catch {
+                if (syncImportArea) syncImportArea.value = encoded;
+                log('Copy failed — save code placed in SYNC import box.', 'saved');
+                openSyncModal();
+            }
+        }
+
+        function importPortableSaveText(raw){
+            const data = decodePortableSave(raw);
             localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+            applySaveData(data, { logMessage: 'Portable save imported.' });
+            writeLinkedSaveFile(data).catch(() => {});
+        }
+
+        function save(silent = false){
+            state.lastTickAt = Date.now();
+            const data = getSavePayload();
+            localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+            writeLinkedSaveFile(data).catch(() => {});
             if (!silent){
                 log('Progress saved.', 'saved');
                 playSaveSuccessAnimation();
@@ -2468,50 +2891,7 @@ To address all issues, run:
                 if (!raw) raw = localStorage.getItem(SAVE_KEY_LEGACY);
                 if(!raw) return;
                 const data = JSON.parse(raw);
-
-                if (data.moneyMicro != null){
-                    state.moneyMicro = dollarsToMicro(data.moneyMicro);
-                } else {
-                    state.moneyMicro = dollarsToMicro(Number.isFinite(data.money) ? Math.max(0, data.money) : 0);
-                }
-
-                state.clicks = Number.isFinite(data.clicks) ? Math.max(0, data.clicks) : 0;
-                state.scientificNotation = data.scientificNotation ?? false;
-                state.fragments = Number.isFinite(data.fragments) ? Math.max(0, data.fragments) : 0;
-                state.prestigeCount = Number.isFinite(data.prestigeCount) ? Math.max(0, data.prestigeCount)
-                    : (Number.isFinite(data.prestigeLevel) ? Math.max(0, data.prestigeLevel) : 0);
-                if (Number.isFinite(data.totalFragmentsEarned)){
-                    state.totalFragmentsEarned = Math.max(0, data.totalFragmentsEarned);
-                } else {
-                    const legacyPrestige = Number.isFinite(data.prestigeLevel) ? data.prestigeLevel : state.prestigeCount;
-                    const legacyFloor = fragReqForRunTier(Math.min(legacyPrestige, RUN_TIER_THRESHOLDS.length - 1));
-                    state.totalFragmentsEarned = Math.max(state.fragments, legacyFloor);
-                }
-                recalcRunTier();
-                state.activeTheme = data.activeTheme || 'default';
-                for (const u of FRAG_UPGRADES){
-                    const lv = data.fragUpgrades?.[u.id];
-                    state.fragUpgrades[u.id] = Number.isFinite(lv) ? Math.max(0, Math.min(lv, u.maxLevel ?? 1)) : 0;
-                }
-                state.lastTickAt = Number.isFinite(data.lastTickAt) ? data.lastTickAt : Date.now();
-
-                for(const k in data.items || {}){
-                    if(state.items[k]) state.items[k].count = Number(data.items[k].count||0);
-                }
-                for(const k in data.targets || {}){
-                    if(state.targets[k]) state.targets[k].unlocked = !!data.targets[k].unlocked;
-                }
-                const savedTarget = data.activeTarget || 'lan';
-                state.activeTarget = (state.targets[savedTarget]?.unlocked) ? savedTarget : 'lan';
-
-                sciNotationBtn.textContent = state.scientificNotation ? '[ SCI: ON ]' : '[ SCI: OFF ]';
-                applyTheme(state.activeTheme);
-                applyVisualUpgrades();
-                updateFragShopVisibility();
-                resetAffordabilityCache();
-
-                applyOfflineProgress();
-                log('Save loaded. Welcome back, operator.');
+                applySaveData(data, { logMessage: 'Save loaded. Welcome back, operator.' });
             }catch(e){ console.warn('Load failed', e) }
         }
 
@@ -3340,6 +3720,8 @@ To address all issues, run:
            INIT: Load, render, start loop
            ======================================== */
         load();
+        initSyncDevVisibility();
+        tryRestoreLinkedSaveFile();
         applyTheme(state.activeTheme);
         applyVisualUpgrades();
         initConsoleResize();
